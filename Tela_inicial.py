@@ -1,4 +1,4 @@
-import tkinter as tk
+"""import tkinter as tk
 from tkinter import ttk
 
 # Função para calcular carboidratos
@@ -71,4 +71,29 @@ resultado_label = ttk.Label(janela, text="", justify=tk.LEFT)
 resultado_label.grid(column=0, row=4, columnspan=2)
 
 # Inicia o loop principal da interface gráfica, mantendo a janela aberta
+janela.mainloop()
+"""
+
+
+from tkinter import *
+from PIL import ImageTk, Image
+
+janela = Tk()
+
+# Dimensão base tela celular
+janela.geometry('900x1600')
+janela.title("Interface Gráfica")
+
+# Abrir e redimensionar a imagem
+caminho_imagem = Image.open("image_teste.png")
+imagem_redimensionada = caminho_imagem.resize((450,800), Image.LANCZOS)
+
+# Converter a imagem para o formato adequado para o Tkinter
+imagem_de_fundo = ImageTk.PhotoImage(imagem_redimensionada)
+
+# Exibir a imagem no fundo
+label_imagem_de_fundo = Label(janela, image=imagem_de_fundo)  # Usar 'imagem_de_fundo' aqui
+label_imagem_de_fundo.place(x=0, y=0, relwidth=1, relheight=1)
+
+# Inicia o loop principal da interface gráfica
 janela.mainloop()
