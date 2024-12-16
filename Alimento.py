@@ -1,11 +1,10 @@
-from Interface_Alimento import InterfaceAlimento
 from supabase import create_client, Client
 from Chaves_banco import SUPABASE_URL, SUPABASE_KEY
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
-class Alimento(InterfaceAlimentos):
+class Alimento:
     def __init__(self, gramas=0 , descricao='', nutrientes=None):
         self.gramas = gramas 
         self.descricao = descricao

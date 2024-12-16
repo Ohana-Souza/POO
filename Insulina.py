@@ -1,5 +1,19 @@
+from Interface_Insulina import InterfaceInsulina
 
-class Insulina:
+class Asparge(InterfaceInsulina):
 
-    def contaInsulina(self):
+    def calculaDosagem(self):
         pass 
+
+    def mostraDosagem(self):
+        pass 
+
+
+class Humlog(InterfaceInsulina):
+    def calculaDosagem(self):
+        pass 
+
+    def mostraDosagem(self):
+        pass 
+    
+

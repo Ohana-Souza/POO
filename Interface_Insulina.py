@@ -2,10 +2,10 @@ from abc import ABC, abstractmethod
 
 class InterfaceAlimento(ABC):
     @abstractmethod
-    def AdicionaAlimento(self):
+    def calculaDosagem(self):
         pass
 
     @abstractmethod
-    def MostraTodosAlimentos(self):
+    def mostraDosagem(self):
         pass 
 
