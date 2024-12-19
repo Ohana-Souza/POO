@@ -1,22 +1,23 @@
 from tkinter import *
 from PIL import ImageTk, Image
-import TelaCadastro1  # Importa a segunda tela (TelaCadastro1)
+import TelaCadastro1  # Importa a TelaCadastro1
+import TelaCadastro2  # Importa a TelaCadastro2
 
 # Função chamada quando o botão "Cadastrar" for clicado
 def cadastrar():
     # Esconde a tela inicial
     tela_inicial.pack_forget()
 
-    # Passa a informação de qual botão foi pressionado (neste caso "Cadastrar") para a tela de cadastro
-    TelaCadastro1.mostrar_tela_cadastro(janela, "Cadastrar")
+    # Exibe a tela de cadastro 1
+    TelaCadastro1.mostrar_tela_cadastro(janela)
 
 # Função chamada quando o botão "Entrar" for clicado
 def entrar():
     # Esconde a tela inicial
     tela_inicial.pack_forget()
 
-    # Passa a informação de qual botão foi pressionado (neste caso "Entrar") para a tela de cadastro
-    TelaCadastro1.mostrar_tela_cadastro(janela, "Entrar")
+    # Exibe a tela de cadastro 1
+    TelaCadastro1.mostrar_tela_cadastro(janela)
 
 # Criação da janela principal
 janela = Tk()
