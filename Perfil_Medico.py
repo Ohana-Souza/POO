@@ -50,9 +50,9 @@ class PerfilMedico(Usuario):
             'idade': self.idade,
             'id_atividade': id_atividade,
             'id_tipo_diabetes': id_tipo_diabetes,
-            'peso': self.peso
-            'toma_insulina': self.toma_insulina
-            'id_tipo_insulina': id_tipo_insulina
+            'peso': self.peso,
+            'toma_insulina': self.toma_insulina,
+            'id_tipo_insulina': id_tipo_insulina,
             'dosagem_max': self.dosagem_max
         }).execute()
 

@@ -34,7 +34,7 @@ class Alimento:
 
 
     def mostraAlimento(self, id_alimento):
-        response = supabase.table(Alimentos).select(
+        response = supabase.table("Alimentos").select(
         "descricao, energia(kcal), proteina(g), lipideos(g), carboidrato(g), fibra(g)").eq("id", id_alimento).execute()
         
         if response.error:

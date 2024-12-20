@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod 
 
-class InterfaceAlimento(ABC):
+class InterfaceInsulina(ABC):
     @abstractmethod
     def calculaDosagem(self):
         pass
