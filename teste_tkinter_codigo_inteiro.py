@@ -45,15 +45,15 @@ def Tela_Cadastro():
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
-    tk.Label(frame, text="Nome Completo:").pack(pady=5)
-    entry_nome = tk.Entry(frame)
-    entry_nome.pack(pady=5)
-
     tk.Label(frame, text="Email:").pack(pady=5)
     entry_email = tk.Entry(frame)
     entry_email.pack(pady=5)
 
-    tk.Label(frame, text="Telefone:").pack(pady=5)
+    tk.Label(frame, text="Senha:").pack(pady=5)
+    entry_telefone = tk.Entry(frame)
+    entry_telefone.pack(pady=5)
+    
+    tk.Label(frame, text="Conf.senha:").pack(pady=5)
     entry_telefone = tk.Entry(frame)
     entry_telefone.pack(pady=5)
 
@@ -63,61 +63,40 @@ def Tela_Cadastro():
     btn_voltar = tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial))
     btn_voltar.pack(pady=10)
 
-# Tela Cadastro Perfil Médico
 def Tela_Cadastro_PerfilMedico():
     # Cria a janela de cadastro de perfil médico
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
-    tk.Label(frame, text="CRM:").pack(pady=5)
-    entry_crm = tk.Entry(frame)
-    entry_crm.pack(pady=5)
+    # Label e campo para Toma Insulina (Menu Suspenso)
+    tk.Label(frame, text="Toma Insulina:").pack(pady=5)
+    toma_insulina = ["SIM", "NÃO"]
+    toma_insulina_var = tk.StringVar(frame)
+    toma_insulina_var.set(toma_insulina[0])  # Valor inicial
+    toma_insulina_menu = tk.OptionMenu(frame, toma_insulina_var, *toma_insulina)
+    toma_insulina_menu.pack(pady=5)
 
-    tk.Label(frame, text="Especialidade:").pack(pady=5)
+    # Label e campo para Tipo de Insulina (Menu Suspenso)
+    tk.Label(frame, text="Tipo de Insulina:").pack(pady=5)
+    tipos_insulina = ["T1", "T2", "T3", "T4"]
+    tipo_insulina_var = tk.StringVar(frame)
+    tipo_insulina_var.set(tipos_insulina[0])  # Valor inicial
+    tipo_insulina_menu = tk.OptionMenu(frame, tipo_insulina_var, *tipos_insulina)
+    tipo_insulina_menu.pack(pady=5)
+    
+    # Label e campo para Especialidade
+    #convém colocar como Menu Suspenso?????? O tamanho das insulinas é pré-determinado
+    tk.Label(frame, text="Quantidade MAX (UI):").pack(pady=5)
     entry_especialidade = tk.Entry(frame)
     entry_especialidade.pack(pady=5)
 
-    tk.Label(frame, text="Endereço Consultório:").pack(pady=5)
-    entry_endereco = tk.Entry(frame)
-    entry_endereco.pack(pady=5)
-
-    tk.Label(frame, text="Cidade:").pack(pady=5)
-    entry_cidade = tk.Entry(frame)
-    entry_cidade.pack(pady=5)
-
-    tk.Label(frame, text="Telefone Consultório:").pack(pady=5)
-    entry_telefone_consultorio = tk.Entry(frame)
-    entry_telefone_consultorio.pack(pady=5)
-
-    tk.Label(frame, text="E-mail Consultório:").pack(pady=5)
-    entry_email_consultorio = tk.Entry(frame)
-    entry_email_consultorio.pack(pady=5)
-
-    btn_avancar = tk.Button(frame, text="Avançar", width=20, command=lambda: mudar_tela(Tela_Cadastro_Insulina))
+    # Botões de navegação
+    btn_avancar = tk.Button(frame, text="Avançar", width=20, command=lambda: mudar_tela(Tela_Cadastro_Sucesso))
     btn_avancar.pack(pady=10)
 
     btn_voltar = tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro))
     btn_voltar.pack(pady=10)
 
-# Tela Cadastro Insulina
-def Tela_Cadastro_Insulina():
-    # Cria a janela de cadastro de insulina
-    frame = tk.Frame(root)
-    frame.pack(padx=20, pady=20)
-
-    tk.Label(frame, text="Tipo de Insulina:").pack(pady=5)
-    entry_tipo_insulina = tk.Entry(frame)
-    entry_tipo_insulina.pack(pady=5)
-
-    tk.Label(frame, text="Dose Recomendada:").pack(pady=5)
-    entry_dose = tk.Entry(frame)
-    entry_dose.pack(pady=5)
-
-    btn_avancar = tk.Button(frame, text="Avançar", width=20, command=lambda: mudar_tela(Tela_Cadastro_Sucesso))
-    btn_avancar.pack(pady=10)
-
-    btn_voltar = tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro_PerfilMedico))
-    btn_voltar.pack(pady=10)
 
 # Tela Cadastro Sucesso
 def Tela_Cadastro_Sucesso():
@@ -127,8 +106,9 @@ def Tela_Cadastro_Sucesso():
 
     tk.Label(frame, text="Cadastro realizado com sucesso!").pack(pady=10)
 
-    btn_voltar = tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial))
-    btn_voltar.pack(pady=10)
+    btn_avancar = tk.Button(frame, text="Avançar", width=20, command=lambda: mudar_tela(Tela_Consumo1))
+    btn_avancar.pack(pady=10)
+
 
 # Tela Consumo 1
 def Tela_Consumo1():
@@ -136,11 +116,12 @@ def Tela_Consumo1():
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
-    btn_avancar = tk.Button(frame, text="Avançar", width=20, command=lambda: mudar_tela(Tela_Cadastro_PerfilMedico))
+    btn_avancar = tk.Button(frame, text="Histórico", width=20, command=lambda: mudar_tela(Tela_Historico))
     btn_avancar.pack(pady=10)
 
-    btn_voltar = tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial))
-    btn_voltar.pack(pady=10)
+    btn_avancar = tk.Button(frame, text="Adicionar", width=20, command=lambda: mudar_tela(Tela_CadastroAlimento))
+    btn_avancar.pack(pady=10)
+
 
 # Tela Cadastro Alimento (menu rolante)
 def Tela_CadastroAlimento():
