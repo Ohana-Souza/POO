@@ -1,5 +1,28 @@
 import tkinter as tk
 from tkinter import messagebox
+from supabase import create_client, Client
+from Chaves_banco import SUPABASE_URL, SUPABASE_KEY
+
+# Conectar ao Supabase
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# Classe Alimento
+class Alimento:
+    def __init__(self, descricao='', gramas=0, nutrientes=None):
+        self.descricao = descricao
+        self.gramas = gramas
+        self.nutrientes = nutrientes if nutrientes is not None else []
+
+    def mostraTodosAlimentos(self):
+        # Buscar todos os alimentos na tabela "Alimentos" do Supabase
+        response = supabase.table("Alimentos").select("descricao").execute()
+
+        if response.error:
+            print("Erro ao buscar dados:", response.error)
+            return []
+
+        # Retorna uma lista com as descrições dos alimentos
+        return [alimento['descricao'] for alimento in response.data]
 
 # Função para mudar de tela
 def mudar_tela(nova_tela):
@@ -9,7 +32,6 @@ def mudar_tela(nova_tela):
 
 # Tela Inicial
 def Tela_Inicial():
-    # Cria a janela da tela inicial
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
@@ -21,7 +43,6 @@ def Tela_Inicial():
 
 # Tela de Login
 def Tela_Login():
-    # Cria a janela da tela de login
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
@@ -39,9 +60,8 @@ def Tela_Login():
     btn_voltar = tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial))
     btn_voltar.pack(pady=10)
 
-# Tela de Cadastro
+# Tela Cadastro
 def Tela_Cadastro():
-    # Cria a janela de cadastro
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
@@ -52,7 +72,7 @@ def Tela_Cadastro():
     tk.Label(frame, text="Senha:").pack(pady=5)
     entry_telefone = tk.Entry(frame)
     entry_telefone.pack(pady=5)
-    
+
     tk.Label(frame, text="Conf.senha:").pack(pady=5)
     entry_telefone = tk.Entry(frame)
     entry_telefone.pack(pady=5)
@@ -63,44 +83,37 @@ def Tela_Cadastro():
     btn_voltar = tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial))
     btn_voltar.pack(pady=10)
 
+# Tela Cadastro Perfil Médico
 def Tela_Cadastro_PerfilMedico():
-    # Cria a janela de cadastro de perfil médico
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
-    # Label e campo para Toma Insulina (Menu Suspenso)
     tk.Label(frame, text="Toma Insulina:").pack(pady=5)
     toma_insulina = ["SIM", "NÃO"]
     toma_insulina_var = tk.StringVar(frame)
-    toma_insulina_var.set(toma_insulina[0])  # Valor inicial
+    toma_insulina_var.set(toma_insulina[0])
     toma_insulina_menu = tk.OptionMenu(frame, toma_insulina_var, *toma_insulina)
     toma_insulina_menu.pack(pady=5)
 
-    # Label e campo para Tipo de Insulina (Menu Suspenso)
     tk.Label(frame, text="Tipo de Insulina:").pack(pady=5)
     tipos_insulina = ["T1", "T2", "T3", "T4"]
     tipo_insulina_var = tk.StringVar(frame)
-    tipo_insulina_var.set(tipos_insulina[0])  # Valor inicial
+    tipo_insulina_var.set(tipos_insulina[0])
     tipo_insulina_menu = tk.OptionMenu(frame, tipo_insulina_var, *tipos_insulina)
     tipo_insulina_menu.pack(pady=5)
-    
-    # Label e campo para Especialidade
-    #convém colocar como Menu Suspenso?????? O tamanho das insulinas é pré-determinado
+
     tk.Label(frame, text="Quantidade MAX (UI):").pack(pady=5)
     entry_especialidade = tk.Entry(frame)
     entry_especialidade.pack(pady=5)
 
-    # Botões de navegação
     btn_avancar = tk.Button(frame, text="Avançar", width=20, command=lambda: mudar_tela(Tela_Cadastro_Sucesso))
     btn_avancar.pack(pady=10)
 
     btn_voltar = tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro))
     btn_voltar.pack(pady=10)
 
-
 # Tela Cadastro Sucesso
 def Tela_Cadastro_Sucesso():
-    # Cria a janela de sucesso
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
@@ -109,10 +122,8 @@ def Tela_Cadastro_Sucesso():
     btn_avancar = tk.Button(frame, text="Avançar", width=20, command=lambda: mudar_tela(Tela_Consumo1))
     btn_avancar.pack(pady=10)
 
-
 # Tela Consumo 1
 def Tela_Consumo1():
-    # Cria a janela de consumo 1
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
@@ -122,17 +133,26 @@ def Tela_Consumo1():
     btn_avancar = tk.Button(frame, text="Adicionar", width=20, command=lambda: mudar_tela(Tela_CadastroAlimento))
     btn_avancar.pack(pady=10)
 
-
 # Tela Cadastro Alimento (menu rolante)
 def Tela_CadastroAlimento():
     # Cria a janela de cadastro de alimento
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
+    # Buscar alimentos do banco de dados
+    alimento_obj = Alimento()
+    alimentos = alimento_obj.mostraTodosAlimentos()
+
+    if not alimentos:
+        tk.Label(frame, text="Não foi possível carregar alimentos").pack(pady=5)
+        return
+
+    # Label para o menu suspenso
     tk.Label(frame, text="Selecione um Alimento:").pack(pady=5)
-    alimentos = ['Arroz', 'Feijão', 'Carne', 'Fruta']
+
+    # Criar o menu suspenso (dropdown) com os alimentos
     combo_alimento = tk.StringVar(frame)
-    combo_alimento.set(alimentos[0])
+    combo_alimento.set(alimentos[0])  # Definir o primeiro alimento como selecionado por padrão
     dropdown = tk.OptionMenu(frame, combo_alimento, *alimentos)
     dropdown.pack(pady=5)
 
@@ -144,7 +164,6 @@ def Tela_CadastroAlimento():
 
 # Tela Cadastro Alimento Quantidade
 def Tela_CadastroAlimentoQuantidade():
-    # Cria a janela de cadastro de quantidade de alimento
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
@@ -160,7 +179,6 @@ def Tela_CadastroAlimentoQuantidade():
 
 # Tela Histórico
 def Tela_Historico():
-    # Cria a janela de histórico
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
