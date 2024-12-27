@@ -6,6 +6,6 @@ class InterfaceInsulina(ABC):
         pass
 
     @abstractmethod
-    def mostraDosagem(self):
+    def verificaAlarme(self):
         pass 
 

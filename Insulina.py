@@ -3,7 +3,7 @@ from Interface_Insulina import InterfaceInsulina
 
 class Asparge(InterfaceInsulina):
 
-    def calculaDosagem(peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
+    def calculaDosagem(self, peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
         """
         Calcula a dose de insulina Aspart (ação rápida) necessária para uma refeição.
         """
@@ -35,7 +35,7 @@ class Asparge(InterfaceInsulina):
 
 
 
-    def verificaAlarme(dose_calculada, dosagem_maxima):
+    def verificaAlarme(self, dose_calculada, dosagem_maxima):
     
         if dose_calculada > dosagem_maxima:
             print("\n⚠️ ALARME: A dose calculada excede a dose máxima do perfil médico!")
@@ -47,7 +47,7 @@ class Asparge(InterfaceInsulina):
 
 
 class Humalog(InterfaceInsulina):
-    def calculaDosagem(peso, tipo_diabetes, carboidratos, proteinas, dosagem_max):
+    def calculaDosagem(self, peso, tipo_diabetes, carboidratos, proteinas, dosagem_max):
         """
         Calcula a dose de insulina Humalog (lispro) necessária para uma refeição.
         """
@@ -79,7 +79,7 @@ class Humalog(InterfaceInsulina):
 
 
 
-    def verificaAlarme(dose_calculada, dosagem_maxima):
+    def verificaAlarme(self, dose_calculada, dosagem_maxima):
     
         if dose_calculada > dosagem_maxima:
             print("\n⚠️ ALARME: A dose calculada excede a dose máxima do perfil médico!")
@@ -90,4 +90,6 @@ class Humalog(InterfaceInsulina):
             print("\n✅ A dose calculada está dentro dos limites seguros.\n")
      
         
+
+
 
