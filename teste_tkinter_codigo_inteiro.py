@@ -1,28 +1,12 @@
+
 import tkinter as tk
 from tkinter import messagebox
 from supabase import create_client, Client
-from Chaves_banco import SUPABASE_URL, SUPABASE_KEY
+from PIL import Image, ImageTk
+from ArquivosJU25_12.Chaves_banco import SUPABASE_URL, SUPABASE_KEY
 
 # Conectar ao Supabase
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-# Classe Alimento
-class Alimento:
-    def __init__(self, descricao='', gramas=0, nutrientes=None):
-        self.descricao = descricao
-        self.gramas = gramas
-        self.nutrientes = nutrientes if nutrientes is not None else []
-
-    def mostraTodosAlimentos(self):
-        # Buscar todos os alimentos na tabela "Alimentos" do Supabase
-        response = supabase.table("Alimentos").select("descricao").execute()
-
-        if response.error:
-            print("Erro ao buscar dados:", response.error)
-            return []
-
-        # Retorna uma lista com as descrições dos alimentos
-        return [alimento['descricao'] for alimento in response.data]
 
 # Função para mudar de tela
 def mudar_tela(nova_tela):
@@ -30,10 +14,24 @@ def mudar_tela(nova_tela):
         widget.destroy()
     nova_tela()
 
+# Função para adicionar uma imagem à tela
+def adicionar_imagem(frame, caminho_imagem): 
+    try: 
+        imagem = Image.open(caminho_imagem) 
+        imagem_tk = ImageTk.PhotoImage(imagem) 
+        label_imagem = tk.Label(frame, image=imagem_tk) 
+        label_imagem.image = imagem_tk  # Manter referência da imagem
+        label_imagem.pack(pady=10)  # Adicionar o label à tela
+    except Exception as e: 
+        print("Erro ao carregar imagem:", e)
+        
 # Tela Inicial
 def Tela_Inicial():
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
+    
+    # Adicionando uma imagem na Tela Inicial
+    adicionar_imagem(frame,"tinicial.jpeg")
 
     btn_entrar = tk.Button(frame, text="Entrar", width=20, command=lambda: mudar_tela(Tela_Login))
     btn_entrar.pack(pady=10)
@@ -45,6 +43,9 @@ def Tela_Inicial():
 def Tela_Login():
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
+
+    # Adicionando uma imagem na Tela de Login
+    adicionar_imagem(frame, "tpos.jpeg")
 
     tk.Label(frame, text="Usuário:").pack(pady=5)
     entry_usuario = tk.Entry(frame)
@@ -64,6 +65,9 @@ def Tela_Login():
 def Tela_Cadastro():
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
+
+    # Adicionando uma imagem na Tela Cadastro
+    adicionar_imagem(frame, "tpos.jpeg")
 
     tk.Label(frame, text="Email:").pack(pady=5)
     entry_email = tk.Entry(frame)
@@ -87,6 +91,9 @@ def Tela_Cadastro():
 def Tela_Cadastro_PerfilMedico():
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
+
+    # Adicionando uma imagem na Tela Cadastro Perfil Médico
+    adicionar_imagem(frame, "tpos.jpeg")
 
     tk.Label(frame, text="Toma Insulina:").pack(pady=5)
     toma_insulina = ["SIM", "NÃO"]
@@ -117,6 +124,9 @@ def Tela_Cadastro_Sucesso():
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
+    # Adicionando uma imagem na Tela Cadastro Sucesso
+    adicionar_imagem(frame, "tinicial.jpeg")
+
     tk.Label(frame, text="Cadastro realizado com sucesso!").pack(pady=10)
 
     btn_avancar = tk.Button(frame, text="Avançar", width=20, command=lambda: mudar_tela(Tela_Consumo1))
@@ -127,6 +137,9 @@ def Tela_Consumo1():
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
+    # Adicionando uma imagem na Tela Consumo 1
+    adicionar_imagem(frame, "tpos.jpeg")
+
     btn_avancar = tk.Button(frame, text="Histórico", width=20, command=lambda: mudar_tela(Tela_Historico))
     btn_avancar.pack(pady=10)
 
@@ -135,9 +148,11 @@ def Tela_Consumo1():
 
 # Tela Cadastro Alimento (menu rolante)
 def Tela_CadastroAlimento():
-    # Cria a janela de cadastro de alimento
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
+
+    # Adicionando uma imagem na Tela Cadastro Alimento
+    adicionar_imagem(frame, "tpos.jpeg")
 
     # Buscar alimentos do banco de dados
     alimento_obj = Alimento()
@@ -167,6 +182,9 @@ def Tela_CadastroAlimentoQuantidade():
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
+    # Adicionando uma imagem na Tela Cadastro Alimento Quantidade
+    adicionar_imagem(frame, "tpos.jpeg")
+
     tk.Label(frame, text="Quantidade:").pack(pady=5)
     entry_quantidade = tk.Entry(frame)
     entry_quantidade.pack(pady=5)
@@ -182,11 +200,13 @@ def Tela_Historico():
     frame = tk.Frame(root)
     frame.pack(padx=20, pady=20)
 
+    # Adicionando uma imagem na Tela Histórico
+    adicionar_imagem(frame, "tpos.jpeg")
+
     tk.Label(frame, text="Histórico de Consumos:").pack(pady=10)
 
     # Simulação de histórico (pode ser uma lista, etc.)
-    tk.Label(frame, text="Alimento 1: 100g").pack(pady=5)
-    tk.Label(frame, text="Alimento 2: 200g").pack(pady=5)
+    tk.Label(frame, text="Alimento")
 
     btn_voltar = tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1))
     btn_voltar.pack(pady=10)
