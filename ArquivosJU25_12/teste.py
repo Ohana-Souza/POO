@@ -1,5 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
+from supabase import create_client, Client
+from Chaves_banco import SUPABASE_URL, SUPABASE_KEY
+from Alimento import Alimento
+from Usuario import Usuario
+import re
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Função para mudar de tela
 def mudar_tela(nova_tela, root, *args):
@@ -16,7 +23,7 @@ def Tela_Inicial(root):
     tk.Button(frame, text="Entrar", width=20, command=lambda: mudar_tela(Tela_Login, root)).pack(pady=20)
     tk.Button(frame, text="Cadastrar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)).pack(pady=20)
 
-# Tela de Login
+#Tela de Login
 def Tela_Login(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
@@ -29,16 +36,26 @@ def Tela_Login(root):
     entry_senha = tk.Entry(frame, show="*")
     entry_senha.pack(pady=5)
 
+    error_label = tk.Label(frame, text="", fg="red")
+    error_label.pack(pady=5)
+
     def autenticar():
-        usuario = entry_usuario.get()
+        email = entry_usuario.get()
         senha = entry_senha.get()
-        if usuario == "admin" and senha == "123":
-            mudar_tela(Tela_Consumo1, root)
-        else:
-            messagebox.showerror("Erro", "Usuário ou senha inválidos.")
+        usuario = Usuario.autenticacao_usuario(email)
+
+        response = usuario.autenticacao_usuario(senha)
+
+        error_label.config(text=response, fg="red")
+                        
+        if response == True:
+            error_label.config(text="Login realizado com sucesso!", fg="green")
+            root.after(2000, lambda: mudar_tela(Tela_Consumo1, root))
 
     tk.Button(frame, text="Avançar", width=20, command=autenticar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).pack(pady=10)
+
+
 
 # Tela de Cadastro
 def Tela_Cadastro(root):
@@ -57,34 +74,37 @@ def Tela_Cadastro(root):
     entry_conf_senha = tk.Entry(frame, show="*")
     entry_conf_senha.pack(pady=5)
 
+    error_label = tk.Label(frame, text="", fg="red")
+    error_label.pack(pady=5)
+
     def cadastrar():
-        if entry_senha.get() == entry_conf_senha.get():
-            mudar_tela(Tela_Cadastro_PerfilMedico, root)
+        email = entry_email.get()
+        senha = entry_senha.get()
+        conf_senha = entry_conf_senha.get()
+
+        if senha != conf_senha:
+            error_label.config(text="As senhas não coincidem.", fg="red")
+            return
+
+        usuario = Usuario(email)
+        
+        # Validate email by calling the setter
+        usuario.email = email
+        if not re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', usuario.email):
+            error_label.config(text="Formato de e-mail inválido.", fg="red")
+            return
+
+        response = usuario.insere_usuario(senha)
+
+        # Update the error label with the response from insere_usuario
+        if response == True:
+            error_label.config(text="Usuário cadastrado com sucesso!", fg="green")
+            root.after(2000, lambda: mudar_tela(Tela_Cadastro_Sucesso, root))
         else:
-            messagebox.showerror("Erro", "As senhas não coincidem.")
+            error_label.config(text=response, fg="red")
 
     tk.Button(frame, text="Avançar", width=20, command=cadastrar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).pack(pady=10)
-
-# Tela de Cadastro do Perfil Médico
-def Tela_Cadastro_PerfilMedico(root):
-    frame = tk.Frame(root)
-    frame.place(relwidth=1, relheight=1)
-
-    tk.Label(frame, text="Toma Insulina:").pack(pady=5)
-    insulina_var = tk.StringVar(value="Sim")
-    tk.OptionMenu(frame, insulina_var, "Sim", "Não").pack(pady=5)
-
-    tk.Label(frame, text="Tipo de Insulina:").pack(pady=5)
-    insulina_tipo_var = tk.StringVar(value="Rápida")
-    tk.OptionMenu(frame, insulina_tipo_var, "Rápida", "Lenta").pack(pady=5)
-
-    tk.Label(frame, text="Quantidade Máxima (UI):").pack(pady=5)
-    entry_quantidade = tk.Entry(frame)
-    entry_quantidade.pack(pady=5)
-
-    tk.Button(frame, text="Avançar", width=20, command=lambda: mudar_tela(Tela_Cadastro_Sucesso, root)).pack(pady=10)
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)).pack(pady=10)
 
 # Tela de Cadastro de Sucesso
 def Tela_Cadastro_Sucesso(root):
@@ -100,11 +120,11 @@ def Tela_Consumo1(root):
     frame.place(relwidth=1, relheight=1)
 
     tk.Label(frame, text="Tela de Consumo", font=("Helvetica", 16)).pack(pady=20)
-    tk.Button(frame, text="Adicionar Alimento", width=20, command=lambda: mudar_tela(Tela_CadastroAlimento, root)).pack(pady=10)
+    tk.Button(frame, text="Adicionar Alimento", width=20, command=lambda: mudar_tela(Tela_CadastroRefeicao, root)).pack(pady=10)
     tk.Button(frame, text="Histórico", width=20, command=lambda: mudar_tela(Tela_Historico, root)).pack(pady=10)
 
-# Tela de Cadastro de Alimento
-def Tela_CadastroAlimento(root):
+# Tela de Cadastro de Refeição
+def Tela_CadastroRefeicao(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
@@ -112,18 +132,56 @@ def Tela_CadastroAlimento(root):
     refeicao_var = tk.StringVar(value="Café da Manhã")
     tk.OptionMenu(frame, refeicao_var, "Café da Manhã", "Almoço", "Jantar").pack(pady=5)
 
+    def avancar():
+        refeicao = refeicao_var.get()
+        mudar_tela(Tela_CadastroAlimento, root, refeicao)
+
+    tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=10)
+
+# Tela de Cadastro de Alimento
+def Tela_CadastroAlimento(root, refeicao):
+    frame = tk.Frame(root)
+    frame.place(relwidth=1, relheight=1)
+
+    tk.Label(frame, text=f"Refeição selecionada: {refeicao}").pack(pady=5)
     tk.Label(frame, text="Selecione o alimento:").pack(pady=5)
-    alimento_var = tk.StringVar(value="Arroz")
-    tk.OptionMenu(frame, alimento_var, "Arroz", "Feijão", "Carne").pack(pady=5)
+
+    alimento_obj = Alimento()
+    alimentos = alimento_obj.mostraTodosAlimentos()
+    lista_alimentos = [alimento['descricao'] for alimento in alimentos]
+
+    if lista_alimentos:
+        alimento_var = tk.StringVar(value=lista_alimentos[0])
+    else:
+        alimento_var = tk.StringVar(value="Nenhum alimento encontrado")
+
+    tk.OptionMenu(frame, alimento_var, *lista_alimentos).pack(pady=5)
 
     tk.Label(frame, text="Informe a quantidade (gramas):").pack(pady=5)
     entry_quantidade = tk.Entry(frame)
     entry_quantidade.pack(pady=5)
 
-    tk.Button(frame, text="Adicionar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=10)
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=10)
+    def salvar():
+        with open("consumos.txt", "a") as file:
+            file.write(f"Refeição: {refeicao}, Alimento: {alimento_var.get()}, Quantidade: {entry_quantidade.get()}g\n")
 
-# Tela de Histórico
+    def voltar():
+        with open("consumos.txt", "r") as file:
+            lines = file.readlines()
+        with open("consumos.txt", "w") as file:
+            file.writelines(lines[:-1])
+        mudar_tela(Tela_CadastroRefeicao, root)
+
+    def avancar():
+        salvar()
+        messagebox.showinfo("Informação", "Informações salvas com sucesso!")
+        mudar_tela(Tela_Consumo1, root)
+
+    tk.Button(frame, text="Salvar", width=20, command=salvar).pack(pady=10)
+    tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
+
 def Tela_Historico(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
@@ -131,13 +189,8 @@ def Tela_Historico(root):
     tk.Label(frame, text="Histórico de Consumos", font=("Helvetica", 16)).pack(pady=20)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=20)
 
-# Inicialização do programa
-def main():
-    root = tk.Tk()
-    root.title("Contagem de Carboidratos")
-    root.geometry("400x400")
-    Tela_Inicial(root)
-    root.mainloop()
-
-if __name__ == "__main__":
-    main()
+root = tk.Tk()
+root.title("Contagem de Carboidratos")
+root.geometry("800x600")
+mudar_tela(Tela_Inicial, root)
+root.mainloop()
