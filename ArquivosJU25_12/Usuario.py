@@ -22,20 +22,18 @@ class Usuario:
             print("Formato de e-mail inválido.")
         self._email = email
 
-
     def autenticacao_usuario(self, senha_inserida):
         response = supabase.table('Usuarios').select('senha').eq('email', self._email).execute()
 
-        if response.data:  
+        if response.data:
             senha_armazenada = response.data[0]['senha']
-        
+
             if bcrypt.checkpw(senha_inserida.encode('utf-8'), senha_armazenada.encode('utf-8')):
-                print("Login realizado com sucesso!")
+                return True
             else:
-                print("Senha Inválida")
+                return "Senha inválida"
         else:
-            print("Usuário não encontrado!")
-       
+            return "Usuário não encontrado"
             
     def insere_usuario(self, senha):
         

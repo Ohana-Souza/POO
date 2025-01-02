@@ -15,7 +15,7 @@ def teste_tkinter_pillow():
     frame.pack(padx=20, pady=20)
 
     try:
-        imagem = Image.open("tinicial.jpeg")  # Substitua pelo caminho correto
+        imagem = Image.open(r"C:\Users\ohana\Downloads\codigo feito\POO\tinicial.jpeg")  # Substitua pelo caminho correto
         imagem_tk = ImageTk.PhotoImage(imagem)
         label_imagem = tk.Label(frame, image=imagem_tk)
         label_imagem.image = imagem_tk  # Manter referência da imagem
