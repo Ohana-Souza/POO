@@ -1,0 +1,3 @@
+Refeição: Café da Manhã, Alimento: Arroz, integral, cozido, Quantidade: 20g
+Refeição: Café da Manhã, Alimento: Bolo, mistura para, Quantidade: 300g
+Refeição: Café da Manhã, Alimento: Bolo, mistura para, Quantidade: 300g

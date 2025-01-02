@@ -12,7 +12,7 @@ from PIL import Image, ImageTk
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def configurar_fundo(frame):
-    imagem = Image.open(r"POO/ArquivosJU25_12/tpos.jpeg")
+    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\trabalho final\POO\ArquivosJU25_12\tpos.jpeg")
     imagem = imagem.resize((800, 600), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
@@ -206,7 +206,7 @@ def Tela_CadastroAlimento(root, refeicao):
         return alimentos
 
     # Lendo o CSV
-    lista_alimentos = ler_csv(r'C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\PF POO\codigo feito\POO\ArquivosJU25_12\TACO.csv')
+    lista_alimentos = ler_csv(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\trabalho final\POO\ArquivosJU25_12\TACO.csv")
 
     # Populando o OptionMenu
     if lista_alimentos:
