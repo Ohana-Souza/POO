@@ -36,14 +36,7 @@ class Asparge(InterfaceInsulina):
 
 
     def verificaAlarme(self, dose_calculada, dosagem_maxima):
-    
-        if dose_calculada > dosagem_maxima:
-            print("\n⚠️ ALARME: A dose calculada excede a dose máxima do perfil médico!")
-            print(f"Dose calculada: {dose_calculada} unidades")
-            print(f"Dose máxima permitida: {dosagem_maxima} unidades")
-            print("Consulte seu médico ou profissional de saúde antes de administrar essa dose.\n")
-        else:
-            print("\n✅ A dose calculada está dentro dos limites seguros.\n")
+        super().verificaAlarme(dose_calculada, dosagem_maxima)
 
 
 class Humalog(InterfaceInsulina):
@@ -76,20 +69,11 @@ class Humalog(InterfaceInsulina):
         dose_insulina_final = min(dose_insulina, dosagem_max)
 
         return round(dose_insulina_final, 2)  # Retorna o valor arredondado para 2 casas decimais
-
-
+    
 
     def verificaAlarme(self, dose_calculada, dosagem_maxima):
-    
-        if dose_calculada > dosagem_maxima:
-            print("\n⚠️ ALARME: A dose calculada excede a dose máxima do perfil médico!")
-            print(f"Dose calculada: {dose_calculada} unidades")
-            print(f"Dose máxima permitida: {dosagem_maxima} unidades")
-            print("Consulte seu médico ou profissional de saúde antes de administrar essa dose.\n")
-        else:
-            print("\n✅ A dose calculada está dentro dos limites seguros.\n")
+        super().verificaAlarme(dose_calculada, dosagem_maxima)
      
         
-
 
 
