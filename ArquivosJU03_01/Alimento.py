@@ -10,23 +10,28 @@ class Alimento:
         self.descricao = descricao
         self.nutrientes = nutrientes
 
-    def adicionaAlimento(self, id_alimento):
+    def adicionaAlimento(self, id_alimento, gramas):
+        self.gramas = gramas
         response = supabase.table("Alimentos").select(
-        "descricao, energia(kcal), proteina(g), lipideos(g), carboidrato(g), fibra(g)").eq("id", id_alimento).execute()
+        '"descricao", "energia(kcal)", "proteina(g)", "lipideos(g)", "carboidrato(g)", "fibra(g)"').eq("id", 1).execute()
     
-        if response.error:
-            print("Erro ao buscar dados:", response.error)
+        if not response.data:  # If no data was returned
+            print("Nenhum dado encontrado para o alimento selecionado.")
+            return []
+
+        if 'error' in response:  # Check if an error exists
+            print("Erro ao buscar dados:", response['error'])
             return []
     
         if response.data:
             row = response.data[0]
             self.descricao = row.get("descricao")  
             self.nutrientes =  [
-                row.get("energia(kcal)"),
-                row.get("proteina(g)"),
-                row.get("lipideos(g)"),
-                row.get("carboidrato(g)"),
-                row.get("fibra(g)"),
+                row.get("energia(kcal)")*(gramas/100),
+                row.get("proteina(g)")*(gramas/100),
+                row.get("lipideos(g)")*(gramas/100),
+                row.get("carboidrato(g)")*(gramas/100),
+                row.get("fibra(g)")*(gramas/100),
             ]
         else:
             print("Nenhum dado encontrado para o alimento selecionado.")
@@ -37,8 +42,12 @@ class Alimento:
         response = supabase.table("Alimentos").select(
         "descricao, energia(kcal), proteina(g), lipideos(g), carboidrato(g), fibra(g)").eq("id", id_alimento).execute()
         
-        if response.error:
-            print("Erro ao buscar dados:", response.error)
+        if not response.data:  # If no data was returned
+            print("Nenhum dado encontrado para o alimento selecionado.")
+            return []
+
+        if 'error' in response:  # Check if an error exists
+            print("Erro ao buscar dados:", response['error'])
             return []
 
         return response.data
