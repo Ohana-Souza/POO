@@ -12,7 +12,7 @@ from PIL import Image, ImageTk
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def configurar_fundo(frame):
-    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\POO\ArquivosJU03_01\tpos.jpeg")
+    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\POO\POO\ArquivosJU03_01\tpos.jpeg")
     imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
@@ -33,7 +33,7 @@ def Tela_Inicial(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
-    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\POO\ArquivosJU03_01\tinicial.jpeg")
+    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\POO\POO\ArquivosJU03_01\tinicial.jpeg")
     imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
@@ -194,7 +194,7 @@ def Tela_CadastroAlimento(root, refeicao):
         return alimentos
 
     # Lendo o CSV
-    lista_alimentos = ler_csv(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\POO\ArquivosJU03_01\TACO.csv")
+    lista_alimentos = ler_csv(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\POO\POO\ArquivosJU03_01\TACO.csv")
 
     # Populando o OptionMenu
     if lista_alimentos:

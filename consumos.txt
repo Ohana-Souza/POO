@@ -4,3 +4,6 @@ Refeição: Café da Manhã, Alimento: Bolo, mistura para, Quantidade: 300g
 Refeição: Café da Manhã, Alimento: Arroz, integral, cozido, Quantidade: 20g
 Refeição: Café da Manhã, Alimento: Arroz, integral, cozido, Quantidade: 300g
 Refeição: Café da Manhã, Alimento: Arroz, integral, cozido, Quantidade: 300g
+Refeição: Café da Manhã, Alimento: Curau, milho verde, Quantidade: 12g
+Refeição: Café da Manhã, Alimento: Biscoito, doce, wafer, recheado de chocolate, Quantidade: 34g
+Refeição: Café da Manhã, Alimento: Biscoito, doce, wafer, recheado de chocolate, Quantidade: 34g
