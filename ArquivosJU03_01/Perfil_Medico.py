@@ -1,6 +1,7 @@
-from Usuario import Usuario
 from supabase import create_client, Client
 from Chaves_banco import SUPABASE_KEY, SUPABASE_URL
+from datetime import datetime
+from Usuario import Usuario
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -19,29 +20,39 @@ class PerfilMedico(Usuario):
         
     def cria_perfil_medico(self):
         resposta_usuario = supabase.table('Usuarios').select('id').eq('email', self.email).execute()
-
         if resposta_usuario.data and len(resposta_usuario.data) > 0:
             id_usuario = resposta_usuario.data[0]['id']
+        else:
+            print("Usuário não encontrado.")
+            return False
 
         resposta_sexo = supabase.table('Sexos').select('id').eq('sexo', self.sexo).execute()
-
         if resposta_sexo.data and len(resposta_sexo.data) > 0:
             id_sexo = resposta_sexo.data[0]['id']
+        else:
+            print("Sexo não encontrado.")
+            return False
 
         resposta_atividade = supabase.table('Atividades_fisicas').select('id').eq('nivel', self.atividade).execute()
-
         if resposta_atividade.data and len(resposta_atividade.data) > 0:
             id_atividade = resposta_atividade.data[0]['id']
+        else:
+            print("Atividade física não encontrada.")
+            return False
 
         resposta_tipo_diabetes = supabase.table('Tipos_diabetes').select('id').eq('tipo', self.tipo_diabetes).execute()
-
-        if resposta_tipo_diabetes and len(resposta_tipo_diabetes) > 0:
+        if resposta_tipo_diabetes.data and len(resposta_tipo_diabetes.data) > 0:
             id_tipo_diabetes = resposta_tipo_diabetes.data[0]['id']
+        else:
+            print("Tipo de diabetes não encontrado.")
+            return False
 
         resposta_tipo_insulina = supabase.table('Tipos_insulina').select('id').eq('tipo', self.tipo_insulina).execute()
-
-        if resposta_tipo_insulina and len(resposta_tipo_insulina) > 0:
+        if resposta_tipo_insulina.data and len(resposta_tipo_insulina.data) > 0:
             id_tipo_insulina = resposta_tipo_insulina.data[0]['id']
+        else:
+            print("Tipo de insulina não encontrado.")
+            return False
 
         response = supabase.table('Perfil_medico').insert({
             'id_usuario': id_usuario,
@@ -56,16 +67,12 @@ class PerfilMedico(Usuario):
             'dosagem_max': self.dosagem_max
         }).execute()
 
-
         if response.data:  
             print("Perfil médico cadastrado com sucesso!")
             return True
         elif response.error:  
-            print(f"Erro cadastrando o perfil médico: {response.error.message}")
+            print(f"Erro ao cadastrar o perfil médico: {response.error.message}")
             return False
         else:
             print("Erro desconhecido.")
             return False
-    
-    
-
