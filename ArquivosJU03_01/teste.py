@@ -6,13 +6,36 @@ from supabase import create_client, Client
 from Chaves_banco import SUPABASE_URL, SUPABASE_KEY
 from Alimento import Alimento
 from Usuario import Usuario
+from Historico_refeicao import HistoricoRefeicao
 import re
 from PIL import Image, ImageTk
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def configurar_fundo(frame):
-    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\POO\POO\ArquivosJU03_01\tpos.jpeg")
+def configurar_fundo_login(frame):
+    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\T2\POO\ArquivosJU03_01\Telas\3.png")
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
+    bg = ImageTk.PhotoImage(imagem)
+
+    # Canvas para exibir a imagem
+    canvas = tk.Canvas(frame, width=360, height=640)
+    canvas.create_image(0, 0, anchor=tk.NW, image=bg)
+    canvas.image = bg
+    canvas.place(relwidth=1, relheight=1)
+    
+def configurar_fundo_cadastro(frame):
+    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\T2\POO\ArquivosJU03_01\Telas\2.png")
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
+    bg = ImageTk.PhotoImage(imagem)
+
+    # Canvas para exibir a imagem
+    canvas = tk.Canvas(frame, width=360, height=640)
+    canvas.create_image(0, 0, anchor=tk.NW, image=bg)
+    canvas.image = bg
+    canvas.place(relwidth=1, relheight=1)
+
+def configurar_fundo_liso(frame):
+    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\T2\POO\ArquivosJU03_01\Telas\4.png")
     imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
@@ -33,7 +56,7 @@ def Tela_Inicial(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
-    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\POO\POO\ArquivosJU03_01\tinicial.jpeg")
+    imagem = Image.open(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\T2\POO\ArquivosJU03_01\Telas\1.png")
     imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
@@ -54,7 +77,7 @@ def Tela_Login(root):
     frame.place(relwidth=1, relheight=1)
 
     # Aplica o fundo
-    configurar_fundo(frame)
+    configurar_fundo_login(frame)
 
     tk.Label(frame, text="Usuário:").pack(pady=5)
     entry_usuario = tk.Entry(frame)
@@ -71,12 +94,13 @@ def Tela_Login(root):
         email = entry_usuario.get()
         senha = entry_senha.get()
         usuario = Usuario(email)
-
+#### VERIFICAR SE ISSO FAZ SENTIDO DEPOIS ########
         if not usuario.autenticacao_usuario(senha):
-            error_label.config(text="Usuário ou senha inválidos.", fg="red")
-        else:
             error_label.config(text="Login realizado com sucesso!", fg="green")
+            # Agendar a mudança de tela após 2 segundos
             root.after(2000, lambda: mudar_tela(Tela_Consumo1, root))
+        else:
+            error_label.config(text="Usuário ou senha inválidos.", fg="red")
 
     tk.Button(frame, text="Login", width=20, command=autenticar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).pack(pady=10)
@@ -87,7 +111,7 @@ def Tela_Cadastro(root):
     frame.place(relwidth=1, relheight=1)
 
     # Aplica o fundo
-    configurar_fundo(frame)
+    configurar_fundo_cadastro(frame)
 
     tk.Label(frame, text="Email:").pack(pady=5)
     entry_email = tk.Entry(frame)
@@ -141,7 +165,7 @@ def Tela_Consumo1(root):
     frame.place(relwidth=1, relheight=1)
 
     # Aplica o fundo
-    configurar_fundo(frame)
+    configurar_fundo_liso(frame)
 
     tk.Label(frame, text="Tela de Consumo", font=("Helvetica", 16)).pack(pady=20)
     tk.Button(frame, text="Adicionar Alimento", width=20, command=lambda: mudar_tela(Tela_CadastroRefeicao, root)).pack(pady=10)
@@ -149,17 +173,20 @@ def Tela_Consumo1(root):
     # Botão de Sair
     tk.Button(frame, text="Sair", width=20, command=sys.exit).pack(pady=10)
 
+
+##########################################################################33
+
 # Tela de Cadastro de Refeição
 def Tela_CadastroRefeicao(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
     # Aplica o fundo
-    configurar_fundo(frame)
+    configurar_fundo_liso(frame)
 
     tk.Label(frame, text="Selecione a refeição:").pack(pady=5)
     refeicao_var = tk.StringVar(value="Café da Manhã")
-    tk.OptionMenu(frame, refeicao_var, "Café da Manhã", "Almoço", "Jantar").pack(pady=5)
+    tk.OptionMenu(frame, refeicao_var, "Café da Manhã", "Almoço", "Jantar", "Lanche").pack(pady=5)
 
     def avancar():
         refeicao = refeicao_var.get()
@@ -168,13 +195,14 @@ def Tela_CadastroRefeicao(root):
     tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=10)
 
-# Tela de Cadastro de Alimento
+
 def Tela_CadastroAlimento(root, refeicao):
+    historico = HistoricoRefeicao()
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
     # Aplica o fundo
-    configurar_fundo(frame)
+    configurar_fundo_liso(frame)
 
     tk.Label(frame, text=f"Refeição selecionada: {refeicao}").pack(pady=5)
     tk.Label(frame, text="Selecione o alimento:").pack(pady=5)
@@ -194,7 +222,7 @@ def Tela_CadastroAlimento(root, refeicao):
         return alimentos
 
     # Lendo o CSV
-    lista_alimentos = ler_csv(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\POO\POO\ArquivosJU03_01\TACO.csv")
+    lista_alimentos = ler_csv(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\POO\ArquivosJU03_01\TACO.csv")
 
     # Populando o OptionMenu
     if lista_alimentos:
@@ -209,19 +237,30 @@ def Tela_CadastroAlimento(root, refeicao):
     entry_quantidade.pack(pady=5)
 
     def salvar():
-        with open("consumos.txt", "a") as file:
-            file.write(f"Refeição: {refeicao}, Alimento: {alimento_var.get()}, Quantidade: {entry_quantidade.get()}g\n")
+        try:
+            quantidade = float(entry_quantidade.get())  # Converte quantidade para float
+        except ValueError:
+            messagebox.showerror("Erro", "Por favor, insira uma quantidade válida em gramas.")
+            return
+
+        descricao_alimento = alimento_var.get()
+        print(f"Dados para salvar: Refeição: {refeicao}, Alimento: {descricao_alimento}, Quantidade: {quantidade}g")
+        alimento = Alimento(descricao=descricao_alimento, gramas=quantidade)
+        alimento.adicionaAlimento(id_alimento=1, gramas=quantidade)  # Usa os dois argumentos esperados
+        print(f"Nutrientes calculados: {alimento.nutrientes}")
+
+        if historico.salvaRefeicao(refeicao, alimento.descricao, alimento.nutrientes):
+            messagebox.showinfo("Informação", "Informações salvas com sucesso!")
+        else:
+            messagebox.showerror("Erro", "Erro ao salvar as informações. Verifique os dados e tente novamente.")
 
     def voltar():
-        with open("consumos.txt", "r") as file:
-            lines = file.readlines()
-        with open("consumos.txt", "w") as file:
-            file.writelines(lines[:-1])
+        temp_label = tk.Label(frame, text="Último alimento adicionado excluído!", fg="black")
+        temp_label.pack(pady=10)
+        root.after(2000, temp_label.destroy)
         mudar_tela(Tela_CadastroRefeicao, root)
 
     def avancar():
-        salvar()
-        messagebox.showinfo("Informação", "Informações salvas com sucesso!")
         mudar_tela(Tela_Consumo1, root)
 
     tk.Button(frame, text="Salvar", width=20, command=salvar).pack(pady=10)
@@ -234,28 +273,20 @@ def Tela_Historico(root):
     frame.place(relwidth=1, relheight=1)
 
     # Aplica o fundo
-    configurar_fundo(frame)
+    configurar_fundo_liso(frame)
 
     tk.Label(frame, text="Histórico de Consumos", font=("Helvetica", 16)).pack(pady=20)
 
-    historico = ler_historico("consumos.txt")
+    historico = HistoricoRefeicao().obtemHistorico()
 
-    # Exibe os últimos 3 itens do histórico
-    for item in historico[-3:]:
+    # Exibe os últimos 5 itens do histórico
+    for item in historico[-5:]:
         tk.Label(frame, text=item).pack(pady=5)
 
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=20)
 
-def ler_historico(caminho_arquivo):
-    historico = []
-    try:
-        with open(caminho_arquivo, 'r', encoding='utf-8') as arquivo:
-            linhas = arquivo.readlines()
-            # Remove espaços em branco e quebras de linha
-            historico = [linha.strip() for linha in linhas if linha.strip()]
-    except FileNotFoundError:
-        historico.append("Nenhum histórico encontrado")
-    return historico
+###############################################################################
+# Tela de Cadastro de Refeição
 
 root = tk.Tk()
 root.title("Contagem de Carboidratos")
