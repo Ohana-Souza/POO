@@ -35,20 +35,34 @@ class HistoricoRefeicao:
         }).execute()
 
 
-        if not response.data:  # If no data was returned
+        if not response.data:  
             print("Nenhum dado encontrado para o alimento selecionado.")
             return []
 
-        if 'error' in response:  # Check if an error exists
+        if 'error' in response:  
             print("Erro ao buscar dados:", response['error'])
             return False
 
+    def mostraHistorico(self):
+        data = datetime.today().strftime('%Y-%m-%d')
+        response = supabase.table("Historico").select("dia, Refeicao(refeicao), Alimentos(descricao), proteina, carboidrato, fibra, lipideo, energia").eq("dia", data).execute()
+        
+        if not response.data:  
+            print("Nenhum dado encontrado no histórico")
+            return []
+
+        if 'error' in response:  
+            print("Erro ao buscar dados:", response['error'])
+            return []
+
+        return response.data
         
 
 testeAl = Alimento()
 testeAl.adicionaAlimento(1, 200)
 teste = HistoricoRefeicao()
 teste.salvaRefeicao("Café da manhã", testeAl.descricao, testeAl.nutrientes)
-
+printar = teste.mostraHistorico()
+print(printar)
 
 

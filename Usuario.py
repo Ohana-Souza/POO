@@ -69,5 +69,4 @@ class Usuario:
             print("Erro desconhecido.")
             return False
             
-        
-  
+
