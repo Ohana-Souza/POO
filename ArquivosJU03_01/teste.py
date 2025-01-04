@@ -7,6 +7,7 @@ from Chaves_banco import SUPABASE_URL, SUPABASE_KEY
 from Alimento import Alimento
 from Usuario import Usuario
 from Historico_refeicao import HistoricoRefeicao
+from Perfil_Medico import PerfilMedico
 import re
 from PIL import Image, ImageTk
 
@@ -157,7 +158,62 @@ def Tela_Cadastro(root):
     tk.Button(frame, text="Avançar", width=20, command=cadastrar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).pack(pady=10)
 
-
+def Tela_PerfilMedico(root): 
+    frame = tk.Frame(root) 
+    frame.place(relwidth=1, relheight=1) 
+    tk.Label(frame, text="Email:").pack(pady=5) 
+    entry_email = tk.Entry(frame) 
+    entry_email.pack(pady=5) 
+    tk.Label(frame, text="Sexo:").pack(pady=5) 
+    sexo_var = tk.StringVar() 
+    tk.OptionMenu(frame, sexo_var, "Masculino", "Feminino", "Outro").pack(pady=5) 
+    tk.Label(frame, text="Altura (cm):").pack(pady=5) 
+    entry_altura = tk.Entry(frame) 
+    entry_altura.pack(pady=5) 
+    tk.Label(frame, text="Peso (kg):").pack(pady=5) 
+    entry_peso = tk.Entry(frame) 
+    entry_peso.pack(pady=5) 
+    tk.Label(frame, text="Idade:").pack(pady=5) 
+    entry_idade = tk.Entry(frame) 
+    entry_idade.pack(pady=5) 
+    tk.Label(frame, text="Atividade Física:").pack(pady=5) 
+    atividade_var = tk.StringVar() 
+    tk.OptionMenu(frame, atividade_var, "Sedentário", "Leve", "Moderado", "Intenso").pack(pady=5) 
+    tk.Label(frame, text="Tipo de Diabetes:").pack(pady=5) 
+    diabetes_var = tk.StringVar() 
+    tk.OptionMenu(frame, diabetes_var, "Tipo 1", "Tipo 2", "Gestacional", "Outro").pack(pady=5) 
+    tk.Label(frame, text="Toma Insulina (Sim/Não):").pack(pady=5) 
+    insulina_var = tk.StringVar() 
+    tk.OptionMenu(frame, insulina_var, "Sim", "Não").pack(pady=5) 
+    tk.Label(frame, text="Tipo de Insulina:").pack(pady=5) 
+    tipo_insulina_var = tk.StringVar() 
+    tk.OptionMenu(frame, tipo_insulina_var, "Rápida", "Lenta", "Mista").pack(pady=5) 
+    tk.Label(frame, text="Dosagem Máxima de Insulina (unidades):").pack(pady=5) 
+    entry_dosagem_max = tk.Entry(frame) 
+    entry_dosagem_max.pack(pady=5) 
+    
+    def salvar(): 
+        email = entry_email.get() 
+        sexo = sexo_var.get() 
+        altura = entry_altura.get() 
+        peso = entry_peso.get() 
+        idade = entry_idade.get() 
+        atividade = atividade_var.get() 
+        tipo_diabetes = diabetes_var.get() 
+        toma_insulina = insulina_var.get() 
+        tipo_insulina = tipo_insulina_var.get() 
+        dosagem_max = entry_dosagem_max.get() 
+        perfil = PerfilMedico(email, sexo, altura, peso, idade, atividade, tipo_diabetes, toma_insulina, tipo_insulina, dosagem_max) 
+        
+        if perfil.cria_perfil_medico(): 
+            messagebox.showinfo("Sucesso", "Perfil médico cadastrado com sucesso!")
+            mudar_tela(Tela_Consumo1, root) 
+        else: 
+            messagebox.showerror("Erro", "Erro ao cadastrar o perfil médico.") 
+            
+    tk.Button(frame, text="Salvar", width=20, command=salvar).pack(pady=10)
+   # tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=10)
+        
 # Tela de Consumo
 # Tela de Consumo
 def Tela_Consumo1(root):
@@ -185,8 +241,8 @@ def Tela_CadastroRefeicao(root):
     configurar_fundo_liso(frame)
 
     tk.Label(frame, text="Selecione a refeição:").pack(pady=5)
-    refeicao_var = tk.StringVar(value="Café da Manhã")
-    tk.OptionMenu(frame, refeicao_var, "Café da Manhã", "Almoço", "Jantar", "Lanche").pack(pady=5)
+    refeicao_var = tk.StringVar(value="Café da manhã")
+    tk.OptionMenu(frame, refeicao_var, "Café da manhã", "Almoço", "Jantar", "Lanche").pack(pady=5)
 
     def avancar():
         refeicao = refeicao_var.get()
