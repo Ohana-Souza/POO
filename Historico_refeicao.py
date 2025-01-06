@@ -43,8 +43,7 @@ class HistoricoRefeicao:
             print("Erro ao buscar dados:", response['error'])
             return False
 
-    def mostraHistorico(self):
-        data = datetime.today().strftime('%Y-%m-%d')
+    def mostraHistorico(self, data):
         response = supabase.table("Historico").select("dia, Refeicao(refeicao), Alimentos(descricao), proteina, carboidrato, fibra, lipideo, energia").eq("dia", data).execute()
         
         if not response.data:  
@@ -58,11 +57,12 @@ class HistoricoRefeicao:
         return response.data
         
 
-testeAl = Alimento()
-testeAl.adicionaAlimento(1, 200)
-teste = HistoricoRefeicao()
-teste.salvaRefeicao("Café da manhã", testeAl.descricao, testeAl.nutrientes)
-printar = teste.mostraHistorico()
-print(printar)
+#testeAl = Alimento()
+#testeAl.adicionaAlimento(1, 200)
+#teste = HistoricoRefeicao()
+#teste.salvaRefeicao("Café da manhã", testeAl.descricao, testeAl.nutrientes)
+#printar = teste.mostraHistorico()
+#print(printar)
+
 
 
