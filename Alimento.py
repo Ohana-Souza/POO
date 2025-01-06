@@ -10,10 +10,10 @@ class Alimento:
         self.descricao = descricao
         self.nutrientes = nutrientes
 
-    def adicionaAlimento(self, id_alimento, gramas):
+    def adicionaAlimento(self, gramas, id_alimento):
         self.gramas = gramas
         response = supabase.table("Alimentos").select(
-        '"descricao", "energia(kcal)", "proteina(g)", "lipideos(g)", "carboidrato(g)", "fibra(g)"').eq("id", 1).execute()
+        '"descricao", "energia(kcal)", "proteina(g)", "lipideos(g)", "carboidrato(g)", "fibra(g)"').eq("id", id_alimento).execute()
     
         if not response.data:  # If no data was returned
             print("Nenhum dado encontrado para o alimento selecionado.")
@@ -40,7 +40,7 @@ class Alimento:
 
     def mostraAlimento(self, id_alimento):
         response = supabase.table("Alimentos").select(
-        "descricao, energia(kcal), proteina(g), lipideos(g), carboidrato(g), fibra(g)").eq("id", id_alimento).execute()
+        '"descricao", "energia(kcal)", "proteina(g)", "lipideos(g)", "carboidrato(g)", "fibra(g)"').eq("id", id_alimento).execute()
         
         if not response.data:  # If no data was returned
             print("Nenhum dado encontrado para o alimento selecionado.")
