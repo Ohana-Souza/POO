@@ -8,8 +8,14 @@ from Alimento import Alimento
 from Usuario import Usuario
 from Historico_refeicao import HistoricoRefeicao
 from Perfil_Medico import PerfilMedico
+from tkcalendar import DateEntry
+import datetime
+
 import re
 from PIL import Image, ImageTk
+
+import os
+print(f"Localização do arquivo Historico_refeicao: {os.path.abspath(HistoricoRefeicao.__module__)}") 
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -346,6 +352,7 @@ def Tela_CadastroAlimento(root, refeicao):
     tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
 
 # Tela de Histórico
+
 def Tela_Historico(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
@@ -355,13 +362,26 @@ def Tela_Historico(root):
 
     tk.Label(frame, text="Histórico de Consumos", font=("Helvetica", 16)).pack(pady=20)
 
-    historico = HistoricoRefeicao().obtemHistorico()
+    tk.Label(frame, text="Selecione a data:").pack(pady=5)
+    data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
+    data_entry.pack(pady=5)
 
-    # Exibe os últimos 5 itens do histórico
-    for item in historico[-5:]:
-        tk.Label(frame, text=item).pack(pady=5)
+    def exibir_historico():
+        data_selecionada = data_entry.get_date().strftime('%Y-%m-%d')
+        historico = HistoricoRefeicao().mostraHistorico(data_selecionada)
+        print(f"Histórico obtido para {data_selecionada}: {historico}")
 
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=20)
+        historico_frame = tk.Frame(frame)
+        historico_frame.pack(pady=10)
+
+        if not historico:
+            tk.Label(historico_frame, text="Nenhum dado encontrado para a data selecionada.").pack(pady=5)
+        else:
+            for item in historico:
+                tk.Label(historico_frame, text=item).pack(pady=5)
+
+    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=10)
 
 ###############################################################################
 # Tela de Cadastro de Refeição
