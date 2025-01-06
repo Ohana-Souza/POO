@@ -243,7 +243,6 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_PerfilMedico1, root)).pack(pady=10)
 
 # Tela de Consumo
-# Tela de Consumo
 def Tela_Consumo1(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
@@ -257,8 +256,6 @@ def Tela_Consumo1(root):
     # Botão de Sair
     tk.Button(frame, text="Sair", width=20, command=sys.exit).pack(pady=10)
 
-
-##########################################################################33
 
 # Tela de Cadastro de Refeição
 def Tela_CadastroRefeicao(root):
@@ -330,7 +327,7 @@ def Tela_CadastroAlimento(root, refeicao):
         descricao_alimento = alimento_var.get()
         print(f"Dados para salvar: Refeição: {refeicao}, Alimento: {descricao_alimento}, Quantidade: {quantidade}g")
         alimento = Alimento(descricao=descricao_alimento, gramas=quantidade)
-        alimento.adicionaAlimento(id_alimento=1, gramas=quantidade)  # Usa os dois argumentos esperados
+        alimento.adicionaAlimento(descricao_alimento, gramas=quantidade)  # Ajuste para usar a descrição do alimento
         print(f"Nutrientes calculados: {alimento.nutrientes}")
 
         if historico.salvaRefeicao(refeicao, alimento.descricao, alimento.nutrientes):
@@ -350,6 +347,7 @@ def Tela_CadastroAlimento(root, refeicao):
     tk.Button(frame, text="Salvar", width=20, command=salvar).pack(pady=10)
     tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
+
 
 # Tela de Histórico
 
