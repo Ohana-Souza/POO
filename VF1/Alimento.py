@@ -10,32 +10,37 @@ class Alimento:
         self.descricao = descricao
         self.nutrientes = nutrientes
 
-    def adicionaAlimento(self, gramas, id_alimento):
+    def adicionaAlimento(self, gramas, descricao):
         self.gramas = gramas
-        response = supabase.table("Alimentos").select(
-        '"descricao", "energia(kcal)", "proteina(g)", "lipideos(g)", "carboidrato(g)", "fibra(g)"').eq("id", id_alimento).execute()
-    
-        if not response.data:  # If no data was returned
-            print("Nenhum dado encontrado para o alimento selecionado.")
-            return []
 
-        if 'error' in response:  # Check if an error exists
-            print("Erro ao buscar dados:", response['error'])
-            return []
-    
-        if response.data:
-            row = response.data[0]
-            self.descricao = row.get("descricao")  
-            self.nutrientes =  [
-                row.get("energia(kcal)")*(gramas/100),
-                row.get("proteina(g)")*(gramas/100),
-                row.get("lipideos(g)")*(gramas/100),
-                row.get("carboidrato(g)")*(gramas/100),
-                row.get("fibra(g)")*(gramas/100),
-            ]
-        else:
-            print("Nenhum dado encontrado para o alimento selecionado.")
-            return []
+        # Consulta ao banco de dados baseada na descrição do alimento
+        response = supabase.table("Alimentos").select(
+            '"descricao", "energia(kcal)", "proteina(g)", "lipideos(g)", "carboidrato(g)", "fibra(g)"'
+        ).eq("descricao", descricao).execute()
+
+        # Verifica se a consulta retornou dados
+        if not response.data:  # Nenhum dado encontrado
+            print(f"Alimento '{descricao}' não encontrado no banco de dados.")
+            self.nutrientes = []
+            return
+
+        if "error" in response:  # Verifica se ocorreu algum erro
+            print("Erro ao buscar dados do alimento:", response["error"])
+            self.nutrientes = []
+            return
+
+        # Processa os dados retornados
+        row = response.data[0]
+        self.descricao = row.get("descricao", "Alimento desconhecido")  # Evita valores nulos
+        self.nutrientes = [
+            row.get("energia(kcal)", 0) * (gramas / 100),  # Energia calculada com base nos gramas
+            row.get("proteina(g)", 0) * (gramas / 100),
+            row.get("lipideos(g)", 0) * (gramas / 100),
+            row.get("carboidrato(g)", 0) * (gramas / 100),
+            row.get("fibra(g)", 0) * (gramas / 100),
+        ]
+        print(f"Alimento processado: {self.descricao}, Nutrientes: {self.nutrientes}")
+
 
 
     def mostraAlimento(self, descricao_alimento):
@@ -63,8 +68,5 @@ class Alimento:
         return response.data
     
     
-teste = Alimento()
-escreve = teste.mostraAlimento(13)
-print(escreve)
 
 
