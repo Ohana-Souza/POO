@@ -38,9 +38,9 @@ class Alimento:
             return []
 
 
-    def mostraAlimento(self, id_alimento):
+    def mostraAlimento(self, descricao_alimento):
         response = supabase.table("Alimentos").select(
-        '"descricao", "energia(kcal)", "proteina(g)", "lipideos(g)", "carboidrato(g)", "fibra(g)"').eq("id", id_alimento).execute()
+        '"descricao", "energia(kcal)", "proteina(g)", "lipideos(g)", "carboidrato(g)", "fibra(g)"').eq("descricao", descricao_alimento).execute()
         
         if not response.data:  # If no data was returned
             print("Nenhum dado encontrado para o alimento selecionado.")
@@ -63,6 +63,8 @@ class Alimento:
         return response.data
     
     
-
+teste = Alimento()
+escreve = teste.mostraAlimento(13)
+print(escreve)
 
 
