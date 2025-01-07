@@ -76,3 +76,5 @@ class HistoricoRefeicao:
         except Exception as e:
             print(f"Erro ao buscar histórico: {e}")
             return []
+
+
