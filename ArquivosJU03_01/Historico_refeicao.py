@@ -56,7 +56,7 @@ class HistoricoRefeicao:
         try:
             response = supabase.table('Historico').select(
                 'dia', 'id_refeicao(refeicao)', 'id_alimento(descricao)', 'energia', 'proteina', 'lipideo', 'carboidrato', 'fibra'
-            ).eq('dia', data).execute()
+            ).eq('dia', data).order('id', desc=True).limit(5).execute()
 
             print(f"Response ao buscar dados da tabela 'Historico': {response}")
 
@@ -78,12 +78,4 @@ class HistoricoRefeicao:
             print(f"Erro ao buscar histórico: {e}")
             return []
 
-testeAl = Alimento()
-testeAl.adicionaAlimento(1, 200)
-teste = HistoricoRefeicao()
-if teste.salvaRefeicao("Café da manhã", testeAl.descricao, testeAl.nutrientes):
-    print("Refeição salva com sucesso!")
-else:
-    print("Erro ao salvar a refeição.")
-printar = teste.mostraHistorico(datetime.today().strftime('%Y-%m-%d'))
-print(printar)
+
