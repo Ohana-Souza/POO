@@ -327,10 +327,10 @@ def Tela_CadastroAlimento(root, refeicao):
         descricao_alimento = alimento_var.get()
         print(f"Dados para salvar: Refeição: {refeicao}, Alimento: {descricao_alimento}, Quantidade: {quantidade}g")
         alimento = Alimento(descricao=descricao_alimento, gramas=quantidade)
-        alimento.adicionaAlimento(descricao_alimento, gramas=quantidade)  # Ajuste para usar a descrição do alimento
+        alimento.adicionaAlimento(descricao_alimento, quantidade)  # Passa a descrição do alimento corretamente
         print(f"Nutrientes calculados: {alimento.nutrientes}")
 
-        if historico.salvaRefeicao(refeicao, alimento.descricao, alimento.nutrientes):
+        if historico.salvaRefeicao(refeicao, alimento.descricao):
             messagebox.showinfo("Informação", "Informações salvas com sucesso!")
         else:
             messagebox.showerror("Erro", "Erro ao salvar as informações. Verifique os dados e tente novamente.")
@@ -350,7 +350,6 @@ def Tela_CadastroAlimento(root, refeicao):
 
 
 # Tela de Histórico
-
 def Tela_Historico(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
@@ -380,6 +379,7 @@ def Tela_Historico(root):
 
     tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=10)
+
 
 ###############################################################################
 # Tela de Cadastro de Refeição

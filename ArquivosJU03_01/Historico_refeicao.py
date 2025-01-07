@@ -7,9 +7,12 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 class HistoricoRefeicao:
 
-    def salvaRefeicao(self, refeicao, descricao, nutrientes):
+    def salvaRefeicao(self, refeicao, alimento):
         try:
+            print(f"Alimento: {alimento}")
+            
             resposta_refeicao = supabase.table('Refeicao').select('id').eq('refeicao', refeicao).execute()
+            print(f"Resposta Refeição: {resposta_refeicao.data}")
             if not resposta_refeicao.data:
                 print("Refeição não encontrada.")
                 return False
@@ -17,26 +20,22 @@ class HistoricoRefeicao:
             id_refeicao = resposta_refeicao.data[0]['id']
             print(f"ID da Refeição: {id_refeicao}")
 
-            resposta_alimento = supabase.table('Alimentos').select('id').eq('descricao', descricao).execute()
-            if not resposta_alimento.data:
-                print("Alimento não encontrado.")
+            id_alimento = alimento.id_alimento
+            if not id_alimento:
+                print("ID do alimento não encontrado.")
                 return False
-
-            id_alimento = resposta_alimento.data[0]['id']
-            print(f"ID do Alimento: {id_alimento}")
 
             dia_refeicao = datetime.today().strftime('%Y-%m-%d')
             dados_historico = {
                 'dia': dia_refeicao,
                 'id_refeicao': id_refeicao,
                 'id_alimento': id_alimento,
-                'energia': nutrientes[0],
-                'proteina': nutrientes[1],
-                'lipideo': nutrientes[2],
-                'carboidrato': nutrientes[3],
-                'fibra': nutrientes[4],
+                'energia': alimento.nutrientes[0],
+                'proteina': alimento.nutrientes[1],
+                'lipideo': alimento.nutrientes[2],
+                'carboidrato': alimento.nutrientes[3],
+                'fibra': alimento.nutrientes[4],
             }
-            print(f"Dados a serem inseridos: {dados_historico}")
 
             response = supabase.table('Historico').insert(dados_historico).execute()
             print(f"Response ao inserir na tabela 'Historico': {response}")
@@ -56,7 +55,7 @@ class HistoricoRefeicao:
         try:
             response = supabase.table('Historico').select(
                 'dia', 'id_refeicao(refeicao)', 'id_alimento(descricao)', 'energia', 'proteina', 'lipideo', 'carboidrato', 'fibra'
-            ).eq('dia', data).execute()
+            ).eq('dia', data).order('id', desc=True).limit(5).execute()
 
             print(f"Response ao buscar dados da tabela 'Historico': {response}")
 
@@ -77,13 +76,3 @@ class HistoricoRefeicao:
         except Exception as e:
             print(f"Erro ao buscar histórico: {e}")
             return []
-
-testeAl = Alimento()
-testeAl.adicionaAlimento(1, 200)
-teste = HistoricoRefeicao()
-if teste.salvaRefeicao("Café da manhã", testeAl.descricao, testeAl.nutrientes):
-    print("Refeição salva com sucesso!")
-else:
-    print("Erro ao salvar a refeição.")
-printar = teste.mostraHistorico(datetime.today().strftime('%Y-%m-%d'))
-print(printar)
