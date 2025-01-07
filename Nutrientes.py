@@ -1,3 +1,4 @@
+from Alimento import Alimento
 
 class Nutrientes:
     def __init__(self):
@@ -38,5 +39,14 @@ class Nutrientes:
         return print(totais)
 
 
-
-
+alimento1 = Alimento()
+alimento1.adicionaAlimento(200,"Arroz, integral, cozido")
+alimento2 = Alimento()
+alimento2.adicionaAlimento(300,"Bolo, mistura para")
+nutrientes_teste = Nutrientes()
+nutrientes_teste.adicionaNutrientes(alimento1)
+nutrientes_teste.adicionaNutrientes(alimento2)
+nutrientes_teste.mostraTotais()
+print(f" Alimento1: {alimento1.nutrientes}")
+print(f"Alimento 2:{alimento2.nutrientes}")
+nutrientes_teste.mostraTotais()
