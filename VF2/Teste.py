@@ -318,8 +318,11 @@ def Tela_CadastroAlimento(root, refeicao):
         resultado = [alimento for alimento in lista_alimentos if termo_busca in alimento.lower()]
         menu = option_menu["menu"]
         menu.delete(0, "end")
-        for alimento in resultado:
-            menu.add_command(label=alimento, command=lambda value=alimento: alimento_var.set(value))
+        if resultado:
+            for alimento in resultado:
+                menu.add_command(label=alimento, command=lambda value=alimento: alimento_var.set(value))
+        else:
+            menu.add_command(label="Alimento digitado não listado", command=lambda: None)
 
     # Populando o OptionMenu
     alimento_var = tk.StringVar(value="Selecione um alimento")
@@ -344,6 +347,10 @@ def Tela_CadastroAlimento(root, refeicao):
             return
 
         descricao_alimento = alimento_var.get()
+        if descricao_alimento == "Alimento digitado não listado":
+            messagebox.showerror("Erro", "Por favor, selecione um alimento listado.")
+            return
+
         print(f"Dados para salvar: Refeição: {refeicao}, Alimento: {descricao_alimento}, Quantidade: {quantidade}g")
         alimento = Alimento(descricao=descricao_alimento, gramas=quantidade)
         alimento.adicionaAlimento(descricao_alimento, quantidade)  # Passa a descrição do alimento corretamente
