@@ -35,7 +35,10 @@ class PerfilMedico(Usuario):
 
         resposta_tipo_diabetes = supabase.table('Tipos_diabetes').select('id').eq('tipo', self.tipo_diabetes).execute()
 
-        if resposta_tipo_diabetes and len(resposta_tipo_diabetes) > 0:
+        # if resposta_tipo_diabetes and len(resposta_tipo_diabetes) > 0:
+        #     id_tipo_diabetes = resposta_tipo_diabetes.data[0]['id']
+        
+        if resposta_tipo_diabetes:
             id_tipo_diabetes = resposta_tipo_diabetes.data[0]['id']
 
         resposta_tipo_insulina = supabase.table('Tipos_insulina').select('id').eq('tipo', self.tipo_insulina).execute()

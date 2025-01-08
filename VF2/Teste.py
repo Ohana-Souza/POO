@@ -1,7 +1,10 @@
 import csv
 import sys
 import tkinter as tk
-from tkinter import messagebox
+import datetime
+import re
+
+from tkinter import messagebox,StringVar, OptionMenu, Frame, Button
 from supabase import create_client, Client
 from Chaves_banco import SUPABASE_URL, SUPABASE_KEY
 from Alimento import Alimento
@@ -9,10 +12,8 @@ from Usuario import Usuario
 from Historico_refeicao import HistoricoRefeicao
 from Perfil_Medico import PerfilMedico
 from tkcalendar import DateEntry
-import os
-import datetime
-
-import re
+from Nutrientes import Nutrientes
+from Insulina import Asparge, Humalog
 from PIL import Image, ImageTk
 
 import os
@@ -109,10 +110,10 @@ def Tela_Login(root):
         senha = entry_senha.get()
         usuario = Usuario(email)
 #### VERIFICAR SE ISSO FAZ SENTIDO DEPOIS ########
-        if not usuario.autenticacao_usuario(senha):
+        if usuario.autenticacao_usuario(senha):
             error_label.config(text="Login realizado com sucesso!", fg="green")
             # Agendar a mudança de tela após 2 segundos
-            root.after(2000, lambda: mudar_tela(Tela_Consumo1, root))
+            root.after(200, lambda: mudar_tela(Tela_Consumo1, root))
         else:
             error_label.config(text="Usuário ou senha inválidos.", fg="red")
 
@@ -259,7 +260,8 @@ def Tela_Consumo1(root):
 
     tk.Label(frame, text="Tela de Consumo", font=("Helvetica", 16)).pack(pady=20)
     tk.Button(frame, text="Adicionar Alimento", width=20, command=lambda: mudar_tela(Tela_CadastroRefeicao, root)).pack(pady=10)
-    tk.Button(frame, text="Histórico", width=20, command=lambda: mudar_tela(Tela_Historico, root)).pack(pady=10)
+    tk.Button(frame, text="Histórico Nutrientes", width=20, command=lambda: mudar_tela(Tela_Historico, root)).pack(pady=10)
+    tk.Button(frame, text="Histórico Insulina", width=20, command=lambda: mudar_tela(Tela_Historico_Insulina, root, Usuario)).pack(pady=10)
     # Botão de Sair
     tk.Button(frame, text="Sair", width=20, command=sys.exit).pack(pady=10)
 
@@ -310,7 +312,7 @@ def Tela_CadastroAlimento(root, refeicao):
         return alimentos
 
     # Lendo o CSV
-    lista_alimentos = ler_csv(caminho_TACO)
+    lista_alimentos = ler_csv(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\CODIGO COM HISTORICO\POO\VF1\TACO.csv")
 
     # Populando o OptionMenu
     if lista_alimentos:
@@ -332,12 +334,14 @@ def Tela_CadastroAlimento(root, refeicao):
             return
 
         descricao_alimento = alimento_var.get()
-        print(f"Dados para salvar: Refeição: {refeicao}, Alimento: {descricao_alimento}, Quantidade: {quantidade}g")
-        alimento = Alimento(descricao=descricao_alimento, gramas=quantidade)
-        alimento.adicionaAlimento(descricao_alimento, quantidade)  # Passa a descrição do alimento corretamente
-        print(f"Nutrientes calculados: {alimento.nutrientes}")
+        alimento = Alimento()
+        alimento.adicionaAlimento(quantidade, descricao_alimento)
 
-        if historico.salvaRefeicao(refeicao, alimento.descricao):
+        if not alimento.nutrientes:
+            messagebox.showerror("Erro", "Não foi possível calcular os nutrientes do alimento selecionado.")
+            return
+
+        if historico.salvaRefeicao(refeicao, alimento.descricao, alimento.nutrientes):
             messagebox.showinfo("Informação", "Informações salvas com sucesso!")
         else:
             messagebox.showerror("Erro", "Erro ao salvar as informações. Verifique os dados e tente novamente.")
@@ -356,40 +360,162 @@ def Tela_CadastroAlimento(root, refeicao):
     tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
 
 
-# Tela de Histórico
+
 def Tela_Historico(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
-
-    # Aplica o fundo
     configurar_fundo_liso(frame)
 
     tk.Label(frame, text="Histórico de Consumos", font=("Helvetica", 16)).pack(pady=20)
-
     tk.Label(frame, text="Selecione a data:").pack(pady=5)
+
     data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
     data_entry.pack(pady=5)
 
+    tk.Label(frame, text="Selecione a refeição:").pack(pady=5)
+    refeicao_var = StringVar(value="Selecione uma refeição")
+    refeicoes_disponiveis = HistoricoRefeicao().obter_refeicoes()
+    OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).pack(pady=5)
+
+    propriedades = ["proteina", "carboidrato", "fibra", "lipideo", "energia"]
+    propriedade_var = StringVar(value="proteina")
+    tk.Label(frame, text="Selecione a propriedade a ser exibida:").pack(pady=5)
+    OptionMenu(frame, propriedade_var, *propriedades).pack(pady=5)
+
+    historico_frame = tk.Frame(frame)
+    historico_frame.pack(pady=10, fill="both", expand=True)
+    
+    def voltar():
+        mudar_tela(Tela_Consumo1, root)
+
+    def limpar_frame():
+        for widget in historico_frame.winfo_children():
+            widget.destroy()
+
     def exibir_historico():
+        limpar_frame()
         data_selecionada = data_entry.get_date().strftime('%Y-%m-%d')
-        historico = HistoricoRefeicao().mostraHistorico(data_selecionada)
+        refeicao_selecionada = refeicao_var.get()
+        propriedade_selecionada = propriedade_var.get()
+
+        if refeicao_selecionada == "Selecione uma refeição":
+            messagebox.showerror("Erro", "Por favor, selecione uma refeição.")
+            return
+
+        historico = HistoricoRefeicao().mostraHistorico(data=data_selecionada, refeicao=refeicao_selecionada, propriedade=propriedade_selecionada)
         print(f"Histórico obtido para {data_selecionada}: {historico}")
 
-        historico_frame = tk.Frame(frame)
-        historico_frame.pack(pady=10)
+        if not historico:
+            tk.Label(historico_frame, text="Nenhum dado encontrado para a data selecionada.").pack(pady=5)
+        else:
+            tk.Label(historico_frame, text=f"Histórico de {refeicao_selecionada} em {data_selecionada}:", font=("Helvetica", 10)).pack(pady=5)
+            for item in historico:
+                tk.Label(historico_frame, text=(f"- Alimento: {item['Alimentos']['descricao']}, {propriedade_selecionada.capitalize()}: {item[propriedade_selecionada]}g")).pack(pady=2)
+
+    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).pack(pady=10)
+    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
+
+    # Colocando os botões antes da exibição do histórico
+    historico_frame.pack_forget()
+    historico_frame.pack(pady=10, fill="both", expand=True)
+
+
+#######################################################################
+def Tela_Historico_Insulina(root, usuario):
+    frame = tk.Frame(root)
+    frame.place(relwidth=1, relheight=1)
+    configurar_fundo_liso(frame)
+
+    email_usuario = usuario.email
+
+    # Obter informações do perfil médico
+    resposta_usuario = supabase.table('Usuarios').select('*').eq('email', email_usuario).execute()
+    if resposta_usuario.data and len(resposta_usuario.data) > 0:
+        perfil_usuario = resposta_usuario.data[0]
+        perfil_medico = PerfilMedico(
+            email=perfil_usuario['email'],
+            sexo=perfil_usuario['sexo'],
+            altura=perfil_usuario['altura'],
+            peso=perfil_usuario['peso'],
+            idade=perfil_usuario['idade'],
+            atividade=perfil_usuario['atividade'],
+            tipo_diabetes=perfil_usuario['tipo_diabetes'],
+            toma_insulina=perfil_usuario['toma_insulina'],
+            tipo_insulina=perfil_usuario['tipo_insulina'],
+            dosagem_max=perfil_usuario['dosagem_max']
+        )
+    else:
+        messagebox.showerror("Erro", "Usuário não encontrado.")
+        return
+
+    tk.Label(frame, text="Histórico de Consumos", font=("Helvetica", 16)).pack(pady=20)
+    tk.Label(frame, text="Selecione a data:").pack(pady=5)
+
+    data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
+    data_entry.pack(pady=5)
+
+    tk.Label(frame, text="Selecione a refeição:").pack(pady=5)
+    refeicao_var = StringVar(value="Selecione uma refeição")
+    refeicoes_disponiveis = ["Café da Manhã", "Almoço", "Jantar"]  # Exemplo de refeições disponíveis
+    OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).pack(pady=5)
+
+    historico_frame = tk.Frame(frame)
+    historico_frame.pack(pady=10, fill="both", expand=True)
+
+    nutrientes = Nutrientes()
+
+    def limpar_frame():
+        for widget in historico_frame.winfo_children():
+            widget.destroy()
+
+    def exibir_historico():
+        limpar_frame()
+        data_selecionada = data_entry.get_date().strftime('%Y-%m-%d')
+        refeicao_selecionada = refeicao_var.get()
+
+        if refeicao_selecionada == "Selecione uma refeição":
+            messagebox.showerror("Erro", "Por favor, selecione uma refeição.")
+            return
+
+        historico = HistoricoRefeicao().mostraHistorico(data=data_selecionada, refeicao=refeicao_selecionada)
+        print(f"Histórico obtido para {data_selecionada}: {historico}")
 
         if not historico:
             tk.Label(historico_frame, text="Nenhum dado encontrado para a data selecionada.").pack(pady=5)
         else:
             for item in historico:
-                tk.Label(historico_frame, text=item).pack(pady=5)
+                alimento = type('Alimento', (object,), {'nutrientes': [
+                    item['energia'], item['proteina'], item['lipideo'], item['carboidrato'], item['fibra']]})()
+                nutrientes.adicionaNutrientes(alimento)
 
-    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).pack(pady=10)
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=10)
+            totais = nutrientes.obter_totais()
+            carboidratos = totais['carboidratos']
+            proteinas = totais['proteina']
+
+            insulina_tipo = perfil_medico.tipo_insulina
+            peso = perfil_medico.peso
+            tipo_diabetes = perfil_medico.tipo_diabetes
+            dosagem_max = perfil_medico.dosagem_max
+
+            if insulina_tipo == "Asparge":
+                dosagem = Asparge().calculaDosagem(peso, tipo_diabetes, dosagem_max, carboidratos, proteinas)
+            elif insulina_tipo == "Humalog":
+                dosagem = Humalog().calculaDosagem(peso, tipo_diabetes, carboidratos, proteinas, dosagem_max)
+            else:
+                messagebox.showerror("Erro", "Tipo de insulina desconhecido.")
+                return
+
+            tk.Label(historico_frame, text=f"Quantidade de carboidratos: {carboidratos} g").pack(pady=5)
+            tk.Label(historico_frame, text=f"Quantidade de proteínas: {proteinas} g").pack(pady=5)
+            tk.Label(historico_frame, text=f"Dose de insulina calculada: {dosagem} unidades").pack(pady=5)
+
+    tk.Button(frame, text="Exibir Histórico e Calcular Insulina", width=25, command=exibir_historico).pack(pady=10)
+    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=lambda: Tela_Consumo1(root)).pack(pady=10)
 
 
 ###############################################################################
-# Tela de Cadastro de Refeição
 
 root = tk.Tk()
 root.title("Contagem de Carboidratos")

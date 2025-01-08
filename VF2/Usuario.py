@@ -31,8 +31,10 @@ class Usuario:
         
             if bcrypt.checkpw(senha_inserida.encode('utf-8'), senha_armazenada.encode('utf-8')):
                 print("Login realizado com sucesso!")
+                return True
             else:
                 print("Senha Inválida")
+                return False
         else:
             print("Usuário não encontrado!")
        
