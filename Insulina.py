@@ -75,5 +75,66 @@ class Humalog(InterfaceInsulina):
         super().verificaAlarme(dose_calculada, dosagem_maxima)
      
         
+class NPH(InterfaceInsulina):
+    def calculaDosagem(self, peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
+        """
+        Calcula a dose de insulina NPH (ação intermediária) necessária para uma refeição.
+        """
+        # Estimativa inicial da TDD (Dose Total Diária de insulina)
+        if tipo_diabetes == "Tipo 1":
+            tdd = peso * 0.45  # Média de 0,4 a 0,5 UI/kg para NPH
+        elif tipo_diabetes == "Tipo 2":
+            tdd = peso * 0.25  # Média de 0,2 a 0,3 UI/kg para NPH
+        elif tipo_diabetes == "Pré-diabetes":
+            tdd = peso * 0.1  # Valores baixos por não ser dependente de insulina
+        elif tipo_diabetes == "Gestacional":
+            tdd = peso * 0.5  # Maior necessidade devido à gestação
+        
+        ic = 500 / tdd
+
+        glicose_proteina = proteinas * 0.15  
+
+        carboidratos_totais = carboidratos + glicose_proteina
+
+        dose_insulina = carboidratos_totais / ic
+
+        dose_insulina_final = min(dose_insulina, dosagem_max)
+
+        return round(dose_insulina_final, 2)  
+
+    def verificaAlarme(self, dose_calculada, dosagem_maxima):
+        super().verificaAlarme(dose_calculada, dosagem_maxima)
+
+
+class Glargina(InterfaceInsulina):
+    def calculaDosagem(self, peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
+        """
+        Calcula a dose de insulina Glargina (ação prolongada) necessária para uma refeição.
+        """
+        # Estimativa inicial da TDD (Dose Total Diária de insulina)
+        if tipo_diabetes == "Tipo 1":
+            tdd = peso * 0.5  # Média de 0,4 a 0,6 UI/kg para Glargina
+        elif tipo_diabetes == "Tipo 2":
+            tdd = peso * 0.3  # Média de 0,2 a 0,4 UI/kg para Glargina
+        elif tipo_diabetes == "Pré-diabetes":
+            tdd = peso * 0.12  # Valores baixos por não ser dependente de insulina
+        elif tipo_diabetes == "Gestacional":
+            tdd = peso * 0.55  # Necessidade maior devido à gestação
+        
+
+        ic = 500 / tdd
+
+        glicose_proteina = proteinas * 0.15  
+
+        carboidratos_totais = carboidratos + glicose_proteina
+
+        dose_insulina = carboidratos_totais / ic
+
+        dose_insulina_final = min(dose_insulina, dosagem_max)
+
+        return round(dose_insulina_final, 2)  
+
+    def verificaAlarme(self, dose_calculada, dosagem_maxima):
+        super().verificaAlarme(dose_calculada, dosagem_maxima)
 
 

@@ -24,7 +24,7 @@ caminho_imagem1 = os.path.join(os.path.dirname(__file__), "Telas", "1.png")
 caminho_imagem2 = os.path.join(os.path.dirname(__file__), "Telas", "2.png")
 caminho_imagem3 = os.path.join(os.path.dirname(__file__), "Telas", "3.png")
 caminho_imagem4 = os.path.join(os.path.dirname(__file__), "Telas", "4.png")
-caminho_imagem4 = os.path.join(os.path.dirname(__file__), "TACO")
+caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO")
 
 def configurar_fundo_login(frame):
     imagem = Image.open(caminho_imagem3)
@@ -183,7 +183,7 @@ def Tela_PerfilMedico1(root):
 
     tk.Label(frame, text="Sexo:").pack(pady=5)
     sexo_var = tk.StringVar()
-    tk.OptionMenu(frame, sexo_var, "Masculino", "Feminino", "Outro").pack(pady=5)
+    tk.OptionMenu(frame, sexo_var, "Masculino", "Feminino").pack(pady=5)
 
     tk.Label(frame, text="Altura (cm):").pack(pady=5)
     entry_altura = tk.Entry(frame)
@@ -219,7 +219,7 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
 
     tk.Label(frame, text="Tipo de Diabetes:").pack(pady=5)
     diabetes_var = tk.StringVar()
-    tk.OptionMenu(frame, diabetes_var, "Tipo 1", "Tipo 2", "Gestacional", "Outro").pack(pady=5)
+    tk.OptionMenu(frame, diabetes_var, "Tipo 1", "Tipo 2", "Gestacional", "Pré-diabetes").pack(pady=5)
 
     tk.Label(frame, text="Toma Insulina (Sim/Não):").pack(pady=5)
     insulina_var = tk.StringVar()
@@ -227,7 +227,7 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
 
     tk.Label(frame, text="Tipo de Insulina:").pack(pady=5)
     tipo_insulina_var = tk.StringVar()
-    tk.OptionMenu(frame, tipo_insulina_var, "Rápida", "Lenta", "Mista").pack(pady=5)
+    tk.OptionMenu(frame, tipo_insulina_var, "Asperge", "Humalog", "NPH", "Glargina").pack(pady=5)
 
     tk.Label(frame, text="Dosagem Máxima de Insulina (unidades):").pack(pady=5)
     entry_dosagem_max = tk.Entry(frame)

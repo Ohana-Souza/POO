@@ -43,6 +43,11 @@ class PerfilMedico(Usuario):
         if resposta_tipo_insulina and len(resposta_tipo_insulina) > 0:
             id_tipo_insulina = resposta_tipo_insulina.data[0]['id']
 
+        if self.toma_insulina == "Sim":
+            resposta_toma_insulina = 1
+        elif self.toma_insulina == "Não":
+            resposta_toma_insulina = 0
+
         response = supabase.table('Perfil_medico').insert({
             'id_usuario': id_usuario,
             'id_sexo': id_sexo,
@@ -51,7 +56,7 @@ class PerfilMedico(Usuario):
             'id_atividade': id_atividade,
             'id_tipo_diabetes': id_tipo_diabetes,
             'peso': self.peso,
-            'toma_insulina': self.toma_insulina,
+            'toma_insulina': resposta_toma_insulina,
             'id_tipo_insulina': id_tipo_insulina,
             'dosagem_max': self.dosagem_max
         }).execute()
