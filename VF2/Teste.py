@@ -25,7 +25,7 @@ caminho_imagem1 = os.path.join(os.path.dirname(__file__), "Telas", "1.png")
 caminho_imagem2 = os.path.join(os.path.dirname(__file__), "Telas", "2.png")
 caminho_imagem3 = os.path.join(os.path.dirname(__file__), "Telas", "3.png")
 caminho_imagem4 = os.path.join(os.path.dirname(__file__), "Telas", "4.png")
-caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO")
+caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO.csv")
 
 def configurar_fundo_login(frame):
     imagem = Image.open(caminho_imagem3)
@@ -172,7 +172,6 @@ def Tela_Cadastro(root):
     tk.Button(frame, text="Avançar", width=20, command=cadastrar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).pack(pady=10)
 
-
 # Primeira Tela
 def Tela_PerfilMedico1(root):
     frame = tk.Frame(root)
@@ -285,7 +284,6 @@ def Tela_CadastroRefeicao(root):
     tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=10)
 
-
 def Tela_CadastroAlimento(root, refeicao):
     historico = HistoricoRefeicao()
     frame = tk.Frame(root)
@@ -312,15 +310,27 @@ def Tela_CadastroAlimento(root, refeicao):
         return alimentos
 
     # Lendo o CSV
-    lista_alimentos = ler_csv(r"C:\Users\ohana\OneDrive\Área de Trabalho\UFMG\4° PERIODO\POO\VERSAO COM INTERFACE PROJETO\CODIGO COM HISTORICO\POO\VF1\TACO.csv")
+    lista_alimentos = ler_csv(caminho_TACO)
+
+    # Função de busca
+    def buscar_alimentos(event=None):
+        termo_busca = entry_busca.get().lower()
+        resultado = [alimento for alimento in lista_alimentos if termo_busca in alimento.lower()]
+        menu = option_menu["menu"]
+        menu.delete(0, "end")
+        for alimento in resultado:
+            menu.add_command(label=alimento, command=lambda value=alimento: alimento_var.set(value))
 
     # Populando o OptionMenu
-    if lista_alimentos:
-        alimento_var = tk.StringVar(value=lista_alimentos[0])
-    else:
-        alimento_var = tk.StringVar(value="Nenhum alimento encontrado")
+    alimento_var = tk.StringVar(value="Selecione um alimento")
 
-    tk.OptionMenu(frame, alimento_var, *lista_alimentos).pack(pady=5)
+    option_menu = tk.OptionMenu(frame, alimento_var, *lista_alimentos)
+    option_menu.pack(pady=5)
+
+    tk.Label(frame, text="Buscar alimento:").pack(pady=5)
+    entry_busca = tk.Entry(frame)
+    entry_busca.pack(pady=5)
+    entry_busca.bind("<KeyRelease>", buscar_alimentos)
 
     tk.Label(frame, text="Informe a quantidade (gramas):").pack(pady=5)
     entry_quantidade = tk.Entry(frame)
@@ -334,14 +344,12 @@ def Tela_CadastroAlimento(root, refeicao):
             return
 
         descricao_alimento = alimento_var.get()
-        alimento = Alimento()
-        alimento.adicionaAlimento(quantidade, descricao_alimento)
+        print(f"Dados para salvar: Refeição: {refeicao}, Alimento: {descricao_alimento}, Quantidade: {quantidade}g")
+        alimento = Alimento(descricao=descricao_alimento, gramas=quantidade)
+        alimento.adicionaAlimento(descricao_alimento, quantidade)  # Passa a descrição do alimento corretamente
+        print(f"Nutrientes calculados: {alimento.nutrientes}")
 
-        if not alimento.nutrientes:
-            messagebox.showerror("Erro", "Não foi possível calcular os nutrientes do alimento selecionado.")
-            return
-
-        if historico.salvaRefeicao(refeicao, alimento.descricao, alimento.nutrientes):
+        if historico.salvaRefeicao(refeicao, alimento.descricao):
             messagebox.showinfo("Informação", "Informações salvas com sucesso!")
         else:
             messagebox.showerror("Erro", "Erro ao salvar as informações. Verifique os dados e tente novamente.")
@@ -358,7 +366,6 @@ def Tela_CadastroAlimento(root, refeicao):
     tk.Button(frame, text="Salvar", width=20, command=salvar).pack(pady=10)
     tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
-
 
 
 def Tela_Historico(root):
@@ -520,5 +527,5 @@ def Tela_Historico_Insulina(root, usuario):
 root = tk.Tk()
 root.title("Contagem de Carboidratos")
 root.geometry("360x640")
-mudar_tela(Tela_Inicial, root)
+mudar_tela(Tela_Consumo1, root)
 root.mainloop()
