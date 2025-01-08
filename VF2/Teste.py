@@ -431,7 +431,7 @@ def Tela_Historico(root):
         else:
             tk.Label(historico_frame, text=f"Histórico de {refeicao_selecionada} em {data_selecionada}:", font=("Helvetica", 10)).pack(pady=5)
             for item in historico:
-                tk.Label(historico_frame, text=(f"- Alimento: {item['Alimentos']['descricao']}, {propriedade_selecionada.capitalize()}: {item[propriedade_selecionada]}g")).pack(pady=2)
+                tk.Label(historico_frame, text=(f"-{item['Alimentos']['descricao']}, {propriedade_selecionada.capitalize()}: {item[propriedade_selecionada]}g")).pack(pady=2)
 
     tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).pack(pady=10)
     tk.Button(frame, text="Limpar", width=20, command=limpar_frame).pack(pady=10)
@@ -541,5 +541,5 @@ def Tela_Historico_Insulina(root, usuario):
 root = tk.Tk()
 root.title("Contagem de Carboidratos")
 root.geometry("360x640")
-mudar_tela(Tela_Inicial, root)
+mudar_tela(Tela_Consumo1, root)
 root.mainloop()
