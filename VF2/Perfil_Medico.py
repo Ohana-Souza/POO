@@ -34,17 +34,15 @@ class PerfilMedico(Usuario):
             id_atividade = resposta_atividade.data[0]['id']
 
         resposta_tipo_diabetes = supabase.table('Tipos_diabetes').select('id').eq('tipo', self.tipo_diabetes).execute()
-
-        # if resposta_tipo_diabetes and len(resposta_tipo_diabetes) > 0:
-        #     id_tipo_diabetes = resposta_tipo_diabetes.data[0]['id']
         
-        if resposta_tipo_diabetes:
+        if resposta_tipo_diabetes.data and len(resposta_tipo_diabetes.data) > 0:
             id_tipo_diabetes = resposta_tipo_diabetes.data[0]['id']
-
+        
         resposta_tipo_insulina = supabase.table('Tipos_insulina').select('id').eq('tipo', self.tipo_insulina).execute()
-
-        if resposta_tipo_insulina and len(resposta_tipo_insulina) > 0:
+        
+        if resposta_tipo_insulina.data and len(resposta_tipo_insulina.data) > 0:
             id_tipo_insulina = resposta_tipo_insulina.data[0]['id']
+
 
         if self.toma_insulina == "Sim":
             resposta_toma_insulina = 1
@@ -75,5 +73,5 @@ class PerfilMedico(Usuario):
             print("Erro desconhecido.")
             return False
     
-    
-
+#teste = PerfilMedico("juliateste@gmail.com", "Feminino",153,43,19,"Leve","Tipo 1","Sim","Asperge",40)
+#teste.cria_perfil_medico()

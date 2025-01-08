@@ -216,6 +216,9 @@ def Tela_PerfilMedico1(root):
 def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
+    
+    # Inicializa error_label depois do frame
+
 
     tk.Label(frame, text="Tipo de Diabetes:").pack(pady=5)
     diabetes_var = tk.StringVar()
@@ -241,11 +244,15 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
         perfil = PerfilMedico(email, sexo, altura, peso, idade, atividade, tipo_diabetes, toma_insulina, tipo_insulina, dosagem_max)
         
         if perfil.cria_perfil_medico(): 
-            messagebox.showinfo("Sucesso", "Perfil médico cadastrado com sucesso!")
-            mudar_tela(Tela_Consumo1, root) 
+            error_label.config(text="Perfil médico cadastrado com sucesso!", fg="green")
+            # Agendar a mudança de tela após 2 segundos
+            root.after(2000, lambda: mudar_tela(Tela_Consumo1, root))
         else: 
-            messagebox.showerror("Erro", "Erro ao cadastrar o perfil médico.") 
-            
+            error_label.config(text="Reveja as informações inseridas!", fg="red")
+    
+    error_label = tk.Label(frame, text="", fg="red")
+    error_label.pack(pady=5)        
+    
     tk.Button(frame, text="Salvar", width=20, command=salvar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_PerfilMedico1, root)).pack(pady=10)
 
@@ -534,5 +541,5 @@ def Tela_Historico_Insulina(root, usuario):
 root = tk.Tk()
 root.title("Contagem de Carboidratos")
 root.geometry("360x640")
-mudar_tela(Tela_Consumo1, root)
+mudar_tela(Tela_Inicial, root)
 root.mainloop()
