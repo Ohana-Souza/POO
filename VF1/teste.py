@@ -1,7 +1,8 @@
 import csv
 import sys
 import tkinter as tk
-from tkinter import messagebox
+
+from tkinter import messagebox,StringVar, OptionMenu, Frame, Button
 from supabase import create_client, Client
 from Chaves_banco import SUPABASE_URL, SUPABASE_KEY
 from Alimento import Alimento
@@ -350,36 +351,63 @@ def Tela_CadastroAlimento(root, refeicao):
     tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
 
-# Tela de Histórico
+
+
 def Tela_Historico(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
-
-    # Aplica o fundo
     configurar_fundo_liso(frame)
 
     tk.Label(frame, text="Histórico de Consumos", font=("Helvetica", 16)).pack(pady=20)
-
     tk.Label(frame, text="Selecione a data:").pack(pady=5)
+
     data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
     data_entry.pack(pady=5)
 
-    def exibir_historico():
-        data_selecionada = data_entry.get_date().strftime('%Y-%m-%d')
-        historico = HistoricoRefeicao().mostraHistorico(data_selecionada)
-        print(f"Histórico obtido para {data_selecionada}: {historico}")
+    tk.Label(frame, text="Selecione a refeição:").pack(pady=5)
+    refeicao_var = StringVar(value="Selecione uma refeição")
+    refeicoes_disponiveis = HistoricoRefeicao().obter_refeicoes()
+    OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).pack(pady=5)
 
-        historico_frame = tk.Frame(frame)
-        historico_frame.pack(pady=10)
+    propriedades = ["proteina", "carboidrato", "fibra", "lipideo", "energia"]
+    propriedade_var = StringVar(value="proteina")
+    tk.Label(frame, text="Selecione a propriedade a ser exibida:").pack(pady=5)
+    OptionMenu(frame, propriedade_var, *propriedades).pack(pady=5)
+
+    historico_frame = tk.Frame(frame)
+    historico_frame.pack(pady=10, fill="both", expand=True)
+
+    def limpar_frame():
+        for widget in historico_frame.winfo_children():
+            widget.destroy()
+
+    def exibir_historico():
+        limpar_frame()
+        data_selecionada = data_entry.get_date().strftime('%Y-%m-%d')
+        refeicao_selecionada = refeicao_var.get()
+        propriedade_selecionada = propriedade_var.get()
+
+        if refeicao_selecionada == "Selecione uma refeição":
+            messagebox.showerror("Erro", "Por favor, selecione uma refeição.")
+            return
+
+        historico = HistoricoRefeicao().mostraHistorico(data=data_selecionada, refeicao=refeicao_selecionada, propriedade=propriedade_selecionada)
+        print(f"Histórico obtido para {data_selecionada}: {historico}")
 
         if not historico:
             tk.Label(historico_frame, text="Nenhum dado encontrado para a data selecionada.").pack(pady=5)
         else:
+            tk.Label(historico_frame, text=f"Histórico de {refeicao_selecionada} em {data_selecionada}:", font=("Helvetica", 10)).pack(pady=5)
             for item in historico:
-                tk.Label(historico_frame, text=item).pack(pady=5)
+                tk.Label(historico_frame, text=(f"- Alimento: {item['Alimentos']['descricao']}, {propriedade_selecionada.capitalize()}: {item[propriedade_selecionada]}g")).pack(pady=2)
 
     tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).pack(pady=10)
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root)).pack(pady=10)
+    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=lambda: root.destroy()).pack(pady=10)
+
+    # Colocando os botões antes da exibição do histórico
+    historico_frame.pack_forget()
+    historico_frame.pack(pady=10, fill="both", expand=True)
 
 
 ###############################################################################
@@ -388,5 +416,5 @@ def Tela_Historico(root):
 root = tk.Tk()
 root.title("Contagem de Carboidratos")
 root.geometry("360x640")
-mudar_tela(Tela_Inicial, root)
+mudar_tela(Tela_Consumo1, root)
 root.mainloop()
