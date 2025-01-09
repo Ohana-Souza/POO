@@ -73,5 +73,3 @@ class PerfilMedico(Usuario):
             print("Erro desconhecido.")
             return False
     
-#teste = PerfilMedico("juliateste@gmail.com", "Feminino",153,43,19,"Leve","Tipo 1","Sim","Asperge",40)
-#teste.cria_perfil_medico()

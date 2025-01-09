@@ -2,7 +2,7 @@
 
 class Verificadora:
     @staticmethod
-    def verificar_numero_coerente(valor, tipo="float"):
+    def verificar_inteiro(valor, tipo="float"):
         try:
             if tipo == "float":
                 return float(valor)
