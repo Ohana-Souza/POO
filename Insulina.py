@@ -1,6 +1,5 @@
 from Interface_Insulina import InterfaceInsulina
 
-
 class Asparge(InterfaceInsulina):
 
     def calculaDosagem(self, peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
@@ -29,9 +28,7 @@ class Asparge(InterfaceInsulina):
         # Dose de insulina para carboidratos
         dose_insulina = carboidratos_totais / ic
 
-        dose_insulina_final = min(dose_insulina, dosagem_max)
-
-        return round(dose_insulina_final, 2)  # Retorna o valor arredondado para 2 casas decimais
+        return round(dose_insulina, 2)  # Retorna o valor arredondado para 2 casas decimais
 
 
 
@@ -66,9 +63,7 @@ class Humalog(InterfaceInsulina):
         # Dose de insulina para carboidratos
         dose_insulina = carboidratos_totais / ic
 
-        dose_insulina_final = min(dose_insulina, dosagem_max)
-
-        return round(dose_insulina_final, 2)  # Retorna o valor arredondado para 2 casas decimais
+        return round(dose_insulina, 2)  # Retorna o valor arredondado para 2 casas decimais
     
 
     def verificaAlarme(self, dose_calculada, dosagem_maxima):
@@ -98,9 +93,7 @@ class NPH(InterfaceInsulina):
 
         dose_insulina = carboidratos_totais / ic
 
-        dose_insulina_final = min(dose_insulina, dosagem_max)
-
-        return round(dose_insulina_final, 2)  
+        return round(dose_insulina, 2)  
 
     def verificaAlarme(self, dose_calculada, dosagem_maxima):
         super().verificaAlarme(dose_calculada, dosagem_maxima)
@@ -130,9 +123,8 @@ class Glargina(InterfaceInsulina):
 
         dose_insulina = carboidratos_totais / ic
 
-        dose_insulina_final = min(dose_insulina, dosagem_max)
 
-        return round(dose_insulina_final, 2)  
+        return round(dose_insulina, 2)  
 
     def verificaAlarme(self, dose_calculada, dosagem_maxima):
         super().verificaAlarme(dose_calculada, dosagem_maxima)
