@@ -158,27 +158,4 @@ class Glargina(InterfaceInsulina):
 
 
 
-from Usuario import Usuario
-from Perfil_Medico import PerfilMedico
-from Alimento import Alimento
-from Calculadora_Insulina import Calculadora_Insulina
-from Nutrientes import Nutrientes
-from Interface_Insulina import InterfaceInsulina
-
-Usuario_teste = Usuario("juliateste@gmail.com")
-Usuario_teste.autenticacao_usuario("senha")
-Perfil_teste = PerfilMedico(Usuario_teste.email,"Feminino",153,43,19,"Leve","Tipo 1","Sim","Asperge",15)
-alimento1 = Alimento()
-alimento1.adicionaAlimento(200,"Arroz, integral, cozido")
-alimento2 = Alimento()
-alimento2.adicionaAlimento(500,"Bolo, mistura para")
-nutrientes_teste = Nutrientes()
-nutrientes_teste.adicionaNutrientes(alimento1)
-nutrientes_teste.adicionaNutrientes(alimento2)
-nutrientes_teste.mostraTotais()
-insulina_teste = Humalog(Perfil_teste.peso, Perfil_teste.tipo_diabetes, nutrientes_teste.total_carboidratos,nutrientes_teste.total_proteina, Perfil_teste.dosagem_max)
-calculadora = Calculadora_Insulina() 
-dose_calculada = calculadora.fazCalculoDosagem(insulina_teste)
-print(dose_calculada)
-alarme = calculadora.fazVerificacaoAlarme(insulina_teste, dose_calculada)
 
