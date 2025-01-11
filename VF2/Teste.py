@@ -26,7 +26,7 @@ caminho_imagem1 = os.path.join(os.path.dirname(__file__), "Telas", "1.png")
 caminho_imagem2 = os.path.join(os.path.dirname(__file__), "Telas", "2.png")
 caminho_imagem3 = os.path.join(os.path.dirname(__file__), "Telas", "3.png")
 caminho_imagem4 = os.path.join(os.path.dirname(__file__), "Telas", "4.png")
-#caminho_imagem5 =
+caminho_imagem5 = os.path.join(os.path.dirname(__file__), "Telas", "5.png")
 caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO.csv")
 
 def configurar_fundo_login(frame):
@@ -176,6 +176,9 @@ def Tela_PerfilMedico1(root, email):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Aplica o fundo
+    configurar_fundo_cadastro(frame)
+    
     tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 12)).pack(pady=5)
 
     tk.Label(frame, text="Sexo:").pack(pady=5)
@@ -235,6 +238,9 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Aplica o fundo
+    configurar_fundo_cadastro(frame)
+
     tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 12)).pack(pady=5)
 
     tk.Label(frame, text="Tipo de Diabetes:").pack(pady=5)
@@ -291,8 +297,16 @@ def Tela_Alerta(root,email):
     
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
+
+    imagem = Image.open(caminho_imagem5)
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
+    bg = ImageTk.PhotoImage(imagem)
+
+    canvas = tk.Canvas(frame, width=360, height=640)
+    canvas.create_image(0, 0, anchor=tk.NW, image=bg)
+    canvas.image = bg
+    canvas.place(relwidth=1, relheight=1)
     
-    configurar_fundo_liso(frame)
     
     def avancar():
         mudar_tela(Tela_Consumo1,root, email)
@@ -399,32 +413,42 @@ def Tela_CadastroAlimento(root, email, refeicao):
             quantidade_valida = entry_quantidade.get()
             
             if not Verificadora.verificar_inteiro(quantidade_valida, tipo="float"):
-                error_label.config(text="Insira um valor válido!", fg="red")
+                error_label.config(text="Insira um valor válido para a quantidade!", fg="red")
                 return
             
-            quantidade = float(entry_quantidade.get())
+            quantidade = float(quantidade_valida)
+            
+            # Instanciando e configurando o alimento
             alimento = Alimento()
             alimento.adicionaAlimento(descricao_alimento, quantidade)
 
-            if not alimento.nutrientes:
-                error_label.config(text=" Erro ao carregar nutrientes do alimento.", fg="red")
-                         
+            if not alimento.nutrientes or len(alimento.nutrientes) < 5:
+                error_label.config(text="Erro ao carregar nutrientes do alimento.", fg="red")
+                return
+                        
             # Exibe os nutrientes no terminal para depuração
             print(f"Alimento: {alimento.descricao}, Nutrientes: {alimento.nutrientes}")
 
             # Salva no histórico
-            if historico.salvaRefeicao(email, refeicao, alimento.descricao, alimento.nutrientes):
+            sucesso = historico.salvaRefeicao(
+                usuario=email, 
+                refeicao=refeicao, 
+                nutrientes=alimento.nutrientes, 
+                insulina=0  # Se insulina for calculada ou informada, substitua aqui
+            )
+
+            if sucesso:
                 error_label.config(text="Refeição salva com sucesso!", fg="green")
             else:
                 error_label.config(text="Falha ao salvar a refeição. Verifique os dados.", fg="red")
-                                    
+                                
         except ValueError as ve:
             print(f"Erro de validação: {ve}")
             error_label.config(text=f"Erro: {ve}", fg="red")
+            
         except Exception as e:
             print(f"Erro inesperado: {e}")
             error_label.config(text="Erro inesperado ao salvar. Verifique os dados.", fg="red")
-
 
 
     def voltar():
