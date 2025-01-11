@@ -8,17 +8,12 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 class HistoricoRefeicao:
     
-    def salvaRefeicao(self, usuario, refeicao, descricao, nutrientes): # tem q receber Alimento.descricao e Alimento.nutrientes
+    def salvaRefeicao(self, usuario, refeicao, nutrientes, insulina): # tem q receber Alimento.descricao e Alimento.nutrientes
         
         resposta_refeicao = supabase.table('Refeicao').select('id').eq('refeicao', refeicao).execute()
 
         if resposta_refeicao.data and len(resposta_refeicao.data) > 0:
             id_refeicao = resposta_refeicao.data[0]['id']
-
-        resposta_alimento = supabase.table('Alimentos').select('id').eq('descricao', descricao).execute()
-
-        if resposta_alimento.data and len(resposta_alimento.data) > 0:
-            id_alimento = resposta_alimento.data[0]['id']
 
         resposta_usuario = supabase.table('Usuarios').select('id').eq('email', usuario).execute()
 
@@ -30,12 +25,12 @@ class HistoricoRefeicao:
         response = supabase.table('Historico').insert({
             'dia': dia_refeicao,
             'id_refeicao': id_refeicao,
-            'id_alimento': id_alimento,
             'energia' : nutrientes[0],
             'proteina': nutrientes[1],
             'lipideo': nutrientes[2],
             'carboidrato': nutrientes[3],
             'fibra': nutrientes[4],
+            'insulina': insulina,
             'id_usuario': id_usuario
         }).execute()
 
@@ -73,10 +68,34 @@ class HistoricoRefeicao:
 
         return response.data
         
+
+
+from Alimento import Alimento
+from Calculadora_Insulina import Calculadora_Insulina
+from Insulina import Humalog 
+from Usuario import Usuario
+from Perfil_Medico import PerfilMedico
+from Nutrientes import Nutrientes
+
+Usuario_teste = Usuario("juliateste@gmail.com")
+Usuario_teste.autenticacao_usuario("senha")
+Perfil_teste = PerfilMedico(Usuario_teste.email,"Feminino",153,43,19,"Leve","Tipo 1","Sim","Asperge",15)
 alimento1 = Alimento()
-alimento1.adicionaAlimento(200,"Biscoito, doce, maisena")
-teste = HistoricoRefeicao()
-teste.salvaRefeicao("juliateste@gmail.com", "Café da manhã", alimento1.descricao,alimento1.nutrientes)
-hist = teste.mostraHistorico("2025-01-09", "Café da manhã", "juliateste@gmail.com")
-print(hist)
+alimento1.adicionaAlimento(200,"Arroz, integral, cozido")
+alimento2 = Alimento()
+alimento2.adicionaAlimento(500,"Bolo, mistura para")
+nutrientes_teste = Nutrientes()
+nutrientes_teste.adicionaNutrientes(alimento1)
+nutrientes_teste.adicionaNutrientes(alimento2)
+nutrientes_teste.mostraTotais()
+insulina_teste = Humalog(Perfil_teste.peso, Perfil_teste.tipo_diabetes, nutrientes_teste.total_carboidratos,nutrientes_teste.total_proteina, Perfil_teste.dosagem_max)
+calculadora = Calculadora_Insulina() 
+dose_calculada = calculadora.fazCalculoDosagem(insulina_teste)
+alarme = calculadora.fazVerificacaoAlarme(insulina_teste, dose_calculada)
+historico = HistoricoRefeicao()
+nutrientes_lista = nutrientes_teste.obterLista()
+historico.salvaRefeicao(Perfil_teste._email, "Café da manhã", nutrientes_lista, dose_calculada)
+
+
+
 

@@ -37,16 +37,8 @@ class Nutrientes:
                 f"Fibra: {self.total_fibra:.2f} g")
         
         return print(totais)
+    
+    def obterLista(self):
+        lista = [self.total_energia, self.total_proteina, self.total_lipideos, self.total_carboidratos, self.total_fibra]
+        return lista 
 
-
-alimento1 = Alimento()
-alimento1.adicionaAlimento(200,"Arroz, integral, cozido")
-alimento2 = Alimento()
-alimento2.adicionaAlimento(300,"Bolo, mistura para")
-nutrientes_teste = Nutrientes()
-nutrientes_teste.adicionaNutrientes(alimento1)
-nutrientes_teste.adicionaNutrientes(alimento2)
-nutrientes_teste.mostraTotais()
-print(f" Alimento1: {alimento1.nutrientes}")
-print(f"Alimento 2:{alimento2.nutrientes}")
-nutrientes_teste.mostraTotais()

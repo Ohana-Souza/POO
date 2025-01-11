@@ -11,3 +11,6 @@ class Verificadora:
         except ValueError:
             raise ValueError("Valor inválido. Insira um número válido.")
 
+
+
+
