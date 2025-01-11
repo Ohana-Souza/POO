@@ -10,32 +10,30 @@ class Alimento:
         self.descricao = descricao
         self.nutrientes = nutrientes
 
-    def adicionaAlimento(self, gramas, descricao):
-        self.gramas = gramas
-        response = supabase.table("Alimentos").select(
-        '"descricao", "energia(kcal)", "proteina(g)", "lipideos(g)", "carboidrato(g)", "fibra(g)"').eq("descricao", descricao).execute()
-    
-        if not response.data:  # If no data was returned
-            print("Nenhum dado encontrado para o alimento selecionado.")
-            return []
+    def adicionaAlimento(self, descricao, gramas):
+        try:
+            self.gramas = gramas
+            response = supabase.table("Alimentos").select(
+                '"descricao", "energia(kcal)", "proteina(g)", "lipideos(g)", "carboidrato(g)", "fibra(g)"'
+            ).eq("descricao", descricao).execute()
 
-        if 'error' in response:  # Check if an error exists
-            print("Erro ao buscar dados:", response['error'])
-            return []
-    
-        if response.data:
+            if not response.data:
+                raise ValueError("Nenhum dado encontrado para o alimento selecionado.")
+
             row = response.data[0]
-            self.descricao = row.get("descricao")  
-            self.nutrientes =  [
-                row.get("energia(kcal)")*(gramas/100),
-                row.get("proteina(g)")*(gramas/100),
-                row.get("lipideos(g)")*(gramas/100),
-                row.get("carboidrato(g)")*(gramas/100),
-                row.get("fibra(g)")*(gramas/100),
+            self.descricao = row.get("descricao")
+            self.nutrientes = [
+                row.get("energia(kcal)", 0) * (gramas / 100),
+                row.get("proteina(g)", 0) * (gramas / 100),
+                row.get("lipideos(g)", 0) * (gramas / 100),
+                row.get("carboidrato(g)", 0) * (gramas / 100),
+                row.get("fibra(g)", 0) * (gramas / 100),
             ]
-        else:
-            print("Nenhum dado encontrado para o alimento selecionado.")
-            return []
+
+        except Exception as e:
+            print(f"Erro ao adicionar alimento: {e}")
+            self.nutrientes = None
+
 
 
     def mostraAlimento(self, descricao_alimento):
@@ -65,4 +63,10 @@ class Alimento:
     
 
 
+alimento_teste = Alimento()
+alimento_teste.adicionaAlimento("Arroz, integral, cozido", 200)
 
+if alimento_teste.nutrientes:
+    print(f"Nutrientes do alimento: {alimento_teste.nutrientes}")
+else:
+    print("Erro ao carregar nutrientes.")
