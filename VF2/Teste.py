@@ -26,6 +26,7 @@ caminho_imagem1 = os.path.join(os.path.dirname(__file__), "Telas", "1.png")
 caminho_imagem2 = os.path.join(os.path.dirname(__file__), "Telas", "2.png")
 caminho_imagem3 = os.path.join(os.path.dirname(__file__), "Telas", "3.png")
 caminho_imagem4 = os.path.join(os.path.dirname(__file__), "Telas", "4.png")
+#caminho_imagem5 =
 caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO.csv")
 
 def configurar_fundo_login(frame):
@@ -158,22 +159,24 @@ def Tela_Cadastro(root):
 
         usuario = Usuario(email)
         response = usuario.insere_usuario(senha)
+        print(response)
 
         if response is True:
             error_label.config(text="Usuário cadastrado com sucesso!", fg="green")
             # Passa o email para a próxima tela
             root.after(2000, lambda: mudar_tela(Tela_PerfilMedico1, root, email))
         else:
-            error_label.config(text=response, fg="red")
+            error_label.config(text="Email já cadastrado!", fg="red")
 
     tk.Button(frame, text="Avançar", width=20, command=cadastrar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).pack(pady=10)
+
 
 def Tela_PerfilMedico1(root, email):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
-    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 12)).pack(pady=5)  # Mostra o email automaticamente
+    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 12)).pack(pady=5)
 
     tk.Label(frame, text="Sexo:").pack(pady=5)
     sexo_var = tk.StringVar()
@@ -205,6 +208,9 @@ def Tela_PerfilMedico1(root, email):
         idade = entry_idade.get()
         atividade = atividade_var.get()
 
+        if not sexo:
+            error_label.config(text="Sexo não selecionado!")
+            return
         if not Verificadora.verificar_inteiro(altura, tipo="float"):
             error_label.config(text="Altura inválida!")
             return
@@ -214,8 +220,10 @@ def Tela_PerfilMedico1(root, email):
         if not Verificadora.verificar_inteiro(idade, tipo="int"):
             error_label.config(text="Idade inválida!")
             return
+        if not atividade:
+            error_label.config(text="Atividade Física não selecionada!")
+            return
 
-        # Limpa a mensagem de erro ao avançar
         error_label.config(text="")
         mudar_tela(Tela_PerfilMedico2, root, email, sexo, altura, peso, idade, atividade)
 
@@ -254,20 +262,42 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
         tipo_insulina = tipo_insulina_var.get()
         dosagem_max = entry_dosagem_max.get()
 
-        perfil = PerfilMedico(email, sexo, altura, peso, idade, atividade, tipo_diabetes, toma_insulina, tipo_insulina, dosagem_max)
-
+        if not tipo_diabetes:
+            error_label.config(text="Tipo de Diabetes não selecionado!", fg="red")
+            return
+        if not toma_insulina:
+            error_label.config(text="Selecione se toma insulina!", fg="red")
+            return
+        if not tipo_insulina:
+            error_label.config(text="Tipo de Insulina não selecionado!", fg="red")
+            return
         if not Verificadora.verificar_inteiro(dosagem_max, tipo="float"):
             error_label.config(text="Dosagem inválida!", fg="red")
             return
 
+        perfil = PerfilMedico(email, sexo, altura, peso, idade, atividade, tipo_diabetes, toma_insulina, tipo_insulina, dosagem_max)
+
         if perfil.cria_perfil_medico():
             error_label.config(text="Perfil médico cadastrado com sucesso!", fg="green")
-            root.after(2000, lambda: mudar_tela(Tela_Consumo1, root, email))  # Passa o email para a próxima tela
+            root.after(2000, lambda: mudar_tela(Tela_Alerta, root, email))
         else:
             error_label.config(text="Reveja as informações inseridas!", fg="red")
 
     tk.Button(frame, text="Salvar", width=20, command=salvar).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_PerfilMedico1, root, email)).pack(pady=10)
+
+
+def Tela_Alerta(root,email):
+    
+    frame = tk.Frame(root)
+    frame.place(relwidth=1, relheight=1)
+    
+    configurar_fundo_liso(frame)
+    
+    def avancar():
+        mudar_tela(Tela_Consumo1,root, email)
+    
+    tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
 
 
 # Tela de Consumo
