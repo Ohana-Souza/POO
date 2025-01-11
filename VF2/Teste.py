@@ -360,19 +360,19 @@ def Tela_CadastroAlimento(root, email, refeicao):
             
     def salvar():
         try:            
-            quantidade_valida = (entry_quantidade.get())
             descricao_alimento = alimento_var.get()
 
             if not descricao_alimento or descricao_alimento == "Alimento digitado não listado":
                 error_label.config(text="Por favor, selecione um alimento válido.", fg="red")
                 return
 
-            quantidade = float(entry_quantidade.get())
+            quantidade_valida = entry_quantidade.get()
             
             if not Verificadora.verificar_inteiro(quantidade_valida, tipo="float"):
-                error_label.config(text="Dosagem inválida!", fg="red")
-            return
+                error_label.config(text="Insira um valor válido!", fg="red")
+                return
             
+            quantidade = float(entry_quantidade.get())
             alimento = Alimento()
             alimento.adicionaAlimento(descricao_alimento, quantidade)
 
