@@ -31,10 +31,13 @@ class Usuario:
         
             if bcrypt.checkpw(senha_inserida.encode('utf-8'), senha_armazenada.encode('utf-8')):
                 print("Login realizado com sucesso!")
+                return True 
             else:
                 print("Senha Inválida")
+                return False 
         else:
             print("Usuário não encontrado!")
+            return False
        
             
     def insere_usuario(self, senha):
@@ -48,7 +51,7 @@ class Usuario:
 
         if response.data and len(response.data) > 0:
             print("Erro: Este email já está em uso.")
-            return  
+            return  False
 
         salt = bcrypt.gensalt()
         hashed = bcrypt.hashpw(senha.encode('utf-8'), salt)
