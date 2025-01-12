@@ -61,13 +61,14 @@ class HistoricoAlimentos:
         if resposta_usuario.data and len(resposta_usuario.data) > 0:
             id_usuario = resposta_usuario.data[0]['id']
 
-        response = supabase.table("Historico_Alimentos").select("dia, Alimentos(descricao), Refeicao(refeicao), proteina, carboidrato, fibra, lipideo, energia, insulina").match({"dia": data, "id_refeicao": id_refeicao, "id_usuario":id_usuario}).execute()
+        response = supabase.table("Historico_Alimentos").select("dia, Alimentos(descricao), Refeicao(refeicao), proteina, carboidrato, fibra, lipideo, energia,").match({"dia": data, "id_refeicao": id_refeicao, "id_usuario":id_usuario}).execute()
         dados = response.data
 
         linhas_formatadas = []
 
         for i, item in enumerate(dados, 1):
             linhas_formatadas.append(f"Alimento {i}:")
+            linhas_formatadas.append(f"  Descição: {item['Alimentos']['descricao']} g")
             linhas_formatadas.append(f"  Proteína: {item['proteina']} g")
             linhas_formatadas.append(f"  Carboidrato: {item['carboidrato']} g")
             linhas_formatadas.append(f"  Fibra: {item['fibra']} g")
