@@ -73,3 +73,12 @@ class PerfilMedico(Usuario):
             print("Erro desconhecido.")
             return False
     
+
+
+from Usuario import Usuario
+email = "julia4@gmail.com"
+resposta_usuario = supabase.table('Usuarios').select('id').eq('email', email).execute()
+            
+id_usuario = resposta_usuario.data[0]['id']
+resposta_perfil_medico = supabase.table('Perfil_medico').select('*').eq('id_usuario', id_usuario).execute()
+print(resposta_perfil_medico.data)           
