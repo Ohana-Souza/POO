@@ -31,7 +31,7 @@ class Asparge(InterfaceInsulina):
 
         dose_insulina_final = min(dose_insulina, dosagem_max)
 
-        return round(dose_insulina_final, 2)  # Retorna o valor arredondado para 2 casas decimais
+        return round(dose_insulina_final, 6)  # Retorna o valor arredondado para 2 casas decimais
 
 
 
@@ -68,7 +68,7 @@ class Humalog(InterfaceInsulina):
 
         dose_insulina_final = min(dose_insulina, dosagem_max)
 
-        return round(dose_insulina_final, 2)  # Retorna o valor arredondado para 2 casas decimais
+        return round(dose_insulina_final, 6)  # Retorna o valor arredondado para 2 casas decimais
     
 
     def verificaAlarme(self, dose_calculada, dosagem_maxima):
@@ -100,7 +100,7 @@ class NPH(InterfaceInsulina):
 
         dose_insulina_final = min(dose_insulina, dosagem_max)
 
-        return round(dose_insulina_final, 2)  
+        return round(dose_insulina_final, 6)  
 
     def verificaAlarme(self, dose_calculada, dosagem_maxima):
         super().verificaAlarme(dose_calculada, dosagem_maxima)
@@ -132,7 +132,7 @@ class Glargina(InterfaceInsulina):
 
         dose_insulina_final = min(dose_insulina, dosagem_max)
 
-        return round(dose_insulina_final, 2)  
+        return round(dose_insulina_final, 6)  
 
     def verificaAlarme(self, dose_calculada, dosagem_maxima):
         super().verificaAlarme(dose_calculada, dosagem_maxima)

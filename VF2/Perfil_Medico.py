@@ -62,7 +62,6 @@ class PerfilMedico(Usuario):
             'dosagem_max': self.dosagem_max
         }).execute()
 
-
         if response.data:  
             print("Perfil médico cadastrado com sucesso!")
             return True
@@ -72,6 +71,28 @@ class PerfilMedico(Usuario):
         else:
             print("Erro desconhecido.")
             return False
-    
-#teste = PerfilMedico("juliateste@gmail.com", "Feminino",153,43,19,"Leve","Tipo 1","Sim","Asperge",40)
-#teste.cria_perfil_medico()
+
+    def obter_tipo_insulina(self):
+        resposta_usuario = supabase.table('Usuarios').select('id').eq('email', self.email).execute()
+
+        if not resposta_usuario.data:
+            print("Usuário não encontrado.")
+            return None
+
+        id_usuario = resposta_usuario.data[0]['id']
+
+        resposta_perfil_medico = supabase.table('Perfil_medico').select('tipo_insulina').eq('id_usuario', id_usuario).execute()
+
+        if not resposta_perfil_medico.data:
+            print("Perfil médico não encontrado.")
+            return None
+
+        tipo_insulina_id = resposta_perfil_medico.data[0]['tipo_insulina']
+
+        resposta_tipo_insulina = supabase.table('Tipos_insulina').select('tipo').eq('id', tipo_insulina_id).execute()
+
+        if not resposta_tipo_insulina.data:
+            print("Tipo de insulina não encontrado.")
+            return None
+
+        return resposta_tipo_insulina.data[0]['tipo']
