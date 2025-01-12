@@ -68,7 +68,7 @@ class HistoricoAlimentos:
 
         for i, item in enumerate(dados, 1):
             linhas_formatadas.append(f"Alimento {i}:")
-            linhas_formatadas.append(f"  Descição: {item['Alimentos']['descricao']} g")
+            linhas_formatadas.append(f"  Descrição: {item['Alimentos']['descricao']} g")
             linhas_formatadas.append(f"  Proteína: {item['proteina']} g")
             linhas_formatadas.append(f"  Carboidrato: {item['carboidrato']} g")
             linhas_formatadas.append(f"  Fibra: {item['fibra']} g")
