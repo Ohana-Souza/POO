@@ -28,6 +28,7 @@ caminho_imagem2 = os.path.join(os.path.dirname(__file__), "Telas", "2.png")
 caminho_imagem3 = os.path.join(os.path.dirname(__file__), "Telas", "3.png")
 caminho_imagem4 = os.path.join(os.path.dirname(__file__), "Telas", "4.png")
 caminho_imagem5 = os.path.join(os.path.dirname(__file__), "Telas", "5.png")
+caminho_imagem6 = os.path.join(os.path.dirname(__file__), "Telas", "6.png")
 caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO.csv")
 
 def configurar_fundo_login(frame):
