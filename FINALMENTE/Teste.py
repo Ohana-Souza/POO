@@ -21,14 +21,15 @@ from Verificadora import Verificadora
 from Calculadora_Insulina import Calculadora_Insulina
 import os
 
-# Crie seu cliente Supabase aqui
-# supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 caminho_imagem1 = os.path.join(os.path.dirname(__file__), "Telas", "1.png")
 caminho_imagem2 = os.path.join(os.path.dirname(__file__), "Telas", "2.png")
 caminho_imagem3 = os.path.join(os.path.dirname(__file__), "Telas", "3.png")
 caminho_imagem4 = os.path.join(os.path.dirname(__file__), "Telas", "4.png")
 caminho_imagem5 = os.path.join(os.path.dirname(__file__), "Telas", "5.png")
+caminho_imagem6 = os.path.join(os.path.dirname(__file__), "Telas","6.png")
 caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO.csv")
 
 def configurar_tela_inicial(frame):
@@ -602,7 +603,7 @@ def Tela_Historico_Insulina(root, email_usuario):
                 tk.Label(scrollable_frame, text="Nenhum dado encontrado para a data e refeição selecionadas.", font=("Helvetica", 10)).pack(pady=5)
                 return
 
-            tk.Label(scrollable_frame, text=f"Histórico de Insulina e Nutrientes em {data_selecionada}:", font=("Helvetica", 12, "bold")).pack(pady=5)
+            tk.Label(scrollable_frame, text=f"Histórico de Insulina e Nutrientes em {data_selecionada}:", font=("Helvetica", 8, "bold")).pack(pady=5)
             
             for linha in resultado_historico.splitlines():
                 tk.Label(scrollable_frame, text=linha.strip(), anchor="w", justify="left").pack(fill="x", pady=2)
@@ -625,26 +626,28 @@ def Tela_Historico_Nutrientes(root, email_usuario):
     frame.place(relwidth=1, relheight=1)
     configurar_fundo_liso(frame)
 
-    tk.Label(frame, text="Histórico de Alimentos", font=("Helvetica", 16)).pack(pady=20)
-    tk.Label(frame, text="Selecione a data:").pack(pady=5)
+    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
+
+    tk.Label(frame, text="Histórico de Alimentos", font=("Helvetica", 16)).place(x=centro_x, y=50, anchor="center")
+    tk.Label(frame, text="Selecione a data:").place(x=centro_x, y=100, anchor="center")
 
     # Entrada de data
     data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
-    data_entry.pack(pady=5)
+    data_entry.place(x=centro_x, y=130, anchor="center")
 
-    tk.Label(frame, text="Selecione a refeição:").pack(pady=5)
+    tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=160, anchor="center")
     refeicao_var = tk.StringVar(value="Selecione uma refeição")
     refeicoes_disponiveis = ["Café da manhã", "Almoço", "Jantar", "Lanche"]
-    tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).pack(pady=5)
+    tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).place(x=centro_x, y=190, anchor="center")
 
-    tk.Label(frame, text="Selecione a propriedade para exibir:").pack(pady=5)
+    tk.Label(frame, text="Selecione a propriedade para exibir:").place(x=centro_x, y=220, anchor="center")
     propriedade_var = tk.StringVar(value="Todas")
     propriedades_disponiveis = ["Todas", "Proteína", "Carboidrato", "Fibra", "Lipídeo", "Energia"]
-    tk.OptionMenu(frame, propriedade_var, *propriedades_disponiveis).pack(pady=5)
+    tk.OptionMenu(frame, propriedade_var, *propriedades_disponiveis).place(x=centro_x, y=250, anchor="center")
 
     # Canvas com barra de rolagem
     canvas_frame = tk.Frame(frame)
-    canvas_frame.pack(pady=10, fill="both", expand=True)
+    canvas_frame.place(x=0, y=300, width=largura_tela, height=altura_tela-400)
 
     canvas = tk.Canvas(canvas_frame)
     scrollbar = tk.Scrollbar(canvas_frame, orient="vertical", command=canvas.yview)
@@ -688,19 +691,26 @@ def Tela_Historico_Nutrientes(root, email_usuario):
         else:
             tk.Label(scrollable_frame, text=f"Histórico de Alimentos em {data_selecionada}:", font=("Helvetica", 12, "bold")).pack(pady=5)
             
-            for linha in historico.splitlines():
-                if "Alimento" in linha:
-                    tk.Label(scrollable_frame, text=linha.strip(), anchor="w", justify="left", font=("Helvetica", 10, "bold")).pack(fill="x", pady=2)
-                elif propriedade_selecionada == "Todas" or propriedade_selecionada.lower() in linha.lower():
-                    tk.Label(scrollable_frame, text=linha.strip(), anchor="w", justify="left").pack(fill="x", pady=2)
+            for entrada in historico:
+                descricao_alimento = entrada['Alimentos']['descricao']
+                refeicao = entrada['Refeicao']['refeicao']
+                tk.Label(scrollable_frame, text=f"Alimento: {descricao_alimento} - Refeição: {refeicao}", anchor="w", justify="left", font=("Helvetica", 10, "bold")).pack(fill="x", pady=2)
+                
+                if propriedade_selecionada == "Todas":
+                    for chave, valor in entrada.items():
+                        if chave not in ["Alimentos", "Refeicao", "dia"]:
+                            tk.Label(scrollable_frame, text=f"{chave.capitalize()}: {valor}", anchor="w", justify="left").pack(fill="x", pady=2)
+                else:
+                    propriedade = propriedade_selecionada.lower()
+                    if propriedade in entrada:
+                        tk.Label(scrollable_frame, text=f"{propriedade.capitalize()}: {entrada[propriedade]}", anchor="w", justify="left").pack(fill="x", pady=2)
 
     def voltar():
         mudar_tela(Tela_Consumo1, root, email_usuario)
 
-    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).pack(pady=10)
-    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).pack(pady=10)
-    tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
-
+    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=altura_tela-90, anchor="center")
+    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=altura_tela-60, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=altura_tela-30, anchor="center")
 
 ###############################################################################
 
