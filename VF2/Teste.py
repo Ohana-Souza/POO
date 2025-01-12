@@ -17,7 +17,7 @@ from Nutrientes import Nutrientes
 from Insulina import Asparge, Humalog, NPH, Glargina
 from PIL import Image, ImageTk
 from Verificadora import Verificadora
-
+from Calculadora_Insulina import Calculadora_Insulina
 import os
 #print(f"Localização do arquivo Historico_refeicao: {os.path.abspath(HistoricoRefeicao.__module__)}") 
 
@@ -457,7 +457,7 @@ def Tela_CadastroAlimento(root, email, refeicao):
             perfil_medico = resposta_perfil_medico.data[0]
 
             # Garante que as chaves existem no dicionário perfil_medico
-            tipo_diabetes = perfil_medico.get('id_tipo_diabetes')
+            tipo_diabetes = perfil_medico.get('tipo_diabetes')
             peso = perfil_medico.get('peso')
             dosagem_max = perfil_medico.get('dosagem_max')
 
@@ -470,24 +470,22 @@ def Tela_CadastroAlimento(root, email, refeicao):
             insulina = Humalog()
 
             # Usa polimorfismo para calcular a dosagem de insulina
-            insulina_calculada = insulina.calculaDosagem(
-                peso=peso,
-                tipo_diabetes=tipo_diabetes,
-                dosagem_max=dosagem_max,
-                carboidratos=nutrientes_totais[3],
-                proteinas=nutrientes_totais[1],
-            )
+            calculadora_insulina = Calculadora_Insulina()
+            insulina_calculada = calculadora_insulina.fazCalculoDosagem(insulina)
 
             # Salva a refeição no banco de dados
-            historico_refeicao.salvaRefeicao(
+            sucesso = historico_refeicao.salvaRefeicao(
                 usuario=email,
                 refeicao=refeicao,
                 nutrientes=nutrientes_totais,
                 insulina=insulina_calculada,
             )
 
-            messagebox.showinfo("Sucesso", "A refeição foi salva com sucesso!")
-            mudar_tela(Tela_Consumo1, root, email)
+            if sucesso:
+                messagebox.showinfo("Sucesso", "A refeição foi salva com sucesso!")
+                mudar_tela(Tela_Consumo1, root, email)
+            else:
+                messagebox.showerror("Erro", "Erro ao salvar a refeição. Verifique os dados.")
 
         except Exception as e:
             print(f"Erro ao salvar a refeição: {e}")
@@ -500,7 +498,6 @@ def Tela_CadastroAlimento(root, email, refeicao):
     tk.Button(frame, text="ADD", width=20, command=adicionar_alimento).pack(pady=10)
     tk.Button(frame, text="Avançar", width=20, command=salvar_refeicao).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
-
 
 
 #########################################################################################

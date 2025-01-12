@@ -86,33 +86,33 @@ class HistoricoRefeicao:
         
 
 
-from Alimento import Alimento
-from Calculadora_Insulina import Calculadora_Insulina
-from Insulina import Humalog 
-from Usuario import Usuario
-from Perfil_Medico import PerfilMedico
-from Nutrientes import Nutrientes
+# from Alimento import Alimento
+# from Calculadora_Insulina import Calculadora_Insulina
+# from Insulina import Humalog 
+# from Usuario import Usuario
+# from Perfil_Medico import PerfilMedico
+# from Nutrientes import Nutrientes
 
-Usuario_teste = Usuario("juliateste@gmail.com")
-Usuario_teste.autenticacao_usuario("senha")
-Perfil_teste = PerfilMedico(Usuario_teste.email,"Feminino",153,43,19,"Leve","Tipo 1","Sim","Asperge",15)
-alimento1 = Alimento()
-alimento1.adicionaAlimento(200,"Arroz, integral, cozido")
-alimento2 = Alimento()
-alimento2.adicionaAlimento(500,"Bolo, mistura para")
-nutrientes_teste = Nutrientes()
-nutrientes_teste.adicionaNutrientes(alimento1)
-nutrientes_teste.adicionaNutrientes(alimento2)
-nutrientes_teste.mostraTotais()
-insulina_teste = Humalog(Perfil_teste.peso, Perfil_teste.tipo_diabetes, nutrientes_teste.total_carboidratos,nutrientes_teste.total_proteina, Perfil_teste.dosagem_max)
-calculadora = Calculadora_Insulina() 
-dose_calculada = calculadora.fazCalculoDosagem(insulina_teste)
-alarme = calculadora.fazVerificacaoAlarme(insulina_teste, dose_calculada)
-historico = HistoricoRefeicao()
-nutrientes_lista = nutrientes_teste.obterLista()
-historico.salvaRefeicao(Perfil_teste._email, "Café da manhã", nutrientes_lista, dose_calculada)
-diaHoje = datetime.today().strftime('%Y-%m-%d')
-mostra = historico.mostraHistorico(diaHoje, "Café da manhã", Perfil_teste.email)
-print(mostra)
+# Usuario_teste = Usuario("juliateste@gmail.com")
+# Usuario_teste.autenticacao_usuario("senha")
+# Perfil_teste = PerfilMedico(Usuario_teste.email,"Feminino",153,43,19,"Leve","Tipo 1","Sim","Asperge",15)
+# alimento1 = Alimento()
+# alimento1.adicionaAlimento(200,"Arroz, integral, cozido")
+# alimento2 = Alimento()
+# alimento2.adicionaAlimento(500,"Bolo, mistura para")
+# nutrientes_teste = Nutrientes()
+# nutrientes_teste.adicionaNutrientes(alimento1)
+# nutrientes_teste.adicionaNutrientes(alimento2)
+# nutrientes_teste.mostraTotais()
+# insulina_teste = Humalog(Perfil_teste.peso, Perfil_teste.tipo_diabetes, nutrientes_teste.total_carboidratos,nutrientes_teste.total_proteina, Perfil_teste.dosagem_max)
+# calculadora = Calculadora_Insulina() 
+# dose_calculada = calculadora.fazCalculoDosagem(insulina_teste)
+# alarme = calculadora.fazVerificacaoAlarme(insulina_teste, dose_calculada)
+# historico = HistoricoRefeicao()
+# nutrientes_lista = nutrientes_teste.obterLista()
+# historico.salvaRefeicao(Perfil_teste._email, "Café da manhã", nutrientes_lista, dose_calculada)
+# diaHoje = datetime.today().strftime('%Y-%m-%d')
+# mostra = historico.mostraHistorico(diaHoje, "Café da manhã", Perfil_teste.email)
+# print(mostra)
 
 
