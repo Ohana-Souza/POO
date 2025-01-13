@@ -33,9 +33,6 @@ class HistoricoRefeicao:
             'insulina': insulina,
             'id_usuario': id_usuario
         }).execute()
-        
-        if response:
-            return True
 
         if not response.data:  
             print("Nenhum dado encontrado para o alimento selecionado.")
@@ -44,6 +41,8 @@ class HistoricoRefeicao:
         if 'error' in response:  
             print("Erro ao buscar dados:", response['error'])
             return False
+
+        return True
 
     def mostraHistorico(self, data, refeicao, usuario):
 
@@ -74,7 +73,6 @@ class HistoricoRefeicao:
             linhas_formatadas.append(f"  Dosagem Insulina: {item['insulina']} U")
             linhas_formatadas.append("-" * 40)
         
-
         if not response.data:  
             print("Nenhum dado encontrado no histórico")
             return False

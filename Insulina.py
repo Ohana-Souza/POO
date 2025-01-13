@@ -39,7 +39,8 @@ class Asparge(InterfaceInsulina):
 
 
     def verificaAlarme(self, dose_calculada):
-        super().verificaAlarme(dose_calculada, self.dosagem_max)
+        alarme = super().verificaAlarme(dose_calculada, self.dosagem_max)
+        return alarme
 
 
 class Humalog(InterfaceInsulina):
@@ -80,8 +81,7 @@ class Humalog(InterfaceInsulina):
     
 
     def verificaAlarme(self, dose_calculada):
-        super().verificaAlarme(dose_calculada, self.dosagem_max)
-     
+        return super().verificaAlarme(dose_calculada, self.dosagem_max)
         
 class NPH(InterfaceInsulina):
     def __init__(self, peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
@@ -116,8 +116,8 @@ class NPH(InterfaceInsulina):
         return round(dose_insulina, 2)  
 
     def verificaAlarme(self, dose_calculada):
-        super().verificaAlarme(dose_calculada, self.dosagem_max)
-
+        alarme = super().verificaAlarme(dose_calculada, self.dosagem_max)
+        return alarme
 
 class Glargina(InterfaceInsulina):
     def __init__(self, peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
@@ -154,7 +154,8 @@ class Glargina(InterfaceInsulina):
         return round(dose_insulina, 2)  
 
     def verificaAlarme(self, dose_calculada):
-        super().verificaAlarme(dose_calculada, self.dosagem_max)
+        alarme = super().verificaAlarme(dose_calculada, self.dosagem_max)
+        return alarme
 
 
 

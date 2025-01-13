@@ -9,6 +9,6 @@ class Calculadora_Insulina:
 
     def fazVerificacaoAlarme(self, insulina: Type[InterfaceInsulina], dosagem_calculada):
         alarme = insulina.verificaAlarme(dosagem_calculada)
-        return alarme 
+        return alarme
 
 

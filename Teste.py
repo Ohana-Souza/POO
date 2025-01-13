@@ -112,6 +112,7 @@ def Tela_Login(root):
     error_label = tk.Label(frame, text="", fg="red")
     error_label.place(x=centro_x, y=420, anchor="center")
 
+
     def autenticar():
         email = entry_usuario.get()
         senha = entry_senha.get()
@@ -356,6 +357,8 @@ def Tela_CadastroRefeicao(root, email):
 
 ###########################################################################################
 
+historico_alimentos = HistoricoAlimentos()
+
 def Tela_CadastroAlimento(root, email, refeicao):
     """
     Tela para adicionar alimentos e salvar a refeição com cálculo de insulina usando polimorfismo.
@@ -422,11 +425,53 @@ def Tela_CadastroAlimento(root, email, refeicao):
             if not Verificadora.verificar_inteiro(quantidade_valida, tipo="float"):
                 error_label.config(text="Insira um valor válido para a quantidade!", fg="red")
                 return
+            resposta_usuario = supabase.table('Usuarios').select('id').eq('email', email).execute()
+
+            if not resposta_usuario.data:
+                error_label.config(text="Usuário não encontrado.", fg="red")
+                return
             
+            id_usuario = resposta_usuario.data[0]['id']
+            
+            # Recupera o perfil médico do usuário
+            resposta_perfil_medico = supabase.table('Perfil_medico').select('*').eq('id_usuario', id_usuario).execute()
+            
+            if not resposta_perfil_medico.data:
+                error_label.config(text="Perfil médico não encontrado", fg="red")
+                return
+            
+            # Garante que estamos lidando com um único registro do perfil médico
+            perfil_medico = resposta_perfil_medico.data[0] if isinstance(resposta_perfil_medico.data, list) and resposta_perfil_medico.data else None
+            
+            if not perfil_medico:
+                error_label.config(text="Dados do perfil médico inválidos", fg="red")
+                return
+            
+            # Garante que as chaves existem no dicionário perfil_medico
+            id_tipo_diabetes = perfil_medico.get('id_tipo_diabetes')
+            peso = perfil_medico.get('peso')
+            dosagem_max = perfil_medico.get('dosagem_max')
+            id_tipo_insulina = perfil_medico.get('id_tipo_insulina')
+
+            resposta_tipo_insulina = supabase.table('Tipos_insulina').select('tipo').eq('id', id_tipo_insulina).execute()
+        
+            if resposta_tipo_insulina.data and len(resposta_tipo_insulina.data) > 0:
+                tipo_insulina = resposta_tipo_insulina.data[0]['tipo']
+
+            resposta_tipo_diabetes = supabase.table('Tipos_diabetes').select('tipo').eq('id', id_tipo_diabetes).execute()
+        
+            if resposta_tipo_diabetes.data and len(resposta_tipo_diabetes.data) > 0:
+                tipo_diabetes = resposta_tipo_diabetes.data[0]['tipo']
+
+            # Verifica se todos os dados necessários estão presentes
+            if not all([tipo_diabetes, peso, dosagem_max]):
+                error_label.config(text="Dados do perfil médico incompletos", fg="red")
+                return
 
             quantidade = float(quantidade_valida)
             alimento = Alimento()
             alimento.adicionaAlimento(quantidade, descricao_alimento)
+            historico_alimentos.salvaAlimento(email, refeicao, alimento.descricao, alimento.nutrientes)
             
 
             # Adiciona o alimento à lista de alimentos adicionados
@@ -434,6 +479,7 @@ def Tela_CadastroAlimento(root, email, refeicao):
 
             # Adiciona os nutrientes do alimento aos nutrientes totais
             nutrientes.adicionaNutrientes(alimento)
+
 
             error_label.config(text="Alimento adicionado com sucesso!", fg="green")
             alimento_var.set("Selecione um alimento")
@@ -513,10 +559,16 @@ def Tela_CadastroAlimento(root, email, refeicao):
 
             # Salva a refeição no banco de dados
             sucesso = historico_refeicao.salvaRefeicao(email, refeicao, nutrientes_totais, insulina_calculada)
+            alarme = calculadora_insulina.fazVerificacaoAlarme(insulina, insulina_calculada)
 
+ 
             if sucesso:
-                error_label.config(text="A refeição foi salva com sucesso!", fg="GREEN")
-                mudar_tela(Tela_Consumo1, root, email)
+                error_label.config(text=f"A refeição foi salva com sucesso!\nA dosagem de insulina calculada é de: {insulina_calculada} UI", fg="green")
+                #alarme_label = tk.Label(frame, text="", fg="red")
+                #alarme_label.place(x=centro_x, y=420, anchor="center")
+                #alarme_label.config(text=f"{alarme}", fg="black")
+                messagebox.showinfo("Verificação de Dose", alarme)
+
             else:
                 error_label.config(text="Erro ao salvar a refeição. Verifique os dados.", fg="GREEN")
                 print("Dados para depuração:")
@@ -532,9 +584,10 @@ def Tela_CadastroAlimento(root, email, refeicao):
     def voltar():
         mudar_tela(Tela_CadastroRefeicao, root, email)
 
+
     # Botões de ação
-    tk.Button(frame, text="ADD", width=20, command=adicionar_alimento).place(x=centro_x, y=460, anchor="center")
-    tk.Button(frame, text="Avançar", width=20, command=salvar_refeicao).place(x=centro_x, y=510, anchor="center")
+    tk.Button(frame, text="Adicionar Alimento", width=20, command=adicionar_alimento).place(x=centro_x, y=460, anchor="center")
+    tk.Button(frame, text="Salvar Refeição", width=20, command=salvar_refeicao).place(x=centro_x, y=510, anchor="center")
     tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=560, anchor="center")
 
 
@@ -643,11 +696,6 @@ def Tela_Historico_Nutrientes(root, email_usuario):
     refeicoes_disponiveis = ["Café da manhã", "Almoço", "Jantar", "Lanche"]
     tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).place(x=centro_x, y=250, anchor="center")
 
-    tk.Label(frame, text="Selecione a propriedade para exibir:").place(x=centro_x, y=290, anchor="center")
-    propriedade_var = tk.StringVar(value="Todas")
-    propriedades_disponiveis = ["Todas", "Proteína", "Carboidrato", "Fibra", "Lipídeo", "Energia"]
-    tk.OptionMenu(frame, propriedade_var, *propriedades_disponiveis).place(x=centro_x, y=320, anchor="center")
-
     # Canvas com barra de rolagem
     canvas_frame = tk.Frame(frame)
     canvas_frame.place(x=0, y=350, width=largura_tela, height=250)
@@ -675,7 +723,6 @@ def Tela_Historico_Nutrientes(root, email_usuario):
         limpar_frame()
         data_selecionada = data_entry.get_date().strftime('%Y-%m-%d')
         refeicao_selecionada = refeicao_var.get()
-        propriedade_selecionada = propriedade_var.get()
 
         # Validação das entradas
         if refeicao_selecionada == "Selecione uma refeição":
@@ -693,20 +740,8 @@ def Tela_Historico_Nutrientes(root, email_usuario):
             tk.Label(scrollable_frame, text="Nenhum dado encontrado para a data selecionada.", font=("Helvetica", 10)).pack(pady=5)
         else:
             tk.Label(scrollable_frame, text=f"Histórico de Alimentos em {data_selecionada}:", font=("Helvetica", 12, "bold")).pack(pady=5)
-            for entrada in historico:
-                #descricao_alimento = entrada['Alimentos']['descricao']
-                #refeicao = entrada['Refeicao']['refeicao']
-                tk.Label(scrollable_frame, text=f"{historico}", anchor="w", justify="left", font=("Helvetica", 10, "bold")).pack(fill="x", pady=2)
+            tk.Label(scrollable_frame, text=f"{historico}", anchor="w", justify="left", font=("Helvetica", 10, "bold")).pack(fill="x", pady=2)
                 
-                if propriedade_selecionada == "Todas":
-                    for chave, valor in entrada.items():
-                        if chave not in ["Alimentos", "Refeicao", "dia"]:
-                            tk.Label(scrollable_frame, text=f"{chave.capitalize()}: {valor}", anchor="w", justify="left").pack(fill="x", pady=2)
-                else:
-                    propriedade = propriedade_selecionada.lower()
-                    if propriedade in entrada:
-                        tk.Label(scrollable_frame, text=f"{propriedade.capitalize()}: {entrada[propriedade]}", anchor="w", justify="left").pack(fill="x", pady=2)
-
     def voltar():
         mudar_tela(Tela_Consumo1, root, email_usuario)
 
