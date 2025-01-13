@@ -4,7 +4,7 @@ import tkinter as tk
 import datetime
 import re
 
-from tkinter import messagebox, StringVar, OptionMenu, Frame, Button
+from tkinter import messagebox,StringVar, OptionMenu, Frame, Button
 from supabase import create_client, Client
 from Chaves_banco import SUPABASE_URL, SUPABASE_KEY
 from Alimento import Alimento
@@ -12,7 +12,6 @@ from Usuario import Usuario
 from Historico_refeicao import HistoricoRefeicao
 from Historico_alimentos import HistoricoAlimentos
 from Perfil_Medico import PerfilMedico
-
 from tkcalendar import DateEntry
 from Nutrientes import Nutrientes
 from Insulina import Asparge, Humalog, NPH, Glargina
@@ -20,7 +19,7 @@ from PIL import Image, ImageTk
 from Verificadora import Verificadora
 from Calculadora_Insulina import Calculadora_Insulina
 import os
-
+#print(f"Localização do arquivo Historico_refeicao: {os.path.abspath(HistoricoRefeicao.__module__)}") 
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -29,10 +28,55 @@ caminho_imagem2 = os.path.join(os.path.dirname(__file__), "Telas", "2.png")
 caminho_imagem3 = os.path.join(os.path.dirname(__file__), "Telas", "3.png")
 caminho_imagem4 = os.path.join(os.path.dirname(__file__), "Telas", "4.png")
 caminho_imagem5 = os.path.join(os.path.dirname(__file__), "Telas", "5.png")
-caminho_imagem6 = os.path.join(os.path.dirname(__file__), "Telas","6.png")
+caminho_imagem6 = os.path.join(os.path.dirname(__file__), "Telas", "6.png")
 caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO.csv")
 
-def configurar_tela_inicial(frame):
+def configurar_fundo_login(frame):
+    imagem = Image.open(caminho_imagem3)
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
+    bg = ImageTk.PhotoImage(imagem)
+
+    # Canvas para exibir a imagem
+    canvas = tk.Canvas(frame, width=360, height=640)
+    canvas.create_image(0, 0, anchor=tk.NW, image=bg)
+    canvas.image = bg
+    canvas.place(relwidth=1, relheight=1)
+    
+def configurar_fundo_cadastro(frame):
+    imagem = Image.open(caminho_imagem2)
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
+    bg = ImageTk.PhotoImage(imagem)
+
+    # Canvas para exibir a imagem
+    canvas = tk.Canvas(frame, width=360, height=640)
+    canvas.create_image(0, 0, anchor=tk.NW, image=bg)
+    canvas.image = bg
+    canvas.place(relwidth=1, relheight=1)
+
+def configurar_fundo_liso(frame):
+    imagem = Image.open(caminho_imagem4)
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
+    bg = ImageTk.PhotoImage(imagem)
+
+    # Canvas para exibir a imagem
+    canvas = tk.Canvas(frame, width=360, height=640)
+    canvas.create_image(0, 0, anchor=tk.NW, image=bg)
+    canvas.image = bg
+    canvas.place(relwidth=1, relheight=1)
+
+# Função para mudar de tela
+def mudar_tela(nova_tela, root, *args):
+    for widget in root.winfo_children():
+        widget.destroy()
+    nova_tela(root, *args)
+
+#Tela Inicial
+
+# Tela Inicial
+def Tela_Inicial(root):
+    frame = tk.Frame(root)
+    frame.place(relwidth=1, relheight=1)
+
     imagem = Image.open(caminho_imagem1)
     imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
@@ -42,75 +86,27 @@ def configurar_tela_inicial(frame):
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
 
-def configurar_fundo_login(frame):
-    imagem = Image.open(caminho_imagem3)
-    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
-    bg = ImageTk.PhotoImage(imagem)
+    tk.Label(frame, text="TELA INICIAL", font=("Helvetica", 16), bg="#ffffff", fg="#333333").pack(pady=40)
+    tk.Button(frame, text="Entrar", width=20, command=lambda: mudar_tela(Tela_Login, root)).pack(pady=20)
+    tk.Button(frame, text="Cadastrar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)).pack(pady=20)
 
-    canvas = tk.Canvas(frame, width=360, height=640)
-    canvas.create_image(0, 0, anchor=tk.NW, image=bg)
-    canvas.image = bg
-    canvas.place(relwidth=1, relheight=1)
-    
-def configurar_fundo_cadastro(frame):
-    imagem = Image.open(caminho_imagem2)
-    imagem = imagem.resize((414, 896), Image.Resampling.LANCZOS)
-    bg = ImageTk.PhotoImage(imagem)
-
-    canvas = tk.Canvas(frame, width=360, height=640)
-    canvas.create_image(0, 0, anchor=tk.NW, image=bg)
-    canvas.image = bg
-    canvas.place(relwidth=1, relheight=1)
-
-def configurar_fundo_liso(frame):
-    imagem = Image.open(caminho_imagem4)
-    imagem = imagem.resize((414, 896), Image.Resampling.LANCZOS)
-    bg = ImageTk.PhotoImage(imagem)
-
-    canvas = tk.Canvas(frame, width=414, height=896)
-    canvas.create_image(0, 0, anchor=tk.NW, image=bg)
-    canvas.image = bg
-    canvas.place(relwidth=1, relheight=1)
-
-def mudar_tela(nova_tela, root, *args):
-    for widget in root.winfo_children():
-        widget.destroy()
-    nova_tela(root, *args)
-
-def obter_dimensoes_tela(): 
-    largura_tela = 360 
-    altura_tela = 640 
-    centro_x = largura_tela / 2 
-    return largura_tela, altura_tela, centro_x
-
-def Tela_Inicial(root): 
-    frame = tk.Frame(root) 
-    frame.place(relwidth=1, relheight=1) 
-    configurar_tela_inicial(frame) 
-    largura_tela, altura_tela, centro_x = obter_dimensoes_tela() 
-    botao1 = tk.Button(frame, text="Entrar", width=20, command=lambda: mudar_tela(Tela_Login, root)) 
-    botao2 = tk.Button(frame, text="Cadastrar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)) 
-    botao1.place(x=centro_x, y=8.5 * (altura_tela / 12), anchor="center") 
-    botao2.place(x=centro_x, y=9.5 * (altura_tela / 12), anchor="center")
-
+# Tela de Login
 def Tela_Login(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
     configurar_fundo_login(frame)
 
-    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
-
-    tk.Label(frame, text="Usuário:").place(x=centro_x, y=250, anchor="center")
+    tk.Label(frame, text="Usuário:").pack(pady=5)
     entry_usuario = tk.Entry(frame)
-    entry_usuario.place(x=centro_x, y=280, anchor="center")
+    entry_usuario.pack(pady=5)
 
-    tk.Label(frame, text="Senha:").place(x=centro_x, y=320, anchor="center")
+    tk.Label(frame, text="Senha:").pack(pady=5)
     entry_senha = tk.Entry(frame, show="*")
-    entry_senha.place(x=centro_x, y=350, anchor="center")
+    entry_senha.pack(pady=5)
 
     error_label = tk.Label(frame, text="", fg="red")
-    error_label.place(x=centro_x, y=420, anchor="center")
+    error_label.pack(pady=5)
 
     def autenticar():
         email = entry_usuario.get()
@@ -119,37 +115,35 @@ def Tela_Login(root):
 
         if usuario.autenticacao_usuario(senha):
             error_label.config(text="Login realizado com sucesso!", fg="green")
+            # Passe o email diretamente
             root.after(200, lambda: mudar_tela(Tela_Consumo1, root, email))
         else:
             error_label.config(text="Usuário ou senha inválidos.", fg="red")
 
-    tk.Button(frame, text="Login", width=20, command=autenticar).place(x=centro_x, y=490, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).place(x=centro_x, y=540, anchor="center")
-
-
+    tk.Button(frame, text="Login", width=20, command=autenticar).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).pack(pady=10)
 
 def Tela_Cadastro(root):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Aplica o fundo
     configurar_fundo_cadastro(frame)
 
-    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
-
-    tk.Label(frame, text="Email:").place(x=centro_x, y=250, anchor="center")
+    tk.Label(frame, text="Email:").pack(pady=5)
     entry_email = tk.Entry(frame)
-    entry_email.place(x=centro_x, y=280, anchor="center")
+    entry_email.pack(pady=5)
 
-    tk.Label(frame, text="Senha:").place(x=centro_x, y=350, anchor="center")
+    tk.Label(frame, text="Senha:").pack(pady=5)
     entry_senha = tk.Entry(frame, show="*")
-    entry_senha.place(x=centro_x, y=380, anchor="center")
+    entry_senha.pack(pady=5)
 
-    tk.Label(frame, text="Confirmar Senha:").place(x=centro_x, y=450, anchor="center")
+    tk.Label(frame, text="Confirmar Senha:").pack(pady=5)
     entry_conf_senha = tk.Entry(frame, show="*")
-    entry_conf_senha.place(x=centro_x, y=480, anchor="center")
+    entry_conf_senha.pack(pady=5)
 
     error_label = tk.Label(frame, text="", fg="red")
-    error_label.place(x=centro_x, y=550, anchor="center")
+    error_label.pack(pady=5)
 
     def cadastrar():
         email = entry_email.get()
@@ -160,6 +154,7 @@ def Tela_Cadastro(root):
             error_label.config(text="As senhas não coincidem.", fg="red")
             return
 
+        # Validando o e-mail
         if not re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', email):
             error_label.config(text="Formato de e-mail inválido.", fg="red")
             return
@@ -170,46 +165,46 @@ def Tela_Cadastro(root):
 
         if response is True:
             error_label.config(text="Usuário cadastrado com sucesso!", fg="green")
+            # Passa o email para a próxima tela
             root.after(2000, lambda: mudar_tela(Tela_PerfilMedico1, root, email))
         else:
             error_label.config(text="Email já cadastrado!", fg="red")
 
-    tk.Button(frame, text="Avançar", width=20, command=cadastrar).place(x=centro_x, y=620, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).place(x=centro_x, y=670, anchor="center")
+    tk.Button(frame, text="Avançar", width=20, command=cadastrar).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).pack(pady=10)
 
 
 def Tela_PerfilMedico1(root, email):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Aplica o fundo
     configurar_fundo_cadastro(frame)
+    
+    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 12)).pack(pady=5)
 
-    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
-
-    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 12)).place(x=centro_x, y=100, anchor="center")
-
-    tk.Label(frame, text="Sexo:").place(x=centro_x, y=140, anchor="center")
+    tk.Label(frame, text="Sexo:").pack(pady=5)
     sexo_var = tk.StringVar()
-    tk.OptionMenu(frame, sexo_var, "Masculino", "Feminino").place(x=centro_x, y=180, anchor="center")
+    tk.OptionMenu(frame, sexo_var, "Masculino", "Feminino").pack(pady=5)
 
-    tk.Label(frame, text="Altura (cm):").place(x=centro_x, y=220, anchor="center")
+    tk.Label(frame, text="Altura (cm):").pack(pady=5)
     entry_altura = tk.Entry(frame)
-    entry_altura.place(x=centro_x, y=260, anchor="center")
+    entry_altura.pack(pady=5)
 
-    tk.Label(frame, text="Peso (kg):").place(x=centro_x, y=300, anchor="center")
+    tk.Label(frame, text="Peso (kg):").pack(pady=5)
     entry_peso = tk.Entry(frame)
-    entry_peso.place(x=centro_x, y=340, anchor="center")
+    entry_peso.pack(pady=5)
 
-    tk.Label(frame, text="Idade:").place(x=centro_x, y=380, anchor="center")
+    tk.Label(frame, text="Idade:").pack(pady=5)
     entry_idade = tk.Entry(frame)
-    entry_idade.place(x=centro_x, y=420, anchor="center")
+    entry_idade.pack(pady=5)
 
-    tk.Label(frame, text="Atividade Física:").place(x=centro_x, y=460, anchor="center")
+    tk.Label(frame, text="Atividade Física:").pack(pady=5)
     atividade_var = tk.StringVar()
-    tk.OptionMenu(frame, atividade_var, "Sedentário", "Leve", "Moderado", "Intenso").place(x=centro_x, y=500, anchor="center")
+    tk.OptionMenu(frame, atividade_var, "Sedentário", "Leve", "Moderado", "Intenso").pack(pady=5)
 
     error_label = tk.Label(frame, text="", fg="red")
-    error_label.place(x=centro_x, y=540, anchor="center")
+    error_label.pack(pady=5)
 
     def avancar():
         sexo = sexo_var.get()
@@ -237,37 +232,37 @@ def Tela_PerfilMedico1(root, email):
         error_label.config(text="")
         mudar_tela(Tela_PerfilMedico2, root, email, sexo, altura, peso, idade, atividade)
 
-    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=580, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)).place(x=centro_x, y=620, anchor="center")
+    tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)).pack(pady=10)
 
+# Segunda Tela
 def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Aplica o fundo
     configurar_fundo_cadastro(frame)
 
-    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
+    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 12)).pack(pady=5)
 
-    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 12)).place(x=centro_x, y=100, anchor="center")
-
-    tk.Label(frame, text="Tipo de Diabetes:").place(x=centro_x, y=140, anchor="center")
+    tk.Label(frame, text="Tipo de Diabetes:").pack(pady=5)
     diabetes_var = tk.StringVar()
-    tk.OptionMenu(frame, diabetes_var, "Tipo 1", "Tipo 2", "Gestacional", "Pré-diabetes").place(x=centro_x, y=180, anchor="center")
+    tk.OptionMenu(frame, diabetes_var, "Tipo 1", "Tipo 2", "Gestacional", "Pré-diabetes").pack(pady=5)
 
-    tk.Label(frame, text="Toma Insulina (Sim/Não):").place(x=centro_x, y=220, anchor="center")
+    tk.Label(frame, text="Toma Insulina (Sim/Não):").pack(pady=5)
     insulina_var = tk.StringVar()
-    tk.OptionMenu(frame, insulina_var, "Sim", "Não").place(x=centro_x, y=260, anchor="center")
+    tk.OptionMenu(frame, insulina_var, "Sim", "Não").pack(pady=5)
 
-    tk.Label(frame, text="Tipo de Insulina:").place(x=centro_x, y=300, anchor="center")
+    tk.Label(frame, text="Tipo de Insulina:").pack(pady=5)
     tipo_insulina_var = tk.StringVar()
-    tk.OptionMenu(frame, tipo_insulina_var, "Asparge", "Humalog", "NPH", "Glargina", "Não toma").place(x=centro_x, y=340, anchor="center")
+    tk.OptionMenu(frame, tipo_insulina_var, "Asparge", "Humalog", "NPH", "Glargina", "Não toma").pack(pady=5)
 
-    tk.Label(frame, text="Dosagem Máxima de Insulina (unidades):").place(x=centro_x, y=380, anchor="center")
+    tk.Label(frame, text="Dosagem Máxima de Insulina (unidades):").pack(pady=5)
     entry_dosagem_max = tk.Entry(frame)
-    entry_dosagem_max.place(x=centro_x, y=420, anchor="center")
+    entry_dosagem_max.pack(pady=5)
 
     error_label = tk.Label(frame, text="", fg="red")
-    error_label.place(x=centro_x, y=460, anchor="center")
+    error_label.pack(pady=5)
 
     def salvar():
         tipo_diabetes = diabetes_var.get()
@@ -296,8 +291,9 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
         else:
             error_label.config(text="Reveja as informações inseridas!", fg="red")
 
-    tk.Button(frame, text="Salvar", width=20, command=salvar).place(x=centro_x, y=500, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_PerfilMedico1, root, email)).place(x=centro_x, y=540, anchor="center")
+    tk.Button(frame, text="Salvar", width=20, command=salvar).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_PerfilMedico1, root, email)).pack(pady=10)
+
 
 def Tela_Alerta(root, email):
     frame = tk.Frame(root)
@@ -312,13 +308,10 @@ def Tela_Alerta(root, email):
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
     
-    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
-
     def avancar():
         mudar_tela(Tela_Consumo1, root, email)
     
-    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=altura_tela * 0.75, anchor="center")
-
+    tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
 
 
 def Tela_Consumo1(root, email):
@@ -332,6 +325,7 @@ def Tela_Consumo1(root, email):
     tk.Button(frame, text="Histórico Nutrientes", width=20, command=lambda: mudar_tela(Tela_Historico_Nutrientes, root, email)).pack(pady=10)
     tk.Button(frame, text="Dosagem Insulina", width=20, command=lambda: mudar_tela(Tela_Historico_Insulina, root, email)).pack(pady=10)
     tk.Button(frame, text="Sair", width=20, command=sys.exit).pack(pady=10)
+
 
 def Tela_CadastroRefeicao(root, email):
     frame = tk.Frame(root)
@@ -439,7 +433,7 @@ def Tela_CadastroAlimento(root, email, refeicao):
     def salvar_refeicao():
         try:
             if not alimentos_adicionados:
-                error_label.config(text="Nenhum alimento foi adicionado à refeição.", fg="red")
+                messagebox.showwarning("Aviso", "Nenhum alimento foi adicionado à refeição.")
                 return
 
             # Calcula os nutrientes totais
@@ -449,7 +443,7 @@ def Tela_CadastroAlimento(root, email, refeicao):
             resposta_usuario = supabase.table('Usuarios').select('id').eq('email', email).execute()
 
             if not resposta_usuario.data:
-                error_label.config(text="Usuário não encontrado.", fg="red")
+                messagebox.showerror("Erro", "Usuário não encontrado.")
                 return
             
             id_usuario = resposta_usuario.data[0]['id']
@@ -458,14 +452,14 @@ def Tela_CadastroAlimento(root, email, refeicao):
             resposta_perfil_medico = supabase.table('Perfil_medico').select('*').eq('id_usuario', id_usuario).execute()
             
             if not resposta_perfil_medico.data:
-                error_label.config(text="Perfil médico não encontrado", fg="red")
+                messagebox.showerror("Erro", "Perfil médico não encontrado.")
                 return
             
             # Garante que estamos lidando com um único registro do perfil médico
             perfil_medico = resposta_perfil_medico.data[0] if isinstance(resposta_perfil_medico.data, list) and resposta_perfil_medico.data else None
             
             if not perfil_medico:
-                error_label.config(text="Dados do perfil médico inválidos", fg="red")
+                messagebox.showerror("Erro", "Dados do perfil médico inválidos.")
                 return
             
             # Garante que as chaves existem no dicionário perfil_medico
@@ -486,7 +480,7 @@ def Tela_CadastroAlimento(root, email, refeicao):
 
             # Verifica se todos os dados necessários estão presentes
             if not all([tipo_diabetes, peso, dosagem_max]):
-                error_label.config(text="Dados do perfil médico incompletos", fg="red")
+                messagebox.showerror("Erro", "Dados do perfil médico incompletos.")
                 return
 
             # Define a insulina como "Humalog" sempre
@@ -507,10 +501,11 @@ def Tela_CadastroAlimento(root, email, refeicao):
             sucesso = historico_refeicao.salvaRefeicao(email, refeicao, nutrientes_totais, insulina_calculada)
 
             if sucesso:
-                error_label.config(text="A refeição foi salva com sucesso!", fg="GREEN")
+                messagebox.showinfo("Sucesso", "A refeição foi salva com sucesso!")
                 mudar_tela(Tela_Consumo1, root, email)
             else:
-                error_label.config(text="Erro ao salvar a refeição. Verifique os dados.", fg="GREEN")
+                messagebox.showerror("Erro", "Erro ao salvar a refeição. Verifique os dados.")
+                # Usa print diretamente para depurar
                 print("Dados para depuração:")
                 print("Email:", email)
                 print("Refeição:", refeicao)
@@ -519,7 +514,7 @@ def Tela_CadastroAlimento(root, email, refeicao):
 
         except Exception as e:
             print(f"Erro ao salvar a refeição: {e}")
-            error_label.config(text="Erro ao salvar a refeição.", fg="red")
+            messagebox.showerror("Erro", f"Erro ao salvar a refeição. Verifique os dados. Detalhes: {e}")
 
     def voltar():
         mudar_tela(Tela_CadastroRefeicao, root, email)
@@ -567,10 +562,7 @@ def Tela_Historico_Insulina(root, email_usuario):
 
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
-    
-    error_label = tk.Label(frame, text="", fg="red")
-    error_label.pack(pady=5)
-    
+
     def limpar_frame():
         for widget in scrollable_frame.winfo_children():
             widget.destroy()
@@ -582,7 +574,7 @@ def Tela_Historico_Insulina(root, email_usuario):
 
         # Validação das entradas
         if refeicao_selecionada == "Selecione uma refeição":
-            error_label.config(text="Por favor, selecione uma refeição.", fg="red")
+            messagebox.showerror("Erro", "Por favor, selecione uma refeição.")
             return
 
         # Calcula e exibe o histórico de insulina
@@ -613,36 +605,33 @@ def Tela_Historico_Insulina(root, email_usuario):
     tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).pack(pady=10)
     tk.Button(frame, text="Limpar", width=20, command=limpar_frame).pack(pady=10)
     tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
- 
- 
- 
+    
+
 def Tela_Historico_Nutrientes(root, email_usuario):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
     configurar_fundo_liso(frame)
 
-    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
-
-    tk.Label(frame, text="Histórico de Alimentos", font=("Helvetica", 16)).place(x=centro_x, y=50, anchor="center")
-    tk.Label(frame, text="Selecione a data:").place(x=centro_x, y=100, anchor="center")
+    tk.Label(frame, text="Histórico de Alimentos", font=("Helvetica", 16)).pack(pady=20)
+    tk.Label(frame, text="Selecione a data:").pack(pady=5)
 
     # Entrada de data
     data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
-    data_entry.place(x=centro_x, y=130, anchor="center")
+    data_entry.pack(pady=5)
 
-    tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=160, anchor="center")
+    tk.Label(frame, text="Selecione a refeição:").pack(pady=5)
     refeicao_var = tk.StringVar(value="Selecione uma refeição")
     refeicoes_disponiveis = ["Café da manhã", "Almoço", "Jantar", "Lanche"]
-    tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).place(x=centro_x, y=190, anchor="center")
+    tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).pack(pady=5)
 
-    tk.Label(frame, text="Selecione a propriedade para exibir:").place(x=centro_x, y=220, anchor="center")
+    tk.Label(frame, text="Selecione a propriedade para exibir:").pack(pady=5)
     propriedade_var = tk.StringVar(value="Todas")
     propriedades_disponiveis = ["Todas", "Proteína", "Carboidrato", "Fibra", "Lipídeo", "Energia"]
-    tk.OptionMenu(frame, propriedade_var, *propriedades_disponiveis).place(x=centro_x, y=250, anchor="center")
+    tk.OptionMenu(frame, propriedade_var, *propriedades_disponiveis).pack(pady=5)
 
     # Canvas com barra de rolagem
     canvas_frame = tk.Frame(frame)
-    canvas_frame.place(x=0, y=300, width=largura_tela, height=altura_tela-400)
+    canvas_frame.pack(pady=10, fill="both", expand=True)
 
     canvas = tk.Canvas(canvas_frame)
     scrollbar = tk.Scrollbar(canvas_frame, orient="vertical", command=canvas.yview)
@@ -685,27 +674,20 @@ def Tela_Historico_Nutrientes(root, email_usuario):
             tk.Label(scrollable_frame, text="Nenhum dado encontrado para a data selecionada.", font=("Helvetica", 10)).pack(pady=5)
         else:
             tk.Label(scrollable_frame, text=f"Histórico de Alimentos em {data_selecionada}:", font=("Helvetica", 12, "bold")).pack(pady=5)
-
-            for entrada in historico:
-                descricao_alimento = entrada['Alimentos']['descricao']
-                refeicao = entrada['Refeicao']['refeicao']
-                tk.Label(scrollable_frame, text=f"Alimento: {descricao_alimento} - Refeição: {refeicao}", anchor="w", justify="left", font=("Helvetica", 10, "bold")).pack(fill="x", pady=2)
-                
-                if propriedade_selecionada == "Todas":
-                    for chave, valor in entrada.items():
-                        if chave not in ["Alimentos", "Refeicao", "dia"]:
-                            tk.Label(scrollable_frame, text=f"{chave.capitalize()}: {valor}", anchor="w", justify="left").pack(fill="x", pady=2)
-                else:
-                    propriedade = propriedade_selecionada.lower()
-                    if propriedade in entrada:
-                        tk.Label(scrollable_frame, text=f"{propriedade.capitalize()}: {entrada[propriedade]}", anchor="w", justify="left").pack(fill="x", pady=2)
+            
+            for linha in historico.splitlines():
+                if "Alimento" in linha:
+                    tk.Label(scrollable_frame, text=linha.strip(), anchor="w", justify="left", font=("Helvetica", 10, "bold")).pack(fill="x", pady=2)
+                elif propriedade_selecionada == "Todas" or propriedade_selecionada.lower() in linha.lower():
+                    tk.Label(scrollable_frame, text=linha.strip(), anchor="w", justify="left").pack(fill="x", pady=2)
 
     def voltar():
         mudar_tela(Tela_Consumo1, root, email_usuario)
 
-    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=altura_tela-90, anchor="center")
-    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=altura_tela-60, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=altura_tela-30, anchor="center")
+    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).pack(pady=10)
+    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).pack(pady=10)
+    tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
+
 
 ###############################################################################
 
