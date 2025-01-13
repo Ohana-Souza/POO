@@ -34,40 +34,40 @@ caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO.csv")
 
 def configurar_tela_inicial(frame):
     imagem = Image.open(caminho_imagem1)
-    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
+    imagem = imagem.resize((352, 762), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
-    canvas = tk.Canvas(frame, width=360, height=640)
+    canvas = tk.Canvas(frame, width=352, height=762)
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
 
 def configurar_fundo_login(frame):
     imagem = Image.open(caminho_imagem3)
-    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
+    imagem = imagem.resize((352, 762), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
-    canvas = tk.Canvas(frame, width=360, height=640)
+    canvas = tk.Canvas(frame, width=352, height=762)
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
     
 def configurar_fundo_cadastro(frame):
     imagem = Image.open(caminho_imagem2)
-    imagem = imagem.resize((414, 896), Image.Resampling.LANCZOS)
+    imagem = imagem.resize((352, 762), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
-    canvas = tk.Canvas(frame, width=360, height=640)
+    canvas = tk.Canvas(frame, width=352, height=762)
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
 
 def configurar_fundo_liso(frame):
     imagem = Image.open(caminho_imagem4)
-    imagem = imagem.resize((414, 896), Image.Resampling.LANCZOS)
+    imagem = imagem.resize((352, 762), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
-    canvas = tk.Canvas(frame, width=414, height=896)
+    canvas = tk.Canvas(frame, width=352, height=762)
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
@@ -78,8 +78,8 @@ def mudar_tela(nova_tela, root, *args):
     nova_tela(root, *args)
 
 def obter_dimensoes_tela(): 
-    largura_tela = 360 
-    altura_tela = 640 
+    largura_tela = 352 
+    altura_tela = 762 
     centro_x = largura_tela / 2 
     return largura_tela, altura_tela, centro_x
 
@@ -90,8 +90,8 @@ def Tela_Inicial(root):
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela() 
     botao1 = tk.Button(frame, text="Entrar", width=20, command=lambda: mudar_tela(Tela_Login, root)) 
     botao2 = tk.Button(frame, text="Cadastrar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)) 
-    botao1.place(x=centro_x, y=8.5 * (altura_tela / 12), anchor="center") 
-    botao2.place(x=centro_x, y=9.5 * (altura_tela / 12), anchor="center")
+    botao1.place(x=centro_x, y=6.5 * (altura_tela / 12), anchor="center") 
+    botao2.place(x=centro_x, y=7.5 * (altura_tela / 12), anchor="center")
 
 def Tela_Login(root):
     frame = tk.Frame(root)
@@ -186,30 +186,30 @@ def Tela_PerfilMedico1(root, email):
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
-    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 12)).place(x=centro_x, y=100, anchor="center")
+    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 14), bg="#0493b3").place(x=centro_x, y=180, anchor="center")
 
-    tk.Label(frame, text="Sexo:").place(x=centro_x, y=140, anchor="center")
+    tk.Label(frame, text="Sexo:").place(x=centro_x, y=220, anchor="center")
     sexo_var = tk.StringVar()
-    tk.OptionMenu(frame, sexo_var, "Masculino", "Feminino").place(x=centro_x, y=180, anchor="center")
+    tk.OptionMenu(frame, sexo_var, "Masculino", "Feminino").place(x=centro_x, y=250, anchor="center")
 
-    tk.Label(frame, text="Altura (cm):").place(x=centro_x, y=220, anchor="center")
+    tk.Label(frame, text="Altura (cm):").place(x=centro_x, y=290, anchor="center")
     entry_altura = tk.Entry(frame)
-    entry_altura.place(x=centro_x, y=260, anchor="center")
+    entry_altura.place(x=centro_x, y=320, anchor="center")
 
-    tk.Label(frame, text="Peso (kg):").place(x=centro_x, y=300, anchor="center")
+    tk.Label(frame, text="Peso (kg):").place(x=centro_x, y=360, anchor="center")
     entry_peso = tk.Entry(frame)
-    entry_peso.place(x=centro_x, y=340, anchor="center")
+    entry_peso.place(x=centro_x, y=390, anchor="center")
 
-    tk.Label(frame, text="Idade:").place(x=centro_x, y=380, anchor="center")
+    tk.Label(frame, text="Idade:").place(x=centro_x, y=430, anchor="center")
     entry_idade = tk.Entry(frame)
-    entry_idade.place(x=centro_x, y=420, anchor="center")
+    entry_idade.place(x=centro_x, y=460, anchor="center")
 
-    tk.Label(frame, text="Atividade Física:").place(x=centro_x, y=460, anchor="center")
+    tk.Label(frame, text="Atividade Física:").place(x=centro_x, y=500, anchor="center")
     atividade_var = tk.StringVar()
-    tk.OptionMenu(frame, atividade_var, "Sedentário", "Leve", "Moderado", "Intenso").place(x=centro_x, y=500, anchor="center")
+    tk.OptionMenu(frame, atividade_var, "Sedentário", "Leve", "Moderado", "Intenso").place(x=centro_x, y=530, anchor="center")
 
     error_label = tk.Label(frame, text="", fg="red")
-    error_label.place(x=centro_x, y=540, anchor="center")
+    error_label.place(x=centro_x, y=600, anchor="center")
 
     def avancar():
         sexo = sexo_var.get()
@@ -237,8 +237,8 @@ def Tela_PerfilMedico1(root, email):
         error_label.config(text="")
         mudar_tela(Tela_PerfilMedico2, root, email, sexo, altura, peso, idade, atividade)
 
-    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=580, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)).place(x=centro_x, y=620, anchor="center")
+    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=630, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)).place(x=centro_x, y=680, anchor="center")
 
 def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
     frame = tk.Frame(root)
@@ -248,26 +248,26 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
-    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 12)).place(x=centro_x, y=100, anchor="center")
+    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 14), bg="#0493b3").place(x=centro_x, y=180, anchor="center")
 
-    tk.Label(frame, text="Tipo de Diabetes:").place(x=centro_x, y=140, anchor="center")
+    tk.Label(frame, text="Tipo de Diabetes:").place(x=centro_x, y=220, anchor="center")
     diabetes_var = tk.StringVar()
-    tk.OptionMenu(frame, diabetes_var, "Tipo 1", "Tipo 2", "Gestacional", "Pré-diabetes").place(x=centro_x, y=180, anchor="center")
+    tk.OptionMenu(frame, diabetes_var, "Tipo 1", "Tipo 2", "Gestacional", "Pré-diabetes").place(x=centro_x, y=250, anchor="center")
 
-    tk.Label(frame, text="Toma Insulina (Sim/Não):").place(x=centro_x, y=220, anchor="center")
+    tk.Label(frame, text="Toma Insulina (Sim/Não):").place(x=centro_x, y=290, anchor="center")
     insulina_var = tk.StringVar()
-    tk.OptionMenu(frame, insulina_var, "Sim", "Não").place(x=centro_x, y=260, anchor="center")
+    tk.OptionMenu(frame, insulina_var, "Sim", "Não").place(x=centro_x, y=320, anchor="center")
 
-    tk.Label(frame, text="Tipo de Insulina:").place(x=centro_x, y=300, anchor="center")
+    tk.Label(frame, text="Tipo de Insulina:").place(x=centro_x, y=360, anchor="center")
     tipo_insulina_var = tk.StringVar()
-    tk.OptionMenu(frame, tipo_insulina_var, "Asparge", "Humalog", "NPH", "Glargina", "Não toma").place(x=centro_x, y=340, anchor="center")
+    tk.OptionMenu(frame, tipo_insulina_var, "Asparge", "Humalog", "NPH", "Glargina", "Não toma").place(x=centro_x, y=390, anchor="center")
 
-    tk.Label(frame, text="Dosagem Máxima de Insulina (unidades):").place(x=centro_x, y=380, anchor="center")
+    tk.Label(frame, text="Dosagem Máxima de Insulina (unidades):").place(x=centro_x, y=430, anchor="center")
     entry_dosagem_max = tk.Entry(frame)
-    entry_dosagem_max.place(x=centro_x, y=420, anchor="center")
+    entry_dosagem_max.place(x=centro_x, y=460, anchor="center")
 
     error_label = tk.Label(frame, text="", fg="red")
-    error_label.place(x=centro_x, y=460, anchor="center")
+    error_label.place(x=centro_x, y=510, anchor="center")
 
     def salvar():
         tipo_diabetes = diabetes_var.get()
@@ -296,18 +296,18 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
         else:
             error_label.config(text="Reveja as informações inseridas!", fg="red")
 
-    tk.Button(frame, text="Salvar", width=20, command=salvar).place(x=centro_x, y=500, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_PerfilMedico1, root, email)).place(x=centro_x, y=540, anchor="center")
+    tk.Button(frame, text="Avançar", width=20, command=salvar).place(x=centro_x, y=550, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_PerfilMedico1, root, email)).place(x=centro_x, y=600, anchor="center")
 
 def Tela_Alerta(root, email):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
     imagem = Image.open(caminho_imagem5)
-    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
+    imagem = imagem.resize((352, 762), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
-    canvas = tk.Canvas(frame, width=360, height=640)
+    canvas = tk.Canvas(frame, width=352, height=762)
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
@@ -320,18 +320,20 @@ def Tela_Alerta(root, email):
     tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=altura_tela * 0.75, anchor="center")
 
 
-
 def Tela_Consumo1(root, email):
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
     configurar_fundo_liso(frame)
+    
+    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
-    tk.Label(frame, text=f"Bem-vindo(a), {email}", font=("Helvetica", 16)).pack(pady=20)
-    tk.Button(frame, text="Adicionar Alimento", width=20, command=lambda: mudar_tela(Tela_CadastroRefeicao, root, email)).pack(pady=10)
-    tk.Button(frame, text="Histórico Nutrientes", width=20, command=lambda: mudar_tela(Tela_Historico_Nutrientes, root, email)).pack(pady=10)
-    tk.Button(frame, text="Dosagem Insulina", width=20, command=lambda: mudar_tela(Tela_Historico_Insulina, root, email)).pack(pady=10)
-    tk.Button(frame, text="Sair", width=20, command=sys.exit).pack(pady=10)
+    tk.Label(frame, text=f"Bem-vindo(a), {email}", font=("Helvetica", 14), bg="#0493b3").place(x=centro_x, y=50, anchor="center")
+    tk.Button(frame, text="Adicionar Alimento", width=20, command=lambda: mudar_tela(Tela_CadastroRefeicao, root, email)).place(x=centro_x, y=250, anchor="center")
+    tk.Button(frame, text="Histórico Nutrientes", width=20, command=lambda: mudar_tela(Tela_Historico_Nutrientes, root, email)).place(x=centro_x, y=320, anchor="center")
+    tk.Button(frame, text="Dosagem Insulina", width=20, command=lambda: mudar_tela(Tela_Historico_Insulina, root, email)).place(x=centro_x, y=390, anchor="center")
+    tk.Button(frame, text="Sair", width=20, command=sys.exit).place(x=centro_x, y=460, anchor="center")
+
 
 def Tela_CadastroRefeicao(root, email):
     frame = tk.Frame(root)
@@ -339,16 +341,18 @@ def Tela_CadastroRefeicao(root, email):
 
     configurar_fundo_liso(frame)
 
-    tk.Label(frame, text="Selecione a refeição:").pack(pady=5)
+    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
+
+    tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=250, anchor="center")
     refeicao_var = tk.StringVar(value="Café da manhã")
-    tk.OptionMenu(frame, refeicao_var, "Café da manhã", "Almoço", "Jantar", "Lanche").pack(pady=5)
+    tk.OptionMenu(frame, refeicao_var, "Café da manhã", "Almoço", "Jantar", "Lanche").place(x=centro_x, y=280, anchor="center")
 
     def avancar():
         refeicao = refeicao_var.get()
         mudar_tela(Tela_CadastroAlimento, root, email, refeicao)
 
-    tk.Button(frame, text="Avançar", width=20, command=avancar).pack(pady=10)
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root, email)).pack(pady=10)
+    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=420, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root, email)).place(x=centro_x, y=470, anchor="center")
 
 ###########################################################################################
 
@@ -359,14 +363,15 @@ def Tela_CadastroAlimento(root, email, refeicao):
     historico_refeicao = HistoricoRefeicao()
     alimentos_adicionados = []
     nutrientes = Nutrientes()
-
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
     configurar_fundo_liso(frame)
 
-    tk.Label(frame, text=f"Refeição selecionada: {refeicao}", font=("Helvetica", 14)).pack(pady=10)
-    tk.Label(frame, text="Selecione o alimento:").pack(pady=5)
+    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
+
+    tk.Label(frame, text=f"Refeição selecionada: {refeicao}", font=("Helvetica", 14), bg="#0493b3").place(x=centro_x, y=50, anchor="center")
+    tk.Label(frame, text="Selecione o alimento:").place(x=centro_x, y=140, anchor="center")
 
     # Lê o arquivo CSV e extrai os alimentos
     def ler_csv(caminho_csv):
@@ -382,11 +387,11 @@ def Tela_CadastroAlimento(root, email, refeicao):
     # Configuração do campo de seleção de alimentos
     alimento_var = tk.StringVar(value="Selecione um alimento")
     option_menu = tk.OptionMenu(frame, alimento_var, *lista_alimentos)
-    option_menu.pack(pady=5)
+    option_menu.place(x=centro_x, y=170, anchor="center")
 
-    tk.Label(frame, text="Buscar alimento:").pack(pady=5)
+    tk.Label(frame, text="Buscar alimento:").place(x=centro_x, y=210, anchor="center")
     entry_busca = tk.Entry(frame)
-    entry_busca.pack(pady=5)
+    entry_busca.place(x=centro_x, y=240, anchor="center")
 
     def buscar_alimentos(event=None):
         termo_busca = entry_busca.get().lower()
@@ -398,12 +403,12 @@ def Tela_CadastroAlimento(root, email, refeicao):
 
     entry_busca.bind("<KeyRelease>", buscar_alimentos)
 
-    tk.Label(frame, text="Informe a quantidade (gramas):").pack(pady=5)
+    tk.Label(frame, text="Informe a quantidade (gramas):").place(x=centro_x, y=270, anchor="center")
     entry_quantidade = tk.Entry(frame)
-    entry_quantidade.pack(pady=5)
+    entry_quantidade.place(x=centro_x, y=300, anchor="center")
 
     error_label = tk.Label(frame, text="", fg="red")
-    error_label.pack(pady=5)
+    error_label.place(x=centro_x, y=370, anchor="center")
 
     def adicionar_alimento():
         try:
@@ -525,9 +530,9 @@ def Tela_CadastroAlimento(root, email, refeicao):
         mudar_tela(Tela_CadastroRefeicao, root, email)
 
     # Botões de ação
-    tk.Button(frame, text="ADD", width=20, command=adicionar_alimento).pack(pady=10)
-    tk.Button(frame, text="Avançar", width=20, command=salvar_refeicao).pack(pady=10)
-    tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
+    tk.Button(frame, text="ADD", width=20, command=adicionar_alimento).place(x=centro_x, y=460, anchor="center")
+    tk.Button(frame, text="Avançar", width=20, command=salvar_refeicao).place(x=centro_x, y=510, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=560, anchor="center")
 
 
 #########################################################################################
@@ -537,22 +542,24 @@ def Tela_Historico_Insulina(root, email_usuario):
     frame.place(relwidth=1, relheight=1)
     configurar_fundo_liso(frame)
 
-    tk.Label(frame, text="Histórico de Insulina", font=("Helvetica", 16)).pack(pady=20)
-    tk.Label(frame, text="Selecione a data:").pack(pady=5)
+    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
+
+    tk.Label(frame, text="Histórico de Insulina",font=("Helvetica", 16), bg="#0493b3").place(x=centro_x, y=50, anchor="center")
+    tk.Label(frame, text="Selecione a data:").place(x=centro_x, y=100, anchor="center")
 
     # Entrada de data
     data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
-    data_entry.pack(pady=5)
+    data_entry.place(x=centro_x, y=140, anchor="center")
 
-    tk.Label(frame, text="Selecione a refeição:").pack(pady=5)
+    tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=180, anchor="center")
     refeicao_var = tk.StringVar(value="Selecione uma refeição")
     refeicoes_disponiveis = ["Café da manhã", "Almoço", "Jantar", "Lanche"]
-    tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).pack(pady=5)
+    tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).place(x=centro_x, y=220, anchor="center")
 
     # Canvas com barra de rolagem
     canvas_frame = tk.Frame(frame)
-    canvas_frame.pack(pady=10, fill="both", expand=True)
-
+    canvas_frame.place(x=0, y=280, width=largura_tela, height=250)
+    
     canvas = tk.Canvas(canvas_frame)
     scrollbar = tk.Scrollbar(canvas_frame, orient="vertical", command=canvas.yview)
     scrollable_frame = tk.Frame(canvas)
@@ -569,7 +576,7 @@ def Tela_Historico_Insulina(root, email_usuario):
     scrollbar.pack(side="right", fill="y")
     
     error_label = tk.Label(frame, text="", fg="red")
-    error_label.pack(pady=5)
+    error_label.place(x=centro_x, y=430, anchor="center")
     
     def limpar_frame():
         for widget in scrollable_frame.winfo_children():
@@ -610,11 +617,9 @@ def Tela_Historico_Insulina(root, email_usuario):
         mudar_tela(Tela_Consumo1, root, email_usuario)
 
     # Botões
-    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).pack(pady=10)
-    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).pack(pady=10)
-    tk.Button(frame, text="Voltar", width=20, command=voltar).pack(pady=10)
- 
- 
+    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=620, anchor="center")
+    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=670, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=720, anchor="center")
  
 def Tela_Historico_Nutrientes(root, email_usuario):
     frame = tk.Frame(root)
@@ -623,26 +628,26 @@ def Tela_Historico_Nutrientes(root, email_usuario):
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
-    tk.Label(frame, text="Histórico de Alimentos", font=("Helvetica", 16)).place(x=centro_x, y=50, anchor="center")
-    tk.Label(frame, text="Selecione a data:").place(x=centro_x, y=100, anchor="center")
+    tk.Label(frame, text="Histórico de Alimentos", font=("Helvetica", 14), bg="#0493b3").place(x=centro_x, y=50, anchor="center")
+    tk.Label(frame, text="Selecione a data:").place(x=centro_x, y=150, anchor="center")
 
     # Entrada de data
     data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
-    data_entry.place(x=centro_x, y=130, anchor="center")
+    data_entry.place(x=centro_x, y=180, anchor="center")
 
-    tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=160, anchor="center")
+    tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=220, anchor="center")
     refeicao_var = tk.StringVar(value="Selecione uma refeição")
     refeicoes_disponiveis = ["Café da manhã", "Almoço", "Jantar", "Lanche"]
-    tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).place(x=centro_x, y=190, anchor="center")
+    tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).place(x=centro_x, y=250, anchor="center")
 
-    tk.Label(frame, text="Selecione a propriedade para exibir:").place(x=centro_x, y=220, anchor="center")
+    tk.Label(frame, text="Selecione a propriedade para exibir:").place(x=centro_x, y=290, anchor="center")
     propriedade_var = tk.StringVar(value="Todas")
     propriedades_disponiveis = ["Todas", "Proteína", "Carboidrato", "Fibra", "Lipídeo", "Energia"]
-    tk.OptionMenu(frame, propriedade_var, *propriedades_disponiveis).place(x=centro_x, y=250, anchor="center")
+    tk.OptionMenu(frame, propriedade_var, *propriedades_disponiveis).place(x=centro_x, y=320, anchor="center")
 
     # Canvas com barra de rolagem
     canvas_frame = tk.Frame(frame)
-    canvas_frame.place(x=0, y=300, width=largura_tela, height=altura_tela-400)
+    canvas_frame.place(x=0, y=350, width=largura_tela, height=250)
 
     canvas = tk.Canvas(canvas_frame)
     scrollbar = tk.Scrollbar(canvas_frame, orient="vertical", command=canvas.yview)
@@ -703,14 +708,14 @@ def Tela_Historico_Nutrientes(root, email_usuario):
     def voltar():
         mudar_tela(Tela_Consumo1, root, email_usuario)
 
-    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=altura_tela-90, anchor="center")
-    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=altura_tela-60, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=altura_tela-30, anchor="center")
+    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=640, anchor="center")
+    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=690, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=740, anchor="center")
 
 ###############################################################################
 
 root = tk.Tk()
 root.title("Contagem de Carboidratos")
-root.geometry("360x640")
+root.geometry("352x762")
 mudar_tela(Tela_Inicial, root)
 root.mainloop()
