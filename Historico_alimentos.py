@@ -1,7 +1,6 @@
 from supabase import create_client, Client
 from Chaves_banco import SUPABASE_KEY, SUPABASE_URL
 from datetime import datetime
-from Alimento import Alimento
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -61,14 +60,14 @@ class HistoricoAlimentos:
         if resposta_usuario.data and len(resposta_usuario.data) > 0:
             id_usuario = resposta_usuario.data[0]['id']
 
-        response = supabase.table("Historico_Alimentos").select("dia, Alimentos(descricao), Refeicao(refeicao), proteina, carboidrato, fibra, lipideo, energia,").match({"dia": data, "id_refeicao": id_refeicao, "id_usuario":id_usuario}).execute()
+        response = supabase.table("Historico_Alimentos").select("dia, Refeicao(refeicao),Alimentos(descricao), proteina, carboidrato, fibra, lipideo, energia").match({"dia": data, "id_refeicao": id_refeicao, "id_usuario":id_usuario}).execute()
         dados = response.data
 
         linhas_formatadas = []
 
         for i, item in enumerate(dados, 1):
             linhas_formatadas.append(f"Alimento {i}:")
-            linhas_formatadas.append(f"  Descrição: {item['Alimentos']['descricao']} g")
+            linhas_formatadas.append(f"  Descrição: {item['Alimentos']['descricao']}")
             linhas_formatadas.append(f"  Proteína: {item['proteina']} g")
             linhas_formatadas.append(f"  Carboidrato: {item['carboidrato']} g")
             linhas_formatadas.append(f"  Fibra: {item['fibra']} g")
@@ -88,8 +87,6 @@ class HistoricoAlimentos:
         return "\n".join(linhas_formatadas)
 
 
-
-
 #Testessss
 from Alimento import Alimento
 from Calculadora_Insulina import Calculadora_Insulina
@@ -100,16 +97,16 @@ from Nutrientes import Nutrientes
 from Historico_refeicao import HistoricoRefeicao
 
 
-Usuario_teste = Usuario("juliateste@gmail.com")
-Usuario_teste.autenticacao_usuario("senha")
-Perfil_teste = PerfilMedico(Usuario_teste.email,"Feminino",153,43,19,"Leve","Tipo 1","Sim","Asperge",15)
-alimento1 = Alimento()
-alimento1.adicionaAlimento(200,"Arroz, integral, cozido")
-alimento2 = Alimento()
-alimento2.adicionaAlimento(500,"Bolo, mistura para")
-historico_alimentos = HistoricoAlimentos()
-historico_alimentos.salvaAlimento(Perfil_teste._email, "Café da manhã", alimento1.descricao, alimento1.nutrientes)
-historico_alimentos.salvaAlimento(Perfil_teste._email, "Café da manhã", alimento2.descricao, alimento2.nutrientes)
+#Usuario_teste = Usuario("julia4@gmail.com")
+#Usuario_teste.autenticacao_usuario("senha")
+#Perfil_teste = PerfilMedico(Usuario_teste.email,"Feminino",153,43,19,"Leve","Tipo 1","Sim","Asperge",15)
+#alimento1 = Alimento()
+#alimento1.adicionaAlimento(200,"Arroz, integral, cozido")
+#alimento2 = Alimento()
+#alimento2.adicionaAlimento(500,"Bolo, mistura para")
+#historico_alimentos = HistoricoAlimentos()
+#historico_alimentos.salvaAlimento("julia4@gmail.com", "Café da manhã", alimento1.descricao, alimento1.nutrientes)
+#historico_alimentos.salvaAlimento("julia4@gmail.com", "Café da manhã", alimento2.descricao, alimento2.nutrientes)
 #nutrientes_teste = Nutrientes()
 #nutrientes_teste.adicionaNutrientes(alimento1)
 #nutrientes_teste.adicionaNutrientes(alimento2)
@@ -122,6 +119,7 @@ historico_alimentos.salvaAlimento(Perfil_teste._email, "Café da manhã", alimen
 #nutrientes_lista = nutrientes_teste.obterLista()
 #historico_refeicao.salvaRefeicao(Perfil_teste._email, "Café da manhã", nutrientes_lista, dose_calculada)
 #diaHoje = datetime.today().strftime('%Y-%m-%d')
-#mostra = historico_refeicao.mostraHistorico(diaHoje, "Café da manhã", Perfil_teste.email)
+#historico_alimentos = HistoricoAlimentos()
+#mostra = historico_alimentos.mostraHistorico(diaHoje, "Café da manhã", "julia4@gmail.com")
 #print(mostra)
-    
+
