@@ -34,40 +34,40 @@ caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO.csv")
 
 def configurar_tela_inicial(frame):
     imagem = Image.open(caminho_imagem1)
-    imagem = imagem.resize((352, 762), Image.Resampling.LANCZOS)
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
-    canvas = tk.Canvas(frame, width=352, height=762)
+    canvas = tk.Canvas(frame, width=360, height=640)
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
 
 def configurar_fundo_login(frame):
     imagem = Image.open(caminho_imagem3)
-    imagem = imagem.resize((352, 762), Image.Resampling.LANCZOS)
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
-    canvas = tk.Canvas(frame, width=352, height=762)
+    canvas = tk.Canvas(frame, width=360, height=640)
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
     
 def configurar_fundo_cadastro(frame):
     imagem = Image.open(caminho_imagem2)
-    imagem = imagem.resize((352, 762), Image.Resampling.LANCZOS)
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
-    canvas = tk.Canvas(frame, width=352, height=762)
+    canvas = tk.Canvas(frame, width=360, height=640)
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
 
 def configurar_fundo_liso(frame):
     imagem = Image.open(caminho_imagem4)
-    imagem = imagem.resize((352, 762), Image.Resampling.LANCZOS)
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
-    canvas = tk.Canvas(frame, width=352, height=762)
+    canvas = tk.Canvas(frame, width=360, height=640)
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
@@ -78,8 +78,8 @@ def mudar_tela(nova_tela, root, *args):
     nova_tela(root, *args)
 
 def obter_dimensoes_tela(): 
-    largura_tela = 352 
-    altura_tela = 762 
+    largura_tela = 360 
+    altura_tela = 640 
     centro_x = largura_tela / 2 
     return largura_tela, altura_tela, centro_x
 
@@ -220,21 +220,20 @@ def Tela_PerfilMedico1(root, email):
 
         if not sexo:
             error_label.config(text="Sexo não selecionado!")
-            return
+        
         if not Verificadora.verificar_inteiro(altura, tipo="float"):
             error_label.config(text="Altura inválida!")
-            return
+      
         if not Verificadora.verificar_inteiro(peso, tipo="float"):
             error_label.config(text="Peso inválido!")
-            return
+            
         if not Verificadora.verificar_inteiro(idade, tipo="int"):
             error_label.config(text="Idade inválida!")
-            return
+            
         if not atividade:
             error_label.config(text="Atividade Física não selecionada!")
-            return
+            
 
-        error_label.config(text="")
         mudar_tela(Tela_PerfilMedico2, root, email, sexo, altura, peso, idade, atividade)
 
     tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=630, anchor="center")
@@ -304,10 +303,10 @@ def Tela_Alerta(root, email):
     frame.place(relwidth=1, relheight=1)
 
     imagem = Image.open(caminho_imagem5)
-    imagem = imagem.resize((352, 762), Image.Resampling.LANCZOS)
+    imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
 
-    canvas = tk.Canvas(frame, width=352, height=762)
+    canvas = tk.Canvas(frame, width=360, height=640)
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
@@ -558,7 +557,7 @@ def Tela_Historico_Insulina(root, email_usuario):
 
     # Canvas com barra de rolagem
     canvas_frame = tk.Frame(frame)
-    canvas_frame.place(x=0, y=280, width=largura_tela, height=250)
+    canvas_frame.place(x=0, y=250, width=largura_tela, height=250)
     
     canvas = tk.Canvas(canvas_frame)
     scrollbar = tk.Scrollbar(canvas_frame, orient="vertical", command=canvas.yview)
@@ -576,7 +575,7 @@ def Tela_Historico_Insulina(root, email_usuario):
     scrollbar.pack(side="right", fill="y")
     
     error_label = tk.Label(frame, text="", fg="red")
-    error_label.place(x=centro_x, y=430, anchor="center")
+    error_label.place(x=centro_x, y=500, anchor="center")
     
     def limpar_frame():
         for widget in scrollable_frame.winfo_children():
@@ -604,7 +603,7 @@ def Tela_Historico_Insulina(root, email_usuario):
                 tk.Label(scrollable_frame, text="Nenhum dado encontrado para a data e refeição selecionadas.", font=("Helvetica", 10)).pack(pady=5)
                 return
 
-            tk.Label(scrollable_frame, text=f"Histórico de Insulina e Nutrientes em {data_selecionada}:", font=("Helvetica", 12, "bold")).pack(pady=5)
+            #tk.Label(scrollable_frame, text=f"Histórico em {data_selecionada}:", font=("Helvetica", 8, "bold")).pack(pady=5)
             
             for linha in resultado_historico.splitlines():
                 tk.Label(scrollable_frame, text=linha.strip(), anchor="w", justify="left").pack(fill="x", pady=2)
@@ -617,9 +616,9 @@ def Tela_Historico_Insulina(root, email_usuario):
         mudar_tela(Tela_Consumo1, root, email_usuario)
 
     # Botões
-    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=620, anchor="center")
-    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=670, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=720, anchor="center")
+    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=540, anchor="center")
+    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=580, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=620, anchor="center")
  
 def Tela_Historico_Nutrientes(root, email_usuario):
     frame = tk.Frame(root)
@@ -629,25 +628,25 @@ def Tela_Historico_Nutrientes(root, email_usuario):
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
     tk.Label(frame, text="Histórico de Alimentos", font=("Helvetica", 14), bg="#0493b3").place(x=centro_x, y=50, anchor="center")
-    tk.Label(frame, text="Selecione a data:").place(x=centro_x, y=150, anchor="center")
+    tk.Label(frame, text="Selecione a data:").place(x=centro_x, y=100, anchor="center")
 
     # Entrada de data
     data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
-    data_entry.place(x=centro_x, y=180, anchor="center")
+    data_entry.place(x=centro_x, y=130, anchor="center")
 
-    tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=220, anchor="center")
+    tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=170, anchor="center")
     refeicao_var = tk.StringVar(value="Selecione uma refeição")
     refeicoes_disponiveis = ["Café da manhã", "Almoço", "Jantar", "Lanche"]
-    tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).place(x=centro_x, y=250, anchor="center")
+    tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).place(x=centro_x, y=200, anchor="center")
 
-    tk.Label(frame, text="Selecione a propriedade para exibir:").place(x=centro_x, y=290, anchor="center")
+    tk.Label(frame, text="Selecione a propriedade para exibir:").place(x=centro_x, y=240, anchor="center")
     propriedade_var = tk.StringVar(value="Todas")
     propriedades_disponiveis = ["Todas", "Proteína", "Carboidrato", "Fibra", "Lipídeo", "Energia"]
-    tk.OptionMenu(frame, propriedade_var, *propriedades_disponiveis).place(x=centro_x, y=320, anchor="center")
+    tk.OptionMenu(frame, propriedade_var, *propriedades_disponiveis).place(x=centro_x, y=270, anchor="center")
 
     # Canvas com barra de rolagem
     canvas_frame = tk.Frame(frame)
-    canvas_frame.place(x=0, y=350, width=largura_tela, height=250)
+    canvas_frame.place(x=0, y=300, width=largura_tela, height=200)
 
     canvas = tk.Canvas(canvas_frame)
     scrollbar = tk.Scrollbar(canvas_frame, orient="vertical", command=canvas.yview)
@@ -708,14 +707,14 @@ def Tela_Historico_Nutrientes(root, email_usuario):
     def voltar():
         mudar_tela(Tela_Consumo1, root, email_usuario)
 
-    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=640, anchor="center")
-    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=690, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=740, anchor="center")
+    tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=510, anchor="center")
+    tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=550, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=590, anchor="center")
 
 ###############################################################################
 
 root = tk.Tk()
 root.title("Contagem de Carboidratos")
-root.geometry("352x762")
+root.geometry("360x640")
 mudar_tela(Tela_Inicial, root)
 root.mainloop()
