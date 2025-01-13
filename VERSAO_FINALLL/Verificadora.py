@@ -1,16 +1,13 @@
-
-
 class Verificadora:
     @staticmethod
     def verificar_inteiro(valor, tipo="float"):
         try:
             if tipo == "float":
-                return float(valor)
+                float(valor)  # Tenta converter o valor para float
             elif tipo == "int":
-                return int(valor)
+                int(valor)  # Tenta converter o valor para int
+            else:
+                return False  # Tipo inválido
+            return True
         except ValueError:
-            raise ValueError("Valor inválido. Insira um número válido.")
-
-
-
-
+            return False  # Retorna False se a conversão falhar

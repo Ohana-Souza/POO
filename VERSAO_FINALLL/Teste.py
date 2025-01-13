@@ -137,31 +137,47 @@ def Tela_Cadastro(root):
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
-    tk.Label(frame, text="Email:").place(x=centro_x, y=150, anchor="center")
+    tk.Label(frame, text="Email:").place(x=centro_x, y=200, anchor="center")
     entry_email = tk.Entry(frame)
-    entry_email.place(x=centro_x, y=180, anchor="center")
+    entry_email.place(x=centro_x, y=230, anchor="center")
 
-    tk.Label(frame, text="Senha:").place(x=centro_x, y=220, anchor="center")
+    tk.Label(frame, text="Senha:").place(x=centro_x, y=270, anchor="center")
     entry_senha = tk.Entry(frame, show="*")
-    entry_senha.place(x=centro_x, y=250, anchor="center")
+    entry_senha.place(x=centro_x, y=300, anchor="center")
 
-    tk.Label(frame, text="Confirmar Senha:").place(x=centro_x, y=300, anchor="center")
+    tk.Label(frame, text="Confirmar Senha:").place(x=centro_x, y=340, anchor="center")
     entry_conf_senha = tk.Entry(frame, show="*")
-    entry_conf_senha.place(x=centro_x, y=330, anchor="center")
+    entry_conf_senha.place(x=centro_x, y=370, anchor="center")
 
     error_label = tk.Label(frame, text="", fg="red")
-    error_label.place(x=centro_x, y=380, anchor="center")
+    error_label.place(x=centro_x, y=400, anchor="center")
 
     def cadastrar():
         email = entry_email.get()
         senha = entry_senha.get()
         conf_senha = entry_conf_senha.get()
 
-        if (senha != conf_senha):
+        if len(senha) < 5:
+            error_label.config(text="A senha deve ter no mínimo 5 caracteres", fg="red")
+            return
+
+        if not re.search(r'[a-zA-Z]', senha):
+            error_label.config(text="A senha deve conter pelo menos uma letra.", fg="red")
+            return
+
+        if re.search(r'(\d)\1{2,}', senha):
+            error_label.config(text="A senha não pode conter números repetidos em sequência.", fg="red")
+            return
+
+        if re.search(r'123456|234567|345678|456789|567890', senha):
+            error_label.config(text="A senha não pode conter sequências numéricas óbvias.", fg="red")
+            return
+
+        if senha != conf_senha:
             error_label.config(text="As senhas não coincidem.", fg="red")
             return
-        
-        if (senha == "" & conf_senha == ""):
+
+        if not senha or not conf_senha:
             error_label.config(text="Insira a senha", fg="red")
             return
 
@@ -179,8 +195,8 @@ def Tela_Cadastro(root):
         else:
             error_label.config(text="Email já cadastrado!", fg="red")
 
-    tk.Button(frame, text="Avançar", width=20, command=cadastrar).place(x=centro_x, y=460, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).place(x=centro_x, y=500, anchor="center")
+    tk.Button(frame, text="Avançar", width=20, command=cadastrar).place(x=centro_x, y=500, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).place(x=centro_x, y=540, anchor="center")
 
 
 def Tela_PerfilMedico1(root, email):
@@ -191,59 +207,68 @@ def Tela_PerfilMedico1(root, email):
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
-    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 14), bg="#0493b3").place(x=centro_x, y=120, anchor="center")
+    # Exibição do e-mail
+    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 10), bg="#0493b3").place(x=centro_x, y=150, anchor="center")
 
+    # Campo de seleção de sexo
     tk.Label(frame, text="Sexo:").place(x=centro_x, y=180, anchor="center")
-    sexo_var = tk.StringVar()
+    sexo_var = tk.StringVar(value="Selecione")
     tk.OptionMenu(frame, sexo_var, "Masculino", "Feminino").place(x=centro_x, y=210, anchor="center")
 
-    tk.Label(frame, text="Altura (cm):").place(x=centro_x, y=240, anchor="center")
+    # Campo de entrada para altura
+    tk.Label(frame, text="Altura (cm):").place(x=centro_x, y=260, anchor="center")
     entry_altura = tk.Entry(frame)
-    entry_altura.place(x=centro_x, y=270, anchor="center")
+    entry_altura.place(x=centro_x, y=290, anchor="center")
 
-    tk.Label(frame, text="Peso (kg):").place(x=centro_x, y=310, anchor="center")
+    # Campo de entrada para peso
+    tk.Label(frame, text="Peso (kg):").place(x=centro_x, y=320, anchor="center")
     entry_peso = tk.Entry(frame)
-    entry_peso.place(x=centro_x, y=340, anchor="center")
+    entry_peso.place(x=centro_x, y=350, anchor="center")
 
+    # Campo de entrada para idade
     tk.Label(frame, text="Idade:").place(x=centro_x, y=380, anchor="center")
     entry_idade = tk.Entry(frame)
-    entry_idade.place(x=centro_x, y=460, anchor="center")
+    entry_idade.place(x=centro_x, y=420, anchor="center")
 
-    tk.Label(frame, text="Atividade Física:").place(x=centro_x, y=500, anchor="center")
-    atividade_var = tk.StringVar()
-    tk.OptionMenu(frame, atividade_var, "Sedentário", "Leve", "Moderado", "Intenso").place(x=centro_x, y=530, anchor="center")
+    # Campo de seleção de atividade física
+    tk.Label(frame, text="Atividade Física:").place(x=centro_x, y=460, anchor="center")
+    atividade_var = tk.StringVar(value="Selecione")
+    tk.OptionMenu(frame, atividade_var, "Sedentário", "Leve", "Moderado", "Intenso").place(x=centro_x, y=490, anchor="center")
 
-    error_label = tk.Label(frame, text="", fg="red")
-    error_label.place(x=centro_x, y=600, anchor="center")
+    # Label para mensagens de erro
+    error_label = tk.Label(frame, text="", fg="red", wraplength=400, justify="center")
+    error_label.place(x=centro_x, y=530, anchor="center")
 
     def avancar():
+        # Coleta de valores dos campos
         sexo = sexo_var.get()
-        altura = entry_altura.get()
-        peso = entry_peso.get()
-        idade = entry_idade.get()
+        altura = entry_altura.get().strip()
+        peso = entry_peso.get().strip()
+        idade = entry_idade.get().strip()
         atividade = atividade_var.get()
 
-        if not sexo:
-            error_label.config(text="Sexo não selecionado!")
-            return
-        if not Verificadora.verificar_inteiro(altura, tipo="float"):
-            error_label.config(text="Altura inválida!")
-            return
-        if not Verificadora.verificar_inteiro(peso, tipo="float"):
-            error_label.config(text="Peso inválido!")
-            return
-        if not Verificadora.verificar_inteiro(idade, tipo="int"):
-            error_label.config(text="Idade inválida!")
-            return
-        if not atividade:
-            error_label.config(text="Atividade Física não selecionada!")
-            return
+        # Validações
+        if sexo == "Selecione" or not sexo or not altura or not Verificadora.verificar_inteiro(altura, tipo="float") or not peso or not Verificadora.verificar_inteiro(peso, tipo="float") or not idade or not Verificadora.verificar_inteiro(idade, tipo="int") or atividade == "Selecione" or not atividade :
+            if sexo == "Selecione" or not sexo:   # Verifica se o sexo foi selecionado
+                error_label.config(text="Selecione o sexo.")
+            if not altura or not Verificadora.verificar_inteiro(altura, tipo="float"):
+                error_label.config(text="Preencha uma altura válida.")# Valida a altura
+            if not peso or not Verificadora.verificar_inteiro(peso, tipo="float"):
+                error_label.config(text="Preencha um peso válido.")# Valida o peso
+            if not idade or not Verificadora.verificar_inteiro(idade, tipo="int"):
+                error_label.config(text="Preencha uma idade válida.")# Valida a idade
+            if atividade == "Selecione" or not atividade:
+                error_label.config(text="Preencha o campo atividade.")# Verifica se a atividade foi selecionada
+            # Exibe uma mensagem genérica de erro caso algum campo esteja incorreto
+        else:
+            # Limpa o `error_label` e avança para a próxima tela
+            error_label.config(text="")
+            mudar_tela(Tela_PerfilMedico2, root, email, sexo, altura, peso, idade, atividade)
 
-        error_label.config(text="")
-        mudar_tela(Tela_PerfilMedico2, root, email, sexo, altura, peso, idade, atividade)
+    # Botões de navegação
+    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=570, anchor="center")
+    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)).place(x=centro_x, y=620, anchor="center")
 
-    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=630, anchor="center")
-    tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)).place(x=centro_x, y=680, anchor="center")
 
 def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
     frame = tk.Frame(root)
@@ -253,7 +278,7 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
-    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 14), bg="#0493b3").place(x=centro_x, y=180, anchor="center")
+    tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 10), bg="#0493b3").place(x=centro_x, y=150, anchor="center")
 
     tk.Label(frame, text="Tipo de Diabetes:").place(x=centro_x, y=220, anchor="center")
     diabetes_var = tk.StringVar()
@@ -322,7 +347,7 @@ def Tela_Alerta(root, email):
     def avancar():
         mudar_tela(Tela_Consumo1, root, email)
     
-    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=altura_tela * 0.75, anchor="center")
+    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=altura_tela*1, anchor="center")
 
 
 def Tela_Consumo1(root, email):
@@ -588,11 +613,16 @@ def Tela_CadastroAlimento(root, email, refeicao):
     def voltar():
         mudar_tela(Tela_CadastroRefeicao, root, email)
 
+    def avançar():
+        mudar_tela(Tela_Consumo1, root, email)
+
 
     # Botões de ação
     tk.Button(frame, text="Adicionar Alimento", width=20, command=adicionar_alimento).place(x=centro_x, y=460, anchor="center")
     tk.Button(frame, text="Salvar Refeição", width=20, command=salvar_refeicao).place(x=centro_x, y=510, anchor="center")
     tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=560, anchor="center")
+    tk.Button(frame, text="Tela Inicial", width=20, command=avançar).place(x=centro_x, y=600, anchor="center")
+    
 
 
 #########################################################################################
@@ -664,7 +694,7 @@ def Tela_Historico_Insulina(root, email_usuario):
                 tk.Label(scrollable_frame, text="Nenhum dado encontrado para a data e refeição selecionadas.", font=("Helvetica", 10)).pack(pady=5)
                 return
 
-            tk.Label(scrollable_frame, text=f"Histórico de Insulina e Nutrientes em {data_selecionada}:", font=("Helvetica", 12, "bold")).pack(pady=5)
+            tk.Label(scrollable_frame, text=f"Histórico de Insulina e Nutrientes em {data_selecionada}:", font=("Helvetica", 9, "bold")).pack(pady=5)
             
             for linha in resultado_historico.splitlines():
                 tk.Label(scrollable_frame, text=linha.strip(), anchor="w", justify="left").pack(fill="x", pady=2)
@@ -722,35 +752,41 @@ def Tela_Historico_Nutrientes(root, email_usuario):
     canvas.configure(yscrollcommand=scrollbar.set)
 
     canvas.pack(side="left", fill="both", expand=True)
-    scrollbar.pack(side="right", fill=tk.Y)
+    scrollbar.pack(side="right", fill="y")
+
+    # Vincular o evento de rolagem com a roda do mouse
+    def _on_mouse_wheel(event):
+        canvas.yview_scroll(-1 * int(event.delta / 120), "units")
+
+    canvas.bind_all("<MouseWheel>", _on_mouse_wheel)
 
     def limpar_frame():
         for widget in scrollable_frame.winfo_children():
             widget.destroy()
 
-    def exibir_historico(): 
-        limpar_frame() 
-        data_selecionada = data_entry.get_date().strftime('%Y-%m-%d') 
-        refeicao_selecionada = refeicao_var.get() 
+    def exibir_historico():
+        limpar_frame()
+        data_selecionada = data_entry.get_date().strftime('%Y-%m-%d')
+        refeicao_selecionada = refeicao_var.get()
 
-        # Validação das entradas 
-        if refeicao_selecionada == "Selecione uma refeição":    
-            error_label.config(text="Por favor, selecione uma refeição.",fg="red") 
+        # Validação das entradas
+        if refeicao_selecionada == "Selecione uma refeição":
+            error_label.config(text="Por favor, selecione uma refeição.", fg="red")
             return
-        
-        # Obtém o histórico de alimentos do banco 
+
+        # Obtém o histórico de alimentos do banco
         historico = historico_alimentos.mostraHistorico(
-            data=data_selecionada, 
-            refeicao=refeicao_selecionada, 
+            data=data_selecionada,
+            refeicao=refeicao_selecionada,
             usuario=email_usuario
-        ) 
-        
-        if not historico: 
-            tk.Label(scrollable_frame, text="Nenhum dado encontrado para a data selecionada.", font=("Helvetica", 10)).pack(pady=5)     
-        else: 
-            tk.Label(scrollable_frame, text=f"{refeicao_selecionada} em {data_selecionada}:", font=("Helvetica", 8, "bold")).pack(pady=5) 
+        )
+
+        if not historico:
+            tk.Label(scrollable_frame, text="Nenhum dado encontrado para a data selecionada.", font=("Helvetica", 10)).pack(pady=5)
+        else:
+            tk.Label(scrollable_frame, text=f"{refeicao_selecionada} em {data_selecionada}:", font=("Helvetica", 8, "bold")).pack(pady=5)
             tk.Label(scrollable_frame, text=f"{historico}", anchor="w", justify="left", font=("Helvetica", 8,)).pack(fill="x", pady=2)
-    
+
     def voltar():
         mudar_tela(Tela_Consumo1, root, email_usuario)
 
