@@ -872,6 +872,7 @@ def Tela_Historico_Nutrientes(root: tk.Tk, email_usuario: str) -> None:
         """
         for widget in scrollable_frame.winfo_children():
             widget.destroy()
+        error_label.config(text="")
 
     def exibir_historico() -> None:
         """
