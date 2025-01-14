@@ -20,18 +20,22 @@ from PIL import Image, ImageTk
 from Verificadora import Verificadora
 from Calculadora_Insulina import Calculadora_Insulina
 
-
+# Criação do cliente Supabase
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+# Definição dos caminhos para as imagens utilizadas
 caminho_imagem1 = os.path.join(os.path.dirname(__file__), "Telas", "1.png")
 caminho_imagem2 = os.path.join(os.path.dirname(__file__), "Telas", "2.png")
 caminho_imagem3 = os.path.join(os.path.dirname(__file__), "Telas", "3.png")
 caminho_imagem4 = os.path.join(os.path.dirname(__file__), "Telas", "4.png")
 caminho_imagem5 = os.path.join(os.path.dirname(__file__), "Telas", "5.png")
-caminho_imagem6 = os.path.join(os.path.dirname(__file__), "Telas","6.png")
+caminho_imagem6 = os.path.join(os.path.dirname(__file__), "Telas", "6.png")
 caminho_TACO = os.path.join(os.path.dirname(__file__), "TACO.csv")
 
-def configurar_tela_inicial(frame):
+def configurar_tela_inicial(frame: tk.Frame) -> None:
+    """
+    Configura o fundo da tela inicial com uma imagem.
+    """
     imagem = Image.open(caminho_imagem1)
     imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
@@ -41,7 +45,10 @@ def configurar_tela_inicial(frame):
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
 
-def configurar_fundo_login(frame):
+def configurar_fundo_login(frame: tk.Frame) -> None:
+    """
+    Configura o fundo da tela de login com uma imagem.
+    """
     imagem = Image.open(caminho_imagem3)
     imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
@@ -50,8 +57,11 @@ def configurar_fundo_login(frame):
     canvas.create_image(0, 0, anchor=tk.NW, image=bg)
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
-    
-def configurar_fundo_cadastro(frame):
+
+def configurar_fundo_cadastro(frame: tk.Frame) -> None:
+    """
+    Configura o fundo da tela de cadastro com uma imagem.
+    """
     imagem = Image.open(caminho_imagem2)
     imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
@@ -61,7 +71,10 @@ def configurar_fundo_cadastro(frame):
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
 
-def configurar_fundo_liso(frame):
+def configurar_fundo_liso(frame: tk.Frame) -> None:
+    """
+    Configura um fundo liso com uma imagem.
+    """
     imagem = Image.open(caminho_imagem4)
     imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
@@ -71,28 +84,42 @@ def configurar_fundo_liso(frame):
     canvas.image = bg
     canvas.place(relwidth=1, relheight=1)
 
-def mudar_tela(nova_tela, root, *args):
+def mudar_tela(nova_tela, root: tk.Tk, *args) -> None:
+    """
+    Troca a tela atual por uma nova tela.
+    """
     for widget in root.winfo_children():
         widget.destroy()
     nova_tela(root, *args)
 
-def obter_dimensoes_tela(): 
+def obter_dimensoes_tela() -> tuple:
+    """
+    Retorna as dimensões da tela e a posição do centro em coordenadas x.
+    """
     largura_tela = 360 
     altura_tela = 640 
     centro_x = largura_tela / 2 
     return largura_tela, altura_tela, centro_x
 
-def Tela_Inicial(root): 
-    frame = tk.Frame(root) 
-    frame.place(relwidth=1, relheight=1) 
-    configurar_tela_inicial(frame) 
-    largura_tela, altura_tela, centro_x = obter_dimensoes_tela() 
-    botao1 = tk.Button(frame, text="Entrar", width=20, command=lambda: mudar_tela(Tela_Login, root)) 
-    botao2 = tk.Button(frame, text="Cadastrar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)) 
-    botao1.place(x=centro_x, y=6.5 * (altura_tela / 12), anchor="center") 
+def Tela_Inicial(root: tk.Tk) -> None:
+    """
+    Cria a tela inicial com opções de login e cadastro.
+    """
+    frame = tk.Frame(root)
+    frame.place(relwidth=1, relheight=1)
+    configurar_tela_inicial(frame)
+    largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
+    
+    # Botões de Entrar e Cadastrar
+    botao1 = tk.Button(frame, text="Entrar", width=20, command=lambda: mudar_tela(Tela_Login, root))
+    botao2 = tk.Button(frame, text="Cadastrar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root))
+    botao1.place(x=centro_x, y=6.5 * (altura_tela / 12), anchor="center")
     botao2.place(x=centro_x, y=7.5 * (altura_tela / 12), anchor="center")
 
-def Tela_Login(root):
+def Tela_Login(root: tk.Tk) -> None:
+    """
+    Cria a tela de login com campos para inserir usuário e senha.
+    """
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
@@ -100,6 +127,7 @@ def Tela_Login(root):
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
+    # Campos de entrada para usuário e senha
     tk.Label(frame, text="Usuário:").place(x=centro_x, y=250, anchor="center")
     entry_usuario = tk.Entry(frame)
     entry_usuario.place(x=centro_x, y=280, anchor="center")
@@ -111,8 +139,10 @@ def Tela_Login(root):
     error_label = tk.Label(frame, text="", fg="red")
     error_label.place(x=centro_x, y=420, anchor="center")
 
-
-    def autenticar():
+    def autenticar() -> None:
+        """
+        Autentica o usuário com base no email e senha inseridos.
+        """
         email = entry_usuario.get()
         senha = entry_senha.get()
         usuario = Usuario(email)
@@ -127,15 +157,19 @@ def Tela_Login(root):
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).place(x=centro_x, y=540, anchor="center")
 
 
-
-def Tela_Cadastro(root):
+def Tela_Cadastro(root: tk.Tk) -> None:
+    """
+    Cria a tela de cadastro com campos para inserir email e senha.
+    """
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Configura o fundo da tela de cadastro
     configurar_fundo_cadastro(frame)
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
+    # Campos de entrada para email e senha
     tk.Label(frame, text="Email:").place(x=centro_x, y=200, anchor="center")
     entry_email = tk.Entry(frame)
     entry_email.place(x=centro_x, y=230, anchor="center")
@@ -151,11 +185,15 @@ def Tela_Cadastro(root):
     error_label = tk.Label(frame, text="", fg="red")
     error_label.place(x=centro_x, y=400, anchor="center")
 
-    def cadastrar():
+    def cadastrar() -> None:
+        """
+        Valida os dados de entrada e cadastra o usuário se as condições forem atendidas.
+        """
         email = entry_email.get()
         senha = entry_senha.get()
         conf_senha = entry_conf_senha.get()
 
+        # Validações de senha
         if len(senha) < 5:
             error_label.config(text="A senha deve ter no mínimo 5 caracteres", fg="red")
             return
@@ -180,10 +218,12 @@ def Tela_Cadastro(root):
             error_label.config(text="Insira a senha", fg="red")
             return
 
+        # Validação de email
         if not re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', email):
             error_label.config(text="Formato de e-mail inválido.", fg="red")
             return
 
+        # Inserção do usuário no banco de dados
         usuario = Usuario(email)
         response = usuario.insere_usuario(senha)
         print(response)
@@ -194,14 +234,18 @@ def Tela_Cadastro(root):
         else:
             error_label.config(text="Email já cadastrado!", fg="red")
 
+    # Botões de avançar e voltar
     tk.Button(frame, text="Avançar", width=20, command=cadastrar).place(x=centro_x, y=500, anchor="center")
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Inicial, root)).place(x=centro_x, y=540, anchor="center")
 
-
-def Tela_PerfilMedico1(root, email):
+def Tela_PerfilMedico1(root: tk.Tk, email: str) -> None:
+    """
+    Cria a primeira tela do perfil médico com campos para inserir sexo, altura, peso, idade e atividade física.
+    """
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Configura o fundo da tela de cadastro
     configurar_fundo_cadastro(frame)
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
@@ -238,7 +282,10 @@ def Tela_PerfilMedico1(root, email):
     error_label = tk.Label(frame, text="", fg="red", wraplength=400, justify="center")
     error_label.place(x=centro_x, y=530, anchor="center")
 
-    def avancar():
+    def avancar() -> None:
+        """
+        Valida os dados de entrada e avança para a segunda tela do perfil médico se as condições forem atendidas.
+        """
         # Coleta de valores dos campos
         sexo = sexo_var.get()
         altura = entry_altura.get().strip()
@@ -247,18 +294,21 @@ def Tela_PerfilMedico1(root, email):
         atividade = atividade_var.get()
 
         # Validações
-        if sexo == "Selecione" or not sexo or not altura or not Verificadora.verificar_inteiro(altura, tipo="float") or not peso or not Verificadora.verificar_inteiro(peso, tipo="float") or not idade or not Verificadora.verificar_inteiro(idade, tipo="int") or atividade == "Selecione" or not atividade :
-            if sexo == "Selecione" or not sexo:   # Verifica se o sexo foi selecionado
-                error_label.config(text="Selecione o sexo.")
+        if (sexo == "Selecione" or not sexo or 
+            not altura or not Verificadora.verificar_inteiro(altura, tipo="float") or 
+            not peso or not Verificadora.verificar_inteiro(peso, tipo="float") or 
+            not idade or not Verificadora.verificar_inteiro(idade, tipo="int") or 
+            atividade == "Selecione" or not atividade):
+            if sexo == "Selecione" or not sexo:
+                error_label.config(text="Selecione o sexo.")  # Verifica se o sexo foi selecionado
             if not altura or not Verificadora.verificar_inteiro(altura, tipo="float"):
-                error_label.config(text="Preencha uma altura válida.")# Valida a altura
+                error_label.config(text="Preencha uma altura válida.")  # Valida a altura
             if not peso or not Verificadora.verificar_inteiro(peso, tipo="float"):
-                error_label.config(text="Preencha um peso válido.")# Valida o peso
+                error_label.config(text="Preencha um peso válido.")  # Valida o peso
             if not idade or not Verificadora.verificar_inteiro(idade, tipo="int"):
-                error_label.config(text="Preencha uma idade válida.")# Valida a idade
+                error_label.config(text="Preencha uma idade válida.")  # Valida a idade
             if atividade == "Selecione" or not atividade:
-                error_label.config(text="Preencha o campo atividade.")# Verifica se a atividade foi selecionada
-            # Exibe uma mensagem genérica de erro caso algum campo esteja incorreto
+                error_label.config(text="Preencha o campo atividade.")  # Verifica se a atividade foi selecionada
         else:
             # Limpa o `error_label` e avança para a próxima tela
             error_label.config(text="")
@@ -268,42 +318,55 @@ def Tela_PerfilMedico1(root, email):
     tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=570, anchor="center")
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Cadastro, root)).place(x=centro_x, y=620, anchor="center")
 
-
-def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
+def Tela_PerfilMedico2(root: tk.Tk, email: str, sexo: str, altura: str, peso: str, idade: str, atividade: str) -> None:
+    """
+    Cria a segunda tela do perfil médico com campos para inserir tipo de diabetes, insulina, tipo de insulina e dosagem máxima.
+    """
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Configura o fundo da tela de cadastro
     configurar_fundo_cadastro(frame)
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
+    # Exibição do e-mail
     tk.Label(frame, text=f"Email: {email}", font=("Helvetica", 10), bg="#0493b3").place(x=centro_x, y=150, anchor="center")
 
+    # Campo de seleção de tipo de diabetes
     tk.Label(frame, text="Tipo de Diabetes:").place(x=centro_x, y=220, anchor="center")
     diabetes_var = tk.StringVar()
     tk.OptionMenu(frame, diabetes_var, "Tipo 1", "Tipo 2", "Gestacional", "Pré-diabetes").place(x=centro_x, y=250, anchor="center")
 
+    # Campo de seleção de uso de insulina
     tk.Label(frame, text="Toma Insulina (Sim/Não):").place(x=centro_x, y=290, anchor="center")
     insulina_var = tk.StringVar()
     tk.OptionMenu(frame, insulina_var, "Sim", "Não").place(x=centro_x, y=320, anchor="center")
 
+    # Campo de seleção de tipo de insulina
     tk.Label(frame, text="Tipo de Insulina:").place(x=centro_x, y=360, anchor="center")
     tipo_insulina_var = tk.StringVar()
     tk.OptionMenu(frame, tipo_insulina_var, "Asparge", "Humalog", "NPH", "Glargina", "Não toma").place(x=centro_x, y=390, anchor="center")
 
+    # Campo de entrada para dosagem máxima de insulina
     tk.Label(frame, text="Dosagem Máxima de Insulina (unidades):").place(x=centro_x, y=430, anchor="center")
     entry_dosagem_max = tk.Entry(frame)
     entry_dosagem_max.place(x=centro_x, y=460, anchor="center")
 
+    # Label para mensagens de erro
     error_label = tk.Label(frame, text="", fg="red")
     error_label.place(x=centro_x, y=510, anchor="center")
 
-    def salvar():
+    def salvar() -> None:
+        """
+        Valida os dados de entrada e salva o perfil médico se as condições forem atendidas.
+        """
         tipo_diabetes = diabetes_var.get()
         toma_insulina = insulina_var.get()
         tipo_insulina = tipo_insulina_var.get()
         dosagem_max = entry_dosagem_max.get()
 
+        # Validações
         if not tipo_diabetes:
             error_label.config(text="Tipo de Diabetes não selecionado!", fg="red")
             return
@@ -317,6 +380,7 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
             error_label.config(text="Dosagem inválida!", fg="red")
             return
 
+        # Cria o perfil médico e salva no banco de dados
         perfil_medico = PerfilMedico(email, sexo, altura, peso, idade, atividade, tipo_diabetes, toma_insulina, tipo_insulina, dosagem_max)
 
         if perfil_medico.cria_perfil_medico():
@@ -325,13 +389,18 @@ def Tela_PerfilMedico2(root, email, sexo, altura, peso, idade, atividade):
         else:
             error_label.config(text="Reveja as informações inseridas!", fg="red")
 
+    # Botões de navegação
     tk.Button(frame, text="Avançar", width=20, command=salvar).place(x=centro_x, y=550, anchor="center")
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_PerfilMedico1, root, email)).place(x=centro_x, y=600, anchor="center")
 
-def Tela_Alerta(root, email):
+def Tela_Alerta(root: tk.Tk, email: str) -> None:
+    """
+    Cria a tela de alerta final após o cadastro do perfil médico.
+    """
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Configura o fundo da tela de alerta com uma imagem
     imagem = Image.open(caminho_imagem5)
     imagem = imagem.resize((360, 640), Image.Resampling.LANCZOS)
     bg = ImageTk.PhotoImage(imagem)
@@ -343,54 +412,79 @@ def Tela_Alerta(root, email):
     
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
-    def avancar():
+    def avancar() -> None:
+        """
+        Avança para a tela de consumo após o alerta.
+        """
         mudar_tela(Tela_Consumo1, root, email)
     
     tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=600, anchor="center")
 
 
-def Tela_Consumo1(root, email):
+def Tela_Consumo1(root: tk.Tk, email: str) -> None:
+    """
+    Cria a tela de consumo inicial com opções para adicionar alimento, histórico de nutrientes, dosagem de insulina e sair.
+    """
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Configura o fundo liso da tela
     configurar_fundo_liso(frame)
     
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
+    # Boas-vindas ao usuário
     tk.Label(frame, text=f"Bem-vindo(a), {email}", font=("Helvetica", 14), bg="#0493b3").place(x=centro_x, y=50, anchor="center")
+
+    # Botão para adicionar alimento
     tk.Button(frame, text="Adicionar Alimento", width=20, command=lambda: mudar_tela(Tela_CadastroRefeicao, root, email)).place(x=centro_x, y=250, anchor="center")
+    
+    # Botão para visualizar o histórico de nutrientes
     tk.Button(frame, text="Histórico Nutrientes", width=20, command=lambda: mudar_tela(Tela_Historico_Nutrientes, root, email)).place(x=centro_x, y=320, anchor="center")
+    
+    # Botão para visualizar a dosagem de insulina
     tk.Button(frame, text="Dosagem Insulina", width=20, command=lambda: mudar_tela(Tela_Historico_Insulina, root, email)).place(x=centro_x, y=390, anchor="center")
+    
+    # Botão para sair do sistema
     tk.Button(frame, text="Sair", width=20, command=sys.exit).place(x=centro_x, y=460, anchor="center")
 
 
-def Tela_CadastroRefeicao(root, email):
+def Tela_CadastroRefeicao(root: tk.Tk, email: str) -> None:
+    """
+    Cria a tela de cadastro de refeição com opções para selecionar o tipo de refeição.
+    """
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
 
+    # Configura o fundo liso da tela
     configurar_fundo_liso(frame)
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
+    # Campo de seleção de refeição
     tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=250, anchor="center")
     refeicao_var = tk.StringVar(value="Café da manhã")
     tk.OptionMenu(frame, refeicao_var, "Café da manhã", "Almoço", "Jantar", "Lanche").place(x=centro_x, y=280, anchor="center")
 
-    def avancar():
+    def avancar() -> None:
+        """
+        Avança para a tela de cadastro de alimentos após selecionar a refeição.
+        """
         refeicao = refeicao_var.get()
         mudar_tela(Tela_CadastroAlimento, root, email, refeicao)
 
+    # Botão para avançar para a próxima tela
     tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=420, anchor="center")
+    
+    # Botão para voltar para a tela de consumo inicial
     tk.Button(frame, text="Voltar", width=20, command=lambda: mudar_tela(Tela_Consumo1, root, email)).place(x=centro_x, y=470, anchor="center")
 
-###########################################################################################
-
-historico_alimentos = HistoricoAlimentos()
 
 def Tela_CadastroAlimento(root, email, refeicao):
     """
     Tela para adicionar alimentos e salvar a refeição com cálculo de insulina usando polimorfismo.
     """
+    historico_alimentos = HistoricoAlimentos()
     historico_refeicao = HistoricoRefeicao()
     alimentos_adicionados = []
     nutrientes = Nutrientes()
@@ -623,23 +717,25 @@ def Tela_CadastroAlimento(root, email, refeicao):
     tk.Button(frame, text="Tela Inicial", width=20, command=avançar).place(x=centro_x, y=600, anchor="center")
     
 
-
-#########################################################################################
-
-def Tela_Historico_Insulina(root, email_usuario):
+def Tela_Historico_Insulina(root: tk.Tk, email_usuario: str) -> None:
+    """
+    Cria a tela de histórico de insulina com opções para selecionar a data e a refeição.
+    """
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
     configurar_fundo_liso(frame)
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
-    tk.Label(frame, text="Histórico de Insulina",font=("Helvetica", 16), bg="#0493b3").place(x=centro_x, y=50, anchor="center")
+    # Título da tela
+    tk.Label(frame, text="Histórico de Insulina", font=("Helvetica", 16), bg="#0493b3").place(x=centro_x, y=50, anchor="center")
     tk.Label(frame, text="Selecione a data:").place(x=centro_x, y=105, anchor="center")
 
     # Entrada de data
     data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
     data_entry.place(x=centro_x, y=135, anchor="center")
 
+    # Campo de seleção de refeição
     tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=170, anchor="center")
     refeicao_var = tk.StringVar(value="Selecione uma refeição")
     refeicoes_disponiveis = ["Café da manhã", "Almoço", "Jantar", "Lanche"]
@@ -664,14 +760,21 @@ def Tela_Historico_Insulina(root, email_usuario):
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
     
+    # Label para mensagens de erro
     error_label = tk.Label(frame, text="", fg="red")
     error_label.place(x=centro_x, y=240, anchor="center")
     
-    def limpar_frame():
+    def limpar_frame() -> None:
+        """
+        Limpa todos os widgets do frame rolável.
+        """
         for widget in scrollable_frame.winfo_children():
             widget.destroy()
 
-    def exibir_historico():
+    def exibir_historico() -> None:
+        """
+        Exibe o histórico de insulina e nutrientes para a data e refeição selecionadas.
+        """
         limpar_frame()
         data_selecionada = data_entry.get_date().strftime('%Y-%m-%d')
         refeicao_selecionada = refeicao_var.get()
@@ -702,23 +805,29 @@ def Tela_Historico_Insulina(root, email_usuario):
             print(f"Erro ao exibir histórico: {e}")
             tk.Label(scrollable_frame, text="Erro ao carregar o histórico. Verifique os dados.", fg="red").pack(pady=5)
 
-    def voltar():
+    def voltar() -> None:
+        """
+        Retorna para a tela de consumo inicial.
+        """
         mudar_tela(Tela_Consumo1, root, email_usuario)
 
     # Botões
     tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=540, anchor="center")
     tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=580, anchor="center")
     tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=620, anchor="center")
- 
 
 
-def Tela_Historico_Nutrientes(root, email_usuario):
+def Tela_Historico_Nutrientes(root: tk.Tk, email_usuario: str) -> None:
+    """
+    Cria a tela de histórico de nutrientes com opções para selecionar a data e a refeição.
+    """
     frame = tk.Frame(root)
     frame.place(relwidth=1, relheight=1)
     configurar_fundo_liso(frame)
 
     largura_tela, altura_tela, centro_x = obter_dimensoes_tela()
 
+    # Título da tela
     tk.Label(frame, text="Histórico de Alimentos", font=("Helvetica", 14), bg="#0493b3").place(x=centro_x, y=50, anchor="center")
     tk.Label(frame, text="Selecione a data:").place(x=centro_x, y=100, anchor="center")
 
@@ -726,11 +835,13 @@ def Tela_Historico_Nutrientes(root, email_usuario):
     data_entry = DateEntry(frame, width=12, background='darkblue', foreground='white', borderwidth=2)
     data_entry.place(x=centro_x, y=130, anchor="center")
 
+    # Campo de seleção de refeição
     tk.Label(frame, text="Selecione a refeição:").place(x=centro_x, y=170, anchor="center")
     refeicao_var = tk.StringVar(value="Selecione uma refeição")
     refeicoes_disponiveis = ["Café da manhã", "Almoço", "Jantar", "Lanche"]
     tk.OptionMenu(frame, refeicao_var, *refeicoes_disponiveis).place(x=centro_x, y=200, anchor="center")
 
+    # Label para mensagens de erro
     error_label = tk.Label(frame, text="", fg="red")
     error_label.place(x=centro_x, y=240, anchor="center")
 
@@ -759,11 +870,17 @@ def Tela_Historico_Nutrientes(root, email_usuario):
 
     canvas.bind_all("<MouseWheel>", _on_mouse_wheel)
 
-    def limpar_frame():
+    def limpar_frame() -> None:
+        """
+        Limpa todos os widgets do frame rolável.
+        """
         for widget in scrollable_frame.winfo_children():
             widget.destroy()
 
-    def exibir_historico():
+    def exibir_historico() -> None:
+        """
+        Exibe o histórico de alimentos e nutrientes para a data e refeição selecionadas.
+        """
         limpar_frame()
         data_selecionada = data_entry.get_date().strftime('%Y-%m-%d')
         refeicao_selecionada = refeicao_var.get()
@@ -772,7 +889,8 @@ def Tela_Historico_Nutrientes(root, email_usuario):
         if refeicao_selecionada == "Selecione uma refeição":
             error_label.config(text="Por favor, selecione uma refeição.", fg="red")
             return
-
+        
+        historico_alimentos = HistoricoAlimentos()
         # Obtém o histórico de alimentos do banco
         historico = historico_alimentos.mostraHistorico(
             data=data_selecionada,
@@ -786,14 +904,18 @@ def Tela_Historico_Nutrientes(root, email_usuario):
             tk.Label(scrollable_frame, text=f"{refeicao_selecionada} em {data_selecionada}:", font=("Helvetica", 8, "bold")).pack(pady=5)
             tk.Label(scrollable_frame, text=f"{historico}", anchor="w", justify="left", font=("Helvetica", 8,)).pack(fill="x", pady=2)
 
-    def voltar():
+    def voltar() -> None:
+        """
+        Retorna para a tela de consumo inicial.
+        """
         mudar_tela(Tela_Consumo1, root, email_usuario)
 
+    # Botões
     tk.Button(frame, text="Exibir Histórico", width=20, command=exibir_historico).place(x=centro_x, y=540, anchor="center")
     tk.Button(frame, text="Limpar", width=20, command=limpar_frame).place(x=centro_x, y=580, anchor="center")
     tk.Button(frame, text="Voltar", width=20, command=voltar).place(x=centro_x, y=620, anchor="center")
 
-###############################################################################
+
 
 root = tk.Tk()
 root.title("Contagem de Carboidratos")

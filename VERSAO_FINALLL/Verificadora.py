@@ -1,6 +1,9 @@
 class Verificadora:
     @staticmethod
-    def verificar_inteiro(valor, tipo="float"):
+    def verificar_inteiro(valor: str, tipo: str = "float") -> bool:
+        """
+        Verifica se um valor pode ser convertido para um tipo específico (float ou int).
+        """
         try:
             if tipo == "float":
                 float(valor)  # Tenta converter o valor para float
