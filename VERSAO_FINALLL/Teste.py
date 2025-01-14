@@ -3,8 +3,9 @@ import sys
 import tkinter as tk
 import datetime
 import re
+import os
 
-from tkinter import messagebox,ttk, StringVar, OptionMenu, Frame, Button
+from tkinter import messagebox, StringVar, OptionMenu
 from supabase import create_client, Client
 from Chaves_banco import SUPABASE_URL, SUPABASE_KEY
 from Alimento import Alimento
@@ -12,14 +13,12 @@ from Usuario import Usuario
 from Historico_refeicao import HistoricoRefeicao
 from Historico_alimentos import HistoricoAlimentos
 from Perfil_Medico import PerfilMedico
-
 from tkcalendar import DateEntry
 from Nutrientes import Nutrientes
 from Insulina import Asparge, Humalog, NPH, Glargina
 from PIL import Image, ImageTk
 from Verificadora import Verificadora
 from Calculadora_Insulina import Calculadora_Insulina
-import os
 
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)

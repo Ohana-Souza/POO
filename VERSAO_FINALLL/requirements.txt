@@ -1,0 +1,6 @@
+#Para instalar todas as bibliotecas necessárias, execute o seguinte comando no terminal:
+#pip install -r requirements.txt
+
+supabase
+tkcalendar
+Pillow
