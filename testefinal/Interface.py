@@ -792,7 +792,7 @@ def Tela_Historico_Insulina(root: tk.Tk, email_usuario: str) -> None:
                 tk.Label(scrollable_frame, text="Nenhum dado encontrado para a data e refeição selecionadas.", font=("Helvetica", 8)).pack(pady=5)
                 return
 
-            tk.Label(scrollable_frame, text=f"Histórico de Insulina e/ou\n Nutrientes em {data_formatada}:", font=("Helvetica", 8)).pack(pady=5)
+            tk.Label(scrollable_frame, text=f"Histórico de Insulina e/ou Nutrientes em {data_formatada}:", font=("Helvetica", 10)).pack(pady=5)
             
             for linha in resultado_historico.splitlines():
                 tk.Label(scrollable_frame, text=linha.strip(), anchor="w", justify="left").pack(fill="x", pady=2)
@@ -884,7 +884,9 @@ def Tela_Historico_Nutrientes(root: tk.Tk, email_usuario: str) -> None:
         if refeicao_selecionada == "Selecione uma refeição":
             error_label.config(text="Por favor, selecione uma refeição.", fg="red")
             return
-
+        
+        error_label.config(text="")
+        
         # Obtém o histórico de alimentos do banco
         historico = historico_alimentos.mostraHistorico(
             data=data_selecionada,
@@ -899,7 +901,7 @@ def Tela_Historico_Nutrientes(root: tk.Tk, email_usuario: str) -> None:
         if not historico:
             tk.Label(scrollable_frame, text="Nenhum dado encontrado para a data selecionada.", font=("Helvetica", 8)).pack(pady=5)
         else:
-            tk.Label(scrollable_frame, text=f"Histórico de Alimentos em {data_formatada}:", font=("Helvetica", 8)).pack(pady=5)
+            tk.Label(scrollable_frame, text=f"Histórico de Alimentos em {data_formatada}:", font=("Helvetica", 10)).pack(pady=5)
             tk.Label(scrollable_frame, text=f"{historico}", anchor="w", justify="left", font=("Helvetica", 8)).pack(fill="x", pady=2)
                 
     def voltar() -> None:
