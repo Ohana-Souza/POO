@@ -30,6 +30,6 @@ O relatório contendo as explicações detalhadas do programa encontra-se neste 
 
 ## Contato
 Em caso de dúvidas, entre em contato com os desenvolvedores do programa pelos e-mails abaixo:
-- João Pedro Brito: joao.email@example.com
+- João Pedro Brito: santosdebritojoaopedro@gmail.com
 - Julia Rodrigues: juliadinizrodrigues@gmail.com
 - Ohana Souza: ohanasouza04@gmail.com
