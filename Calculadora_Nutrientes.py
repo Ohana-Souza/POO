@@ -17,9 +17,9 @@ class Calculadora_Nutrientes:
         levando em consideração o sexo e a idade do usuário.
         """
         if self.sexo == 2:  # Masculino
-            return 10 * self.peso + 6.25 * self.altura - 5 * self.idade + 5
+            return (10 * self.peso) + (6.25 * self.altura) - (5 * self.idade) + 5
         elif self.sexo == 1:  # Feminino
-            return 10 * self.peso + 6.25 * self.altura - 5 * self.idade - 161
+            return (10 * self.peso) + (6.25 * self.altura) - (5 * self.idade) - 161
         else:
             raise ValueError("Sexo inválido.")
 
@@ -29,6 +29,7 @@ class Calculadora_Nutrientes:
         """
         tmb = self.calcula_tmb()
         if tmb <= 0:
+            print(tmb)
             raise ValueError("TMB calculado inválido. Verifique os dados do perfil médico.")
         
         fator_atividade = {
@@ -85,21 +86,22 @@ class Calculadora_Nutrientes:
         macros = self.calcula_macros()
 
         proteinas_msg = (
-            f"\nQuantidade de Proteínas acima do recomendado!\nQuantidade Recomendada: {macros[0]}g\nQuantidade ingerida: {self.nutrientes[0]}g"
+            f"\nQuantidade de Proteínas acima do recomendado!\nQuantidade Recomendada: {macros[0]}g\nQuantidade ingerida: {self.nutrientes[0]}g\n"
             if self.nutrientes[0] > macros[0] else "Quantidade de Proteínas dentro do recomendado!\n"
         )
         lipideos_msg = (
-            f"\nQuantidade de Lipídios acima do recomendado!\nQuantidade Recomendada: {macros[1]}g\nQuantidade ingerida: {self.nutrientes[1]}g"
+            f"\nQuantidade de Lipídios acima do recomendado!\nQuantidade Recomendada: {macros[1]}g\nQuantidade ingerida: {self.nutrientes[1]}g\n"
             if self.nutrientes[1] > macros[1] else "Quantidade de Lipídeos dentro do recomendado!\n"
         )
         carboidratos_msg = (
-            f"\nQuantidade de Carboidratos acima do recomendado!\nQuantidade Recomendada: {macros[2]}g\nQuantidade ingerida: {self.nutrientes[2]}g"
+            f"\nQuantidade de Carboidratos acima do recomendado!\nQuantidade Recomendada: {macros[2]}g\nQuantidade ingerida: {self.nutrientes[2]}g\n"
             if self.nutrientes[2] > macros[2] else "Quantidade de arboidratos dentro do recomendado!\n"
         )
         fibras_msg = (
-            f"\nQuantidade de Fibras acima do recomendado!\nQuantidade Recomendada: {macros[3]}g\nQuantidade ingerida: {self.nutrientes[3]}g"
-            if self.nutrientes[3] > macros[3] else "Quantidade de fibras dentro do recomendado!\n"
+            f"\nQuantidade de Fibras acima do recomendado!\nQuantidade Recomendada: {macros[3]}g\nQuantidade ingerida: {self.nutrientes[3]}g\n"
+            if self.nutrientes[3] > macros[3] else "Quantidade de fibras dentro do recomendado!"
         )
         
 
         return f"{proteinas_msg} {lipideos_msg} {carboidratos_msg} {fibras_msg}".strip()
+
