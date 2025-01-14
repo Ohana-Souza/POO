@@ -8,7 +8,10 @@ class Nutrientes:
         self.total_carboidratos = 0
         self.total_fibra = 0
 
-    def adicionaNutrientes(self, alimento):
+    def adicionaNutrientes(self, alimento: str) -> None:
+        """
+        Adiciona os nutrientes de um alimento aos totais acumulados.
+        """
 
         if alimento.nutrientes is None:
             raise ValueError("O alimento não possui dados de nutrientes.")
@@ -19,7 +22,10 @@ class Nutrientes:
         self.total_carboidratos += alimento.nutrientes[3]
         self.total_fibra += alimento.nutrientes[4]
 
-    def obter_totais(self):
+    def obter_totais(self) -> str:
+        """
+        Retorna os totais acumulados de cada nutriente em forma de dicionário.
+        """
         return {
             "energia": self.total_energia,
             "proteina": self.total_proteina,
@@ -27,18 +33,11 @@ class Nutrientes:
             "carboidratos": self.total_carboidratos,
             "fibra": self.total_fibra,
         }
-
-    def mostraTotais(self):
-
-        totais = (f"Energia: {self.total_energia:.2f} kcal\n"
-                f"Proteína: {self.total_proteina:.2f} g\n"
-                f"Lipídeos: {self.total_lipideos:.2f} g\n"
-                f"Carboidratos: {self.total_carboidratos:.2f} g\n"
-                f"Fibra: {self.total_fibra:.2f} g")
-        
-        return print(totais)
     
-    def obterLista(self):
+    def obterLista(self) -> list:
+        """
+        Retorna os totais acumulados de cada nutriente em forma de lista.
+        """
         lista = [self.total_energia, self.total_proteina, self.total_lipideos, self.total_carboidratos, self.total_fibra]
         return lista 
 

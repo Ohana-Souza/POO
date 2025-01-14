@@ -1,14 +1,14 @@
 from Interface_Insulina import InterfaceInsulina
 
 class Asparge(InterfaceInsulina):
-    def __init__(self, peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
+    def __init__(self, peso: float, tipo_diabetes: str, dosagem_max: float, carboidratos: float, proteinas: float) -> None:
         self.peso = peso
         self.tipo_diabetes = tipo_diabetes
         self.dosagem_max = dosagem_max
         self.carboidratos = carboidratos
         self.proteinas = proteinas
 
-    def calculaDosagem(self):
+    def calculaDosagem(self) -> None:
         """
         Calcula a dose de insulina Aspart (ação rápida) necessária para uma refeição.
         """
@@ -38,20 +38,20 @@ class Asparge(InterfaceInsulina):
 
 
 
-    def verificaAlarme(self, dose_calculada):
+    def verificaAlarme(self, dose_calculada: float) -> None:
         alarme = super().verificaAlarme(dose_calculada, self.dosagem_max)
         return alarme
 
 
 class Humalog(InterfaceInsulina):
-    def __init__(self, peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
+    def __init__(self, peso: float, tipo_diabetes: str, dosagem_max: float, carboidratos: float, proteinas: float) -> None:
         self.peso = peso
         self.tipo_diabetes = tipo_diabetes
         self.dosagem_max = dosagem_max
         self.carboidratos = carboidratos
         self.proteinas = proteinas
 
-    def calculaDosagem(self):
+    def calculaDosagem(self) -> None:
         """
         Calcula a dose de insulina Humalog (lispro) necessária para uma refeição.
         """
@@ -80,18 +80,18 @@ class Humalog(InterfaceInsulina):
         return round(dose_insulina, 2)  # Retorna o valor arredondado para 2 casas decimais
     
 
-    def verificaAlarme(self, dose_calculada):
+    def verificaAlarme(self, dose_calculada: float) -> None:
         return super().verificaAlarme(dose_calculada, self.dosagem_max)
         
 class NPH(InterfaceInsulina):
-    def __init__(self, peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
+    def __init__(self, peso: float, tipo_diabetes: str, dosagem_max: float, carboidratos: float, proteinas: float) -> None:
         self.peso = peso
         self.tipo_diabetes = tipo_diabetes
         self.dosagem_max = dosagem_max
         self.carboidratos = carboidratos
         self.proteinas = proteinas
 
-    def calculaDosagem(self):
+    def calculaDosagem(self) -> None:
         """
         Calcula a dose de insulina NPH (ação intermediária) necessária para uma refeição.
         """
@@ -115,19 +115,19 @@ class NPH(InterfaceInsulina):
 
         return round(dose_insulina, 2)  
 
-    def verificaAlarme(self, dose_calculada):
+    def verificaAlarme(self, dose_calculada: float) -> None:
         alarme = super().verificaAlarme(dose_calculada, self.dosagem_max)
         return alarme
 
 class Glargina(InterfaceInsulina):
-    def __init__(self, peso, tipo_diabetes, dosagem_max, carboidratos, proteinas):
+    def __init__(self, peso: float, tipo_diabetes: str, dosagem_max: float, carboidratos: float, proteinas: float) -> None:
         self.peso = peso
         self.tipo_diabetes = tipo_diabetes
         self.dosagem_max = dosagem_max
         self.carboidratos = carboidratos
         self.proteinas = proteinas
 
-    def calculaDosagem(self):
+    def calculaDosagem(self) -> None:
         """
         Calcula a dose de insulina Glargina (ação prolongada) necessária para uma refeição.
         """
@@ -153,7 +153,7 @@ class Glargina(InterfaceInsulina):
 
         return round(dose_insulina, 2)  
 
-    def verificaAlarme(self, dose_calculada):
+    def verificaAlarme(self, dose_calculada: float) -> None:
         alarme = super().verificaAlarme(dose_calculada, self.dosagem_max)
         return alarme
 

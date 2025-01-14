@@ -3,12 +3,13 @@ from Chaves_banco import SUPABASE_KEY, SUPABASE_URL
 from datetime import datetime
 from Alimento import Alimento
 
+# Inicializa o cliente Supabase para comunicação com o banco de dados
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
 class HistoricoRefeicao:
     
-    def salvaRefeicao(self, usuario, refeicao, nutrientes, insulina):
+    def salvaRefeicao(self, usuario, refeicao, nutrientes, insulina=None):
         
         resposta_refeicao = supabase.table('Refeicao').select('id').eq('refeicao', refeicao).execute()
 
@@ -44,7 +45,7 @@ class HistoricoRefeicao:
 
         return True
 
-    def mostraHistorico(self, data, refeicao, usuario):
+    def mostraHistorico(self, data, refeicao, usuario, toma_insulina):
 
         resposta_refeicao = supabase.table('Refeicao').select('id').eq('refeicao', refeicao).execute()
 
@@ -70,7 +71,8 @@ class HistoricoRefeicao:
             linhas_formatadas.append(f"  Fibra: {item['fibra']} g")
             linhas_formatadas.append(f"  Lipídeo: {item['lipideo']} g")
             linhas_formatadas.append(f"  Energia: {item['energia']} kcal")
-            linhas_formatadas.append(f"  Dosagem Insulina: {item['insulina']} U")
+            if toma_insulina == True:
+                linhas_formatadas.append(f"  Dosagem Insulina: {item['insulina']} U")
             linhas_formatadas.append("-" * 40)
         
         if not response.data:  

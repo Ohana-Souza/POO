@@ -5,7 +5,7 @@ from Chaves_banco import SUPABASE_KEY, SUPABASE_URL
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 class PerfilMedico(Usuario):
-    def __init__(self, email, sexo, altura, peso, idade, atividade, tipo_diabetes, toma_insulina, tipo_insulina, dosagem_max):
+    def __init__(self, email: str, sexo: str, altura: int, peso: float, idade: int, atividade: str, toma_insulina: bool, tipo_diabetes: str, tipo_insulina:str=None, dosagem_max:float=None):
         super().__init__(email)
         self.sexo = sexo
         self.altura = altura
@@ -17,7 +17,10 @@ class PerfilMedico(Usuario):
         self.tipo_insulina = tipo_insulina
         self.dosagem_max = dosagem_max 
         
-    def cria_perfil_medico(self):
+    def cria_perfil_medico(self) -> bool:
+        """
+        Cria um perfil médico no banco de dados Supabase para o usuário.
+        """
         resposta_usuario = supabase.table('Usuarios').select('id').eq('email', self.email).execute()
 
         if resposta_usuario.data and len(resposta_usuario.data) > 0:
@@ -33,15 +36,17 @@ class PerfilMedico(Usuario):
         if resposta_atividade.data and len(resposta_atividade.data) > 0:
             id_atividade = resposta_atividade.data[0]['id']
 
-        resposta_tipo_diabetes = supabase.table('Tipos_diabetes').select('id').eq('tipo', self.tipo_diabetes).execute()
-        
-        if resposta_tipo_diabetes.data and len(resposta_tipo_diabetes.data) > 0:
-            id_tipo_diabetes = resposta_tipo_diabetes.data[0]['id']
-        
-        resposta_tipo_insulina = supabase.table('Tipos_insulina').select('id').eq('tipo', self.tipo_insulina).execute()
-        
-        if resposta_tipo_insulina.data and len(resposta_tipo_insulina.data) > 0:
-            id_tipo_insulina = resposta_tipo_insulina.data[0]['id']
+        resposta_diabetes = supabase.table('Tipos_diabetes').select('id').eq('tipo', self.tipo_diabetes).execute()
+
+        if resposta_diabetes.data and len(resposta_diabetes.data) > 0:
+            id_tipo_diabetes = resposta_diabetes.data[0]['id']
+
+        if self.tipo_insulina == None:
+            id_tipo_insulina = None
+        else:
+            resposta_tipo_insulina = supabase.table('Tipos_insulina').select('id').eq('tipo', self.tipo_insulina).execute()
+            if resposta_tipo_insulina.data and len(resposta_tipo_insulina.data) > 0:
+                id_tipo_insulina = resposta_tipo_insulina.data[0]['id']
 
 
         if self.toma_insulina == "Sim":
