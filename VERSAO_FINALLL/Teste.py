@@ -346,7 +346,7 @@ def Tela_Alerta(root, email):
     def avancar():
         mudar_tela(Tela_Consumo1, root, email)
     
-    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=altura_tela*1, anchor="center")
+    tk.Button(frame, text="Avançar", width=20, command=avancar).place(x=centro_x, y=600, anchor="center")
 
 
 def Tela_Consumo1(root, email):
